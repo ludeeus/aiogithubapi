@@ -1,0 +1,23 @@
+// See https://aka.ms/vscode-remote/devcontainer.json for format details.
+{
+	"name": "aiogithubapi",
+	"context": "..",
+	"dockerFile": "Dockerfile",
+	"postCreateCommand": "python setup.py develop",
+	"runArgs": [
+		"-e", "GIT_EDTIOR='code --wait'"
+	],
+	"extensions": [
+		"ms-python.python"
+	],
+	"settings": {
+		"python.pythonPath": "/usr/local/bin/python",
+		"python.linting.pylintEnabled": true,
+		"python.linting.enabled": true,
+		"python.formatting.provider": "black",
+		"editor.formatOnPaste": false,
+		"editor.formatOnSave": true,
+		"editor.formatOnType": true,
+		"files.trimTrailingWhitespace": true
+	}
+}
