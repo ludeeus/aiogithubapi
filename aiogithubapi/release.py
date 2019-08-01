@@ -1,4 +1,8 @@
-"""AioGitHub: Repository Release"""
+"""
+AioGitHub: Repository Release
+
+https://developer.github.com/v3/repos/releases/
+"""
 # pylint: disable=missing-docstring
 from datetime import datetime
 from aiogithubapi import AIOGithubRepositoryContent

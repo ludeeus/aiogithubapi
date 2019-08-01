@@ -1,4 +1,8 @@
-"""AioGitHub: Repository Release"""
+"""
+AioGitHub: Repository Content
+
+https://developer.github.com/v3/repos/contents/
+"""
 # pylint: disable=missing-docstring
 import base64
 

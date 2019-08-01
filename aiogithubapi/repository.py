@@ -1,4 +1,8 @@
-"""AioGitHub: Repository"""
+"""
+AioGitHub: Repository
+
+https://developer.github.com/v3/repos/#get
+"""
 # pylint: disable=redefined-builtin, missing-docstring, invalid-name
 from asyncio import CancelledError, TimeoutError, get_event_loop
 from datetime import datetime
@@ -65,8 +69,6 @@ class AIOGithubRepository(AIOGitHub):
     )
     async def get_contents(self, path, ref=None):
         """Retrun a list of repository content objects."""
-        if self.ratelimit_remaining == "0":
-            raise AIOGitHubRatelimit("GitHub Ratelimit error")
         endpoint = "/repos/" + self.full_name + "/contents/" + path
         url = BASE_URL + endpoint
 
@@ -74,15 +76,15 @@ class AIOGithubRepository(AIOGitHub):
         if ref is not None:
             params["ref"] = ref.replace("tags/", "")
 
+        await self.get_ratelimit()
+        if self.ratelimits.remaining is not None and self.ratelimits.remaining == 0:
+            raise AIOGitHubRatelimit("GitHub Ratelimit error")
+
         async with async_timeout.timeout(20, loop=get_event_loop()):
             response = await self.session.get(url, headers=self.headers, params=params)
             if response.status not in GOOD_HTTP_CODES:
                 raise AIOGitHubException(f"GitHub returned {response.status} for {url}")
-            self.ratelimit_remaining = response.headers.get("x-ratelimit-remaining")
             response = await response.json()
-
-            if self.ratelimit_remaining == "0":
-                raise AIOGitHubRatelimit("GitHub Ratelimit error")
 
             if not isinstance(response, list):
                 if response.get("message"):
@@ -106,20 +108,18 @@ class AIOGithubRepository(AIOGitHub):
     )
     async def get_releases(self, prerelease=False):
         """Retrun a list of repository release objects."""
-        if self.ratelimit_remaining == "0":
-            raise AIOGitHubRatelimit("GitHub Ratelimit error")
         endpoint = "/repos/{}/releases".format(self.full_name)
         url = BASE_URL + endpoint
+
+        await self.get_ratelimit()
+        if self.ratelimits.remaining is not None and self.ratelimits.remaining == 0:
+            raise AIOGitHubRatelimit("GitHub Ratelimit error")
 
         async with async_timeout.timeout(20, loop=get_event_loop()):
             response = await self.session.get(url, headers=self.headers)
             if response.status not in GOOD_HTTP_CODES:
                 raise AIOGitHubException(f"GitHub returned {response.status} for {url}")
-            self.ratelimit_remaining = response.headers.get("x-ratelimit-remaining")
             response = await response.json()
-
-            if self.ratelimit_remaining == "0":
-                raise AIOGitHubRatelimit("GitHub Ratelimit error")
 
             if not isinstance(response, list):
                 if response.get("message"):
@@ -142,20 +142,19 @@ class AIOGithubRepository(AIOGitHub):
     )
     async def set_last_commit(self):
         """Retrun a list of repository release objects."""
-        if self.ratelimit_remaining == "0":
-            raise AIOGitHubRatelimit("GitHub Ratelimit error")
         endpoint = "/repos/" + self.full_name + "/commits/" + self.default_branch
         url = BASE_URL + endpoint
+
+        await self.get_ratelimit()
+        if self.ratelimits.remaining is not None and self.ratelimits.remaining == 0:
+            raise AIOGitHubRatelimit("GitHub Ratelimit error")
 
         async with async_timeout.timeout(20, loop=get_event_loop()):
             response = await self.session.get(url, headers=self.headers)
             if response.status not in GOOD_HTTP_CODES:
                 raise AIOGitHubException(f"GitHub returned {response.status} for {url}")
-            self.ratelimit_remaining = response.headers.get("x-ratelimit-remaining")
-            response = await response.json()
 
-            if self.ratelimit_remaining == "0":
-                raise AIOGitHubRatelimit("GitHub Ratelimit error")
+            response = await response.json()
 
             if response.get("message"):
                 raise AIOGitHubException("No commits")

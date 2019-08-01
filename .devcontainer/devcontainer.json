@@ -5,12 +5,17 @@
 	"dockerFile": "Dockerfile",
 	"postCreateCommand": "python setup.py develop",
 	"runArgs": [
-		"-e", "GIT_EDTIOR='code --wait'"
+		"-e",
+		"GIT_EDTIOR='code --wait'"
 	],
 	"extensions": [
-		"ms-python.python"
+		"ms-python.python",
+		"github.vscode-pull-request-github",
+		"tabnine.tabnine-vscode"
 	],
 	"settings": {
+		"files.eol": "\n",
+		"editor.tabSize": 4,
 		"python.pythonPath": "/usr/local/bin/python",
 		"python.linting.pylintEnabled": true,
 		"python.linting.enabled": true,
