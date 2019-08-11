@@ -18,6 +18,8 @@ from aiogithubapi import (
     AIOGitHub,
     AIOGithubRepositoryContent,
     AIOGithubRepositoryRelease,
+    AIOGithubIssueComment,
+    AIOGithubIssue,
     AIOGitHubException,
     AIOGitHubRatelimit,
 )
@@ -55,6 +57,10 @@ class AIOGithubRepository(AIOGitHub):
     @property
     def topics(self):
         return self.attributes.get("topics")
+
+    @property
+    def fork(self):
+        return self.attributes.get("fork")
 
     @property
     def default_branch(self):
@@ -160,3 +166,127 @@ class AIOGithubRepository(AIOGitHub):
                 raise AIOGitHubException("No commits")
 
         self._last_commit = response["sha"][0:7]
+
+    @backoff.on_exception(
+        backoff.expo, (ClientError, CancelledError, TimeoutError, KeyError), max_tries=5
+    )
+    async def get_issue(self, issue: int):
+        """Updates an issue comment."""
+        endpoint = f"/repos/{self.full_name}/issues/{issue}"
+        url = BASE_URL + endpoint
+
+        await self.get_ratelimit()
+        if self.ratelimits.remaining is not None and self.ratelimits.remaining == 0:
+            raise AIOGitHubRatelimit("GitHub Ratelimit error")
+
+        async with async_timeout.timeout(20, loop=get_event_loop()):
+            response = await self.session.get(url, headers=self.headers)
+            if response.status not in GOOD_HTTP_CODES:
+                raise AIOGitHubException(f"GitHub returned {response.status} for {url}")
+
+            response = await response.json()
+            return AIOGithubIssue(response)
+
+    @backoff.on_exception(
+        backoff.expo, (ClientError, CancelledError, TimeoutError, KeyError), max_tries=5
+    )
+    async def list_issue_comments(self, issue: int):
+        """Updates an issue comment."""
+        endpoint = f"/repos/{self.full_name}/issues/{issue}/comments"
+        url = BASE_URL + endpoint
+
+        await self.get_ratelimit()
+        if self.ratelimits.remaining is not None and self.ratelimits.remaining == 0:
+            raise AIOGitHubRatelimit("GitHub Ratelimit error")
+
+        async with async_timeout.timeout(20, loop=get_event_loop()):
+            response = await self.session.get(url, headers=self.headers)
+            if response.status not in GOOD_HTTP_CODES:
+                raise AIOGitHubException(f"GitHub returned {response.status} for {url}")
+
+            comments = []
+            response = await response.json()
+            for comment in response:
+                comments.append(AIOGithubIssueComment(comment))
+            return comments
+
+    @backoff.on_exception(
+        backoff.expo, (ClientError, CancelledError, TimeoutError, KeyError), max_tries=5
+    )
+    async def comment_on_issue(self, issue: int, body: str):
+        """Adds a comment to an issue."""
+        endpoint = f"/repos/{self.full_name}/issues/{issue}/comments"
+        url = BASE_URL + endpoint
+
+        await self.get_ratelimit()
+        if self.ratelimits.remaining is not None and self.ratelimits.remaining == 0:
+            raise AIOGitHubRatelimit("GitHub Ratelimit error")
+
+        async with async_timeout.timeout(20, loop=get_event_loop()):
+            response = await self.session.post(
+                url, headers=self.headers, json={"body": body}
+            )
+            if response.status not in GOOD_HTTP_CODES:
+                raise AIOGitHubException(f"GitHub returned {response.status} for {url}")
+
+    @backoff.on_exception(
+        backoff.expo, (ClientError, CancelledError, TimeoutError, KeyError), max_tries=5
+    )
+    async def update_comment_on_issue(self, comment: int, body: str):
+        """Updates an issue comment."""
+        endpoint = f"/repos/{self.full_name}/issues/comments/{comment}"
+        url = BASE_URL + endpoint
+
+        await self.get_ratelimit()
+        if self.ratelimits.remaining is not None and self.ratelimits.remaining == 0:
+            raise AIOGitHubRatelimit("GitHub Ratelimit error")
+
+        async with async_timeout.timeout(20, loop=get_event_loop()):
+            response = await self.session.patch(
+                url, headers=self.headers, json={"body": body}
+            )
+            if response.status not in GOOD_HTTP_CODES:
+                raise AIOGitHubException(f"GitHub returned {response.status} for {url}")
+
+    @backoff.on_exception(
+        backoff.expo, (ClientError, CancelledError, TimeoutError, KeyError), max_tries=5
+    )
+    async def update_issue(
+        self,
+        issue: int,
+        title=None,
+        body=None,
+        state=None,
+        milestone=None,
+        labels=None,
+        assignees=None,
+    ):
+        """Updates an issue comment."""
+        endpoint = f"/repos/{self.full_name}/issues/{issue}"
+        url = BASE_URL + endpoint
+
+        await self.get_ratelimit()
+        if self.ratelimits.remaining is not None and self.ratelimits.remaining == 0:
+            raise AIOGitHubRatelimit("GitHub Ratelimit error")
+
+        data = {}
+        if title is not None:
+            data["title"] = title
+        if body is not None:
+            data["body"] = body
+        if state is not None:
+            data["state"] = state
+        if milestone is not None:
+            data["milestone"] = milestone
+        if labels is not None:
+            data["labels"] = labels
+        if assignees is not None:
+            data["assignees"] = assignees
+
+        print(data)
+
+        async with async_timeout.timeout(20, loop=get_event_loop()):
+            response = await self.session.patch(url, headers=self.headers, json=data)
+            if response.status not in GOOD_HTTP_CODES:
+                raise AIOGitHubException(f"GitHub returned {response.status} for {url}")
+
