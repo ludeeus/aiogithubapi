@@ -122,7 +122,7 @@ class AIOGithubRepository(AIOGitHub):
         if self.ratelimits.remaining is not None and self.ratelimits.remaining == 0:
             raise AIOGitHubRatelimit("GitHub Ratelimit error")
 
-        headers = self.headers
+        headers = {}
         headers["Accept"] = "application/vnd.github.v3.html"
 
         async with async_timeout.timeout(20, loop=get_event_loop()):
