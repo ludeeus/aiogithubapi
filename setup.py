@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="aiogithubapi",
-    version="0.3.0",
+    version="0.4.0",
     author="Joakim Sorensen (@ludeeus)",
     author_email="hi@ludeeus.dev",
     description="Python async client for the GitHub API.",

@@ -109,6 +109,30 @@ class AIOGithubRepository(AIOGitHub):
 
         return contents
 
+    async def get_rendered_contents(self, path, ref=None):
+        """Retrun a redered representation of a file."""
+        endpoint = "/repos/" + self.full_name + "/contents/" + path
+        url = BASE_URL + endpoint
+
+        params = {"path": path}
+        if ref is not None:
+            params["ref"] = ref.replace("tags/", "")
+
+        await self.get_ratelimit()
+        if self.ratelimits.remaining is not None and self.ratelimits.remaining == 0:
+            raise AIOGitHubRatelimit("GitHub Ratelimit error")
+
+        headers = self.headers
+        headers["Accept"] = "application/vnd.github.v3.html"
+
+        async with async_timeout.timeout(20, loop=get_event_loop()):
+            response = await self.session.get(url, headers=headers, params=params)
+            if response.status not in GOOD_HTTP_CODES:
+                raise AIOGitHubException(f"GitHub returned {response.status} for {url}")
+            response = await response.text()
+
+        return response
+
     @backoff.on_exception(
         backoff.expo, (ClientError, CancelledError, TimeoutError, KeyError), max_tries=5
     )
