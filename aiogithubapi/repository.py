@@ -123,6 +123,8 @@ class AIOGithubRepository(AIOGitHub):
             raise AIOGitHubRatelimit("GitHub Ratelimit error")
 
         headers = {}
+        for header in self.headers:
+            headers[header] = self.headers[header]
         headers["Accept"] = "application/vnd.github.v3.html"
 
         async with async_timeout.timeout(20, loop=get_event_loop()):
