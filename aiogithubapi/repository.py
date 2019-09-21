@@ -138,7 +138,7 @@ class AIOGithubRepository(AIOGitHub):
     @backoff.on_exception(
         backoff.expo, (ClientError, CancelledError, TimeoutError, KeyError), max_tries=5
     )
-    async def get_releases(self, prerelease=False):
+    async def get_releases(self, prerelease=False, returnlimit=5):
         """Retrun a list of repository release objects."""
         endpoint = "/repos/{}/releases".format(self.full_name)
         url = BASE_URL + endpoint
@@ -160,7 +160,7 @@ class AIOGithubRepository(AIOGitHub):
             contents = []
 
             for content in response:
-                if len(contents) == 5:
+                if len(contents) == returnlimit:
                     break
                 if not prerelease:
                     if content.get("prerelease", False):
