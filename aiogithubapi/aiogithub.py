@@ -148,10 +148,14 @@ class AIOGitHub(object):
                 raise AIOGitHubException(f"GitHub returned {response.status} for {url}")
 
             # Convert response to json
-            response = await response.json()
+            response_json = await response.json()
 
             # Ready AIOGithubRateLimits object
-            ratelimit = AIOGithubRateLimits(response)
+            ratelimit = AIOGithubRateLimits(response_json)
             self.ratelimits = ratelimit
+
+            # Workaround for ratelimit issues
+            self.ratelimits.core.remaining = response.headers["X-RateLimit-Remaining"]
+            self.ratelimits.core.reset = int(response.headers["X-RateLimit-Reset"])
 
         return self.ratelimits

@@ -42,15 +42,15 @@ class AIOGithubRateLimits:
 
     @property
     def limit(self):
-        return self.attributes.get("rate", {}).get("limit")
+        return self.core.limit
 
     @property
     def remaining(self):
-        return self.attributes.get("rate", {}).get("remaining")
+        return self.core.remaining
 
     @property
     def reset(self):
-        return self.attributes.get("rate", {}).get("reset")
+        return self.core.reset
 
     @property
     def reset_utc(self):
