@@ -41,3 +41,47 @@ class AIOGithubRepositoryContent:
         return self.attributes.get("download_url") or self.attributes.get(
             "browser_download_url"
         )
+
+
+class AIOGithubTreeContent:
+    """Repository Conetent Github API implementation."""
+
+    def __init__(self, attributes, repository, ref):
+        """Initialize."""
+        self.attributes = attributes
+        self.repository = repository
+        self.ref = ref
+
+    @property
+    def full_path(self):
+        return self.attributes.get("path")
+
+    @property
+    def is_directory(self):
+        if self.attributes.get("type") == "tree":
+            return True
+        return False
+
+    @property
+    def path(self):
+        path = ""
+        if "/" in self.attributes.get("path"):
+            path = self.attributes.get("path").split(
+                f"/{self.attributes.get('path').split('/')[-1]}"
+            )[0]
+        return path
+
+    @property
+    def filename(self):
+        filename = self.attributes.get("path")
+        if "/" in self.attributes.get("path"):
+            filename = self.attributes.get("path").split("/")[-1]
+        return filename
+
+    @property
+    def url(self):
+        return self.attributes.get("url")
+
+    @property
+    def download_url(self):
+        return f"https://raw.githubusercontent.com/{self.repository}/{self.ref}/{self.attributes.get('path')}"

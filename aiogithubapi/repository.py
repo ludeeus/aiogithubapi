@@ -17,6 +17,7 @@ from aiogithubapi import (
     GOOD_HTTP_CODES,
     AIOGitHub,
     AIOGithubRepositoryContent,
+    AIOGithubTreeContent,
     AIOGithubRepositoryRelease,
     AIOGithubIssueComment,
     AIOGithubIssue,
@@ -106,6 +107,31 @@ class AIOGithubRepository(AIOGitHub):
 
             for content in response:
                 contents.append(AIOGithubRepositoryContent(content))
+
+        return contents
+
+    async def get_tree(self, ref=None):
+        """Retrun a list of repository tree objects."""
+        if ref is None:
+            raise AIOGitHubException("Missing ref")
+        url = f"{BASE_URL}/repos/{self.full_name}/git/trees/{ref}"
+
+        await self.get_ratelimit()
+        if self.ratelimits.remaining is not None and self.ratelimits.remaining == 0:
+            raise AIOGitHubRatelimit("GitHub Ratelimit error")
+
+        async with async_timeout.timeout(20, loop=get_event_loop()):
+            response = await self.session.get(
+                url, headers=self.headers, params={"recursive": "1"}
+            )
+            if response.status not in GOOD_HTTP_CODES:
+                raise AIOGitHubException(f"GitHub returned {response.status} for {url}")
+            response = await response.json()
+            response = response.get("tree", [])
+
+            contents = []
+            for content in response:
+                contents.append(AIOGithubTreeContent(content, self.full_name, ref))
 
         return contents
 

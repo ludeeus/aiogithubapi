@@ -7,6 +7,7 @@ from aiogithubapi.exceptions import (
 )
 from aiogithubapi.aiogithub import AIOGitHub
 from aiogithubapi.content import AIOGithubRepositoryContent
+from aiogithubapi.content import AIOGithubTreeContent
 from aiogithubapi.release import AIOGithubRepositoryRelease
 from aiogithubapi.issue import AIOGithubIssue
 from aiogithubapi.issuecomment import AIOGithubIssueComment
