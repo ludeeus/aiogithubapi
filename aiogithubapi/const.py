@@ -5,3 +5,5 @@ BASE_HEADERS = {
     "User-Agent": "python/AIOGitHub",
 }
 GOOD_HTTP_CODES = [200, 201, 202, 203]
+
+RATELIMIT_HTTP_CODE = 403
