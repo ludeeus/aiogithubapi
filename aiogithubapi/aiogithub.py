@@ -28,7 +28,7 @@ class AIOGitHub:
 
         response = await self.client.get(endpoint=_endpoint, headers=_headers)
 
-        return AIOGithubRepository(response, self.token, self.session)
+        return AIOGithubRepository(self.client, response)
 
     async def get_org_repos(self, org: str, page=1):
         """Retrun a list of AIOGithubRepository objects."""
@@ -42,9 +42,7 @@ class AIOGitHub:
             endpoint=_enpoint, params=_params, headers=_headers
         )
 
-        return [
-            AIOGithubRepository(x, self.token, self.session) for x in response or []
-        ]
+        return [AIOGithubRepository(self.client, x) for x in response or []]
 
     async def render_markdown(self, content: str):
         """Retrun AIOGithubRepository object."""

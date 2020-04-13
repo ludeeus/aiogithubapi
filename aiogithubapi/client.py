@@ -38,15 +38,25 @@ class AioGitHubAPIClient:
         return await self.call_api("GET", endpoint, returnjson, headers, params)
 
     async def post(
-        self, endpoint, returnjson=False, headers=None, params=None, data=None
+        self,
+        endpoint,
+        returnjson=False,
+        headers=None,
+        params=None,
+        data=None,
+        jsondata=False,
     ):
         """Execute a POST request."""
-        return await self.call_api("POST", endpoint, returnjson, headers, params, data)
+        return await self.call_api(
+            "POST", endpoint, returnjson, headers, params, data, jsondata
+        )
 
     @backoff.on_exception(
         backoff.expo, (ClientError, CancelledError, TimeoutError, KeyError), max_tries=5
     )
-    async def call_api(self, call, endpoint, returnjson, headers, params, data=None):
+    async def call_api(
+        self, call, endpoint, returnjson, headers, params, data, jsondata
+    ):
         """Execute the API call."""
         _url = f"{BASE_URL}{endpoint}"
         _headers = self.headers
@@ -64,9 +74,14 @@ class AioGitHubAPIClient:
                     _url, params=_params, headers=_headers
                 )
             else:
-                response = await self.session.post(
-                    _url, params=_params, headers=_headers, data=data
-                )
+                if jsondata:
+                    response = await self.session.post(
+                        _url, params=_params, headers=_headers, json=data
+                    )
+                else:
+                    response = await self.session.post(
+                        _url, params=_params, headers=_headers, data=data
+                    )
             _LOGGER.debug(response.headers)
             self.ratelimits.load_from_response_headers(response.headers)
 

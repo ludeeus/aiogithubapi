@@ -1,4 +1,4 @@
-# pylint: disable=missing-docstring, redefined-outer-name
+# pylint: disable=missing-docstring, redefined-outer-name, unused-import
 import json
 import aiohttp
 import pytest
@@ -26,6 +26,22 @@ async def test_get(aresponses, event_loop, base_response):
 
 
 @pytest.mark.asyncio
+async def test_post(aresponses, event_loop, base_response):
+    aresponses.add(
+        "api.github.com",
+        "/",
+        "post",
+        aresponses.Response(
+            text=json.dumps(base_response), status=200, headers=NOT_RATELIMITED,
+        ),
+    )
+    async with aiohttp.ClientSession(loop=event_loop) as session:
+        github = AIOGitHub(TOKEN, session)
+        await github.client.post("/")
+        assert github.client.ratelimits.remaining == "1337"
+
+
+@pytest.mark.asyncio
 async def test_get_ratelimited(aresponses, event_loop, base_response):
     aresponses.add(
         "api.github.com",
@@ -40,22 +56,6 @@ async def test_get_ratelimited(aresponses, event_loop, base_response):
         with pytest.raises(AIOGitHubException):
             await github.client.get("/")
             assert github.client.ratelimits.remaining == "0"
-
-
-@pytest.mark.asyncio
-async def test_post(aresponses, event_loop, base_response):
-    aresponses.add(
-        "api.github.com",
-        "/",
-        "post",
-        aresponses.Response(
-            text=json.dumps(base_response), status=200, headers=NOT_RATELIMITED,
-        ),
-    )
-    async with aiohttp.ClientSession(loop=event_loop) as session:
-        github = AIOGitHub(TOKEN, session)
-        await github.client.post("/")
-        assert github.client.ratelimits.remaining == "1337"
 
 
 @pytest.mark.asyncio
