@@ -55,7 +55,7 @@ class AioGitHubAPIClient:
         backoff.expo, (ClientError, CancelledError, TimeoutError, KeyError), max_tries=5
     )
     async def call_api(
-        self, call, endpoint, returnjson, headers, params, data, jsondata
+        self, call, endpoint, returnjson, headers, params, data=None, jsondata=False
     ):
         """Execute the API call."""
         _url = f"{BASE_URL}{endpoint}"
