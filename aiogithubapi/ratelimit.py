@@ -6,6 +6,7 @@ https://developer.github.com/v3/rate_limit/
 # pylint: disable=missing-docstring
 from datetime import datetime
 
+
 class RateLimitResources:
     """Ratelimit resources."""
 
@@ -22,14 +23,17 @@ class RateLimitResources:
             return None
         return datetime.utcfromtimestamp(self.reset)
 
-    def load_from_resp(self, hdrs):
-        self.limit = hdrs['X-RateLimit-Limit']
-        self.remaining = hdrs['X-RateLimit-Remaining']
-        self.reset = int(hdrs['X-RateLimit-Reset'])
-    def load_from_json(self, data):
-        self.limit = data.get("limit")
-        self.remaining = data.get("remaining")
-        self.reset = data.get("reset")
+    def load_from_response_headers(self, headers):
+        """Load from response headers."""
+        self.limit = headers.get("X-RateLimit-Limit", 0)
+        self.remaining = headers.get("X-RateLimit-Remaining", 0)
+        self.reset = int(headers.get("X-RateLimit-Reset", 0))
+
+    def load_from_response_json(self, data):
+        """Load from response headers."""
+        self.limit = data.get("limit", 0)
+        self.remaining = data.get("remaining", 0)
+        self.reset = data.get("reset", 0)
 
 
 class AIOGithubRateLimits:
@@ -41,16 +45,18 @@ class AIOGithubRateLimits:
         resources = attributes.get("resources", {})
 
         self.core = RateLimitResources()
-        self.core.load_from_json(resources.get("core"))
+        self.core.load_from_response_json(resources.get("core"))
 
         self.search = RateLimitResources()
-        self.search.load_from_json(resources.get("search"))
+        self.search.load_from_response_json(resources.get("search"))
 
         self.graphql = RateLimitResources()
-        self.graphql.load_from_json(resources.get("graphql"))
+        self.graphql.load_from_response_json(resources.get("graphql"))
 
         self.integration_manifest = RateLimitResources()
-        self.integration_manifest.load_from_json(resources.get("integration_manifest"))
+        self.integration_manifest.load_from_response_json(
+            resources.get("integration_manifest")
+        )
 
     @property
     def limit(self):
@@ -67,3 +73,7 @@ class AIOGithubRateLimits:
     @property
     def reset_utc(self):
         return self.core.reset_utc
+
+    @property
+    def is_ratelimited(self):
+        return self.core.remaining == 0

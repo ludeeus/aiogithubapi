@@ -21,16 +21,18 @@ from aiogithubapi import (
     AIOGitHubException,
     AIOGitHubRatelimit,
 )
+from aiogithubapi.client import AioGitHubAPIClient
 from aiogithubapi.ratelimit import RateLimitResources, AIOGithubRateLimits
 
 _LOGGER = logging.getLogger("AioGitHub")
 
 
-class AIOGitHub(object):
+class AIOGitHub:
     """Base Github API implementation."""
 
     def __init__(self, token, session):
         """Must be called before anything else."""
+        self.client = AioGitHubAPIClient(session, token)
         self.token = token
         self.session = session
         # Only track the "core" ratelimits here, use `get_ratelimit` for full info
@@ -55,7 +57,7 @@ class AIOGitHub(object):
             self.ratelimits.load_from_resp(response.headers)
 
             if response.status is RATELIMIT_HTTP_CODE:
-                raise AIOGitHubRatelimit('GitHub Ratelimit error')
+                raise AIOGitHubRatelimit("GitHub Ratelimit error")
 
             if response.status not in GOOD_HTTP_CODES:
                 raise AIOGitHubException(f"GitHub returned {response.status} for {url}")
@@ -86,7 +88,7 @@ class AIOGitHub(object):
             self.ratelimits.load_from_resp(response.headers)
 
             if response.status is RATELIMIT_HTTP_CODE:
-                raise AIOGitHubRatelimit('GitHub Ratelimit error')
+                raise AIOGitHubRatelimit("GitHub Ratelimit error")
             if response.status not in GOOD_HTTP_CODES:
                 raise AIOGitHubException(f"GitHub returned {response.status} for {url}")
 
@@ -121,7 +123,7 @@ class AIOGitHub(object):
             self.ratelimits.load_from_resp(response.headers)
 
             if response.status is RATELIMIT_HTTP_CODE:
-                raise AIOGitHubRatelimit('GitHub Ratelimit error')
+                raise AIOGitHubRatelimit("GitHub Ratelimit error")
             if response.status not in GOOD_HTTP_CODES:
                 raise AIOGitHubException(f"GitHub returned {response.status} for {url}")
             response = await response.text()
@@ -135,25 +137,6 @@ class AIOGitHub(object):
 
         return response
 
-    @backoff.on_exception(
-        backoff.expo, (ClientError, CancelledError, TimeoutError, KeyError), max_tries=5
-    )
     async def get_ratelimit(self):
-        """Retrun a list of AIOGithubRepository objects."""
-        url = f"{BASE_URL}/rate_limit"
-        headers = self.headers
-
-        async with async_timeout.timeout(5, loop=get_event_loop()):
-            response = await self.session.get(url, headers=headers)
-
-            # Handle bad status codes
-            if response.status not in GOOD_HTTP_CODES:
-                raise AIOGitHubException(f"GitHub returned {response.status} for {url}")
-
-            # Convert response to json
-            response_json = await response.json()
-
-            # Ready AIOGithubRateLimits object
-            ratelimit = AIOGithubRateLimits(response_json)
-
-        return ratelimit
+        """Retrun current ratelimits."""
+        return await self.client.get("/rate_limit")
