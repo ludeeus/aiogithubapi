@@ -89,7 +89,7 @@ class AIOGithubRepository(AIOGitHub):
             self.ratelimits.load_from_resp(response.headers)
 
             if response.status is RATELIMIT_HTTP_CODE:
-                raise AIOGitHubRatelimit('GitHub Ratelimit error')
+                raise AIOGitHubRatelimit("GitHub Ratelimit error")
             if response.status not in GOOD_HTTP_CODES:
                 raise AIOGitHubException(f"GitHub returned {response.status} for {url}")
             response = await response.json()
@@ -124,7 +124,7 @@ class AIOGithubRepository(AIOGitHub):
             self.ratelimits.load_from_resp(response.headers)
 
             if response.status is RATELIMIT_HTTP_CODE:
-                raise AIOGitHubRatelimit('GitHub Ratelimit error')
+                raise AIOGitHubRatelimit("GitHub Ratelimit error")
             if response.status not in GOOD_HTTP_CODES:
                 raise AIOGitHubException(f"GitHub returned {response.status} for {url}")
             response = await response.json()
@@ -155,7 +155,7 @@ class AIOGithubRepository(AIOGitHub):
             self.ratelimits.load_from_resp(response.headers)
 
             if response.status is RATELIMIT_HTTP_CODE:
-                raise AIOGitHubRatelimit('GitHub Ratelimit error')
+                raise AIOGitHubRatelimit("GitHub Ratelimit error")
             if response.status not in GOOD_HTTP_CODES:
                 raise AIOGitHubException(f"GitHub returned {response.status} for {url}")
             response = await response.text()
@@ -175,7 +175,7 @@ class AIOGithubRepository(AIOGitHub):
             self.ratelimits.load_from_resp(response.headers)
 
             if response.status is RATELIMIT_HTTP_CODE:
-                raise AIOGitHubRatelimit('GitHub Ratelimit error')
+                raise AIOGitHubRatelimit("GitHub Ratelimit error")
             if response.status not in GOOD_HTTP_CODES:
                 raise AIOGitHubException(f"GitHub returned {response.status} for {url}")
             response = await response.json()
@@ -209,7 +209,7 @@ class AIOGithubRepository(AIOGitHub):
             self.ratelimits.load_from_resp(response.headers)
 
             if response.status is RATELIMIT_HTTP_CODE:
-                raise AIOGitHubRatelimit('GitHub Ratelimit error')
+                raise AIOGitHubRatelimit("GitHub Ratelimit error")
             if response.status not in GOOD_HTTP_CODES:
                 raise AIOGitHubException(f"GitHub returned {response.status} for {url}")
 
@@ -233,7 +233,7 @@ class AIOGithubRepository(AIOGitHub):
             self.ratelimits.load_from_resp(response.headers)
 
             if response.status is RATELIMIT_HTTP_CODE:
-                raise AIOGitHubRatelimit('GitHub Ratelimit error')
+                raise AIOGitHubRatelimit("GitHub Ratelimit error")
             if response.status not in GOOD_HTTP_CODES:
                 raise AIOGitHubException(f"GitHub returned {response.status} for {url}")
 
@@ -253,7 +253,7 @@ class AIOGithubRepository(AIOGitHub):
             self.ratelimits.load_from_resp(response.headers)
 
             if response.status is RATELIMIT_HTTP_CODE:
-                raise AIOGitHubRatelimit('GitHub Ratelimit error')
+                raise AIOGitHubRatelimit("GitHub Ratelimit error")
             if response.status not in GOOD_HTTP_CODES:
                 raise AIOGitHubException(f"GitHub returned {response.status} for {url}")
 
@@ -278,7 +278,7 @@ class AIOGithubRepository(AIOGitHub):
             self.ratelimits.load_from_resp(response.headers)
 
             if response.status is RATELIMIT_HTTP_CODE:
-                raise AIOGitHubRatelimit('GitHub Ratelimit error')
+                raise AIOGitHubRatelimit("GitHub Ratelimit error")
             if response.status not in GOOD_HTTP_CODES:
                 raise AIOGitHubException(f"GitHub returned {response.status} for {url}")
 
@@ -297,7 +297,7 @@ class AIOGithubRepository(AIOGitHub):
             self.ratelimits.load_from_resp(response.headers)
 
             if response.status is RATELIMIT_HTTP_CODE:
-                raise AIOGitHubRatelimit('GitHub Ratelimit error')
+                raise AIOGitHubRatelimit("GitHub Ratelimit error")
             if response.status not in GOOD_HTTP_CODES:
                 raise AIOGitHubException(f"GitHub returned {response.status} for {url}")
 
@@ -339,7 +339,6 @@ class AIOGithubRepository(AIOGitHub):
             self.ratelimits.load_from_resp(response.headers)
 
             if response.status is RATELIMIT_HTTP_CODE:
-                raise AIOGitHubRatelimit('GitHub Ratelimit error')
+                raise AIOGitHubRatelimit("GitHub Ratelimit error")
             if response.status not in GOOD_HTTP_CODES:
                 raise AIOGitHubException(f"GitHub returned {response.status} for {url}")
-

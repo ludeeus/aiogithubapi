@@ -1,0 +1,43 @@
+name: Test pakcage
+
+on:
+  pull_request:
+    branches:
+      - master
+  push:
+    branches:
+      - master
+
+jobs:
+  ha_test:
+    name: Test Package
+    strategy:
+      matrix:
+        python-version: [3.7, 3.8]
+    runs-on: ubuntu-latest
+    steps:
+    - name: "Get the repository content"
+      uses: actions/checkout@v1
+
+    - name: Enable version ${{ matrix.python-version }} of Python
+      uses: actions/setup-python@v1
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - uses: actions/cache@v1
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+
+    - name: Install dependencies
+      run: |
+        python3 -m pip install --upgrade pip setuptools wheel black
+        python3 -m pip install -r requirements.txt
+
+    - name: Run Black
+      run: black .
+
+    - name: Run pytest
+      run: python3 -m pytest

@@ -1,5 +1,10 @@
 """Async Github API implementation."""
-from aiogithubapi.const import BASE_HEADERS, BASE_URL, GOOD_HTTP_CODES, RATELIMIT_HTTP_CODE
+from aiogithubapi.const import (
+    BASE_HEADERS,
+    BASE_URL,
+    GOOD_HTTP_CODES,
+    RATELIMIT_HTTP_CODE,
+)
 from aiogithubapi.exceptions import (
     AIOGitHubAuthentication,
     AIOGitHubException,
