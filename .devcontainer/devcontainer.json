@@ -1,12 +1,11 @@
-// See https://aka.ms/vscode-remote/devcontainer.json for format details.
 {
 	"name": "aiogithubapi",
 	"context": "..",
-	"dockerFile": "Dockerfile",
-	"postCreateCommand": "python setup.py develop",
+	"image": "ludeeus/container:python",
+	"postCreateCommand": "python3 -m pip install -r requirements.txt && python3 setup.py develop",
 	"runArgs": [
-		"-e",
-		"GIT_EDTIOR='code --wait'"
+		"-v",
+		"${env:HOME}${env:USERPROFILE}/.ssh:/tmp/.ssh"
 	],
 	"extensions": [
 		"ms-python.python",
@@ -16,7 +15,8 @@
 	"settings": {
 		"files.eol": "\n",
 		"editor.tabSize": 4,
-		"python.pythonPath": "/usr/local/bin/python",
+		"terminal.integrated.shell.linux": "/bin/bash",
+		"python.pythonPath": "/usr/bin/python3",
 		"python.linting.pylintEnabled": true,
 		"python.linting.enabled": true,
 		"python.formatting.provider": "black",
