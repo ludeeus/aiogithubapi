@@ -15,6 +15,7 @@ import backoff
 from aiogithubapi import (
     BASE_URL,
     GOOD_HTTP_CODES,
+    RATELIMIT_HTTP_CODE,
     AIOGitHub,
     AIOGithubRepositoryContent,
     AIOGithubTreeContent,
@@ -83,12 +84,12 @@ class AIOGithubRepository(AIOGitHub):
         if ref is not None:
             params["ref"] = ref.replace("tags/", "")
 
-        await self.get_ratelimit()
-        if self.ratelimits.remaining is not None and self.ratelimits.remaining == 0:
-            raise AIOGitHubRatelimit("GitHub Ratelimit error")
-
         async with async_timeout.timeout(20, loop=get_event_loop()):
             response = await self.session.get(url, headers=self.headers, params=params)
+            self.ratelimits.load_from_resp(response.headers)
+
+            if response.status is RATELIMIT_HTTP_CODE:
+                raise AIOGitHubRatelimit('GitHub Ratelimit error')
             if response.status not in GOOD_HTTP_CODES:
                 raise AIOGitHubException(f"GitHub returned {response.status} for {url}")
             response = await response.json()
@@ -116,14 +117,14 @@ class AIOGithubRepository(AIOGitHub):
             raise AIOGitHubException("Missing ref")
         url = f"{BASE_URL}/repos/{self.full_name}/git/trees/{ref}"
 
-        await self.get_ratelimit()
-        if self.ratelimits.remaining is not None and self.ratelimits.remaining == 0:
-            raise AIOGitHubRatelimit("GitHub Ratelimit error")
-
         async with async_timeout.timeout(20, loop=get_event_loop()):
             response = await self.session.get(
                 url, headers=self.headers, params={"recursive": "1"}
             )
+            self.ratelimits.load_from_resp(response.headers)
+
+            if response.status is RATELIMIT_HTTP_CODE:
+                raise AIOGitHubRatelimit('GitHub Ratelimit error')
             if response.status not in GOOD_HTTP_CODES:
                 raise AIOGitHubException(f"GitHub returned {response.status} for {url}")
             response = await response.json()
@@ -144,10 +145,6 @@ class AIOGithubRepository(AIOGitHub):
         if ref is not None:
             params["ref"] = ref.replace("tags/", "")
 
-        await self.get_ratelimit()
-        if self.ratelimits.remaining is not None and self.ratelimits.remaining == 0:
-            raise AIOGitHubRatelimit("GitHub Ratelimit error")
-
         headers = {}
         for header in self.headers:
             headers[header] = self.headers[header]
@@ -155,6 +152,10 @@ class AIOGithubRepository(AIOGitHub):
 
         async with async_timeout.timeout(20, loop=get_event_loop()):
             response = await self.session.get(url, headers=headers, params=params)
+            self.ratelimits.load_from_resp(response.headers)
+
+            if response.status is RATELIMIT_HTTP_CODE:
+                raise AIOGitHubRatelimit('GitHub Ratelimit error')
             if response.status not in GOOD_HTTP_CODES:
                 raise AIOGitHubException(f"GitHub returned {response.status} for {url}")
             response = await response.text()
@@ -169,12 +170,12 @@ class AIOGithubRepository(AIOGitHub):
         endpoint = "/repos/{}/releases".format(self.full_name)
         url = BASE_URL + endpoint
 
-        await self.get_ratelimit()
-        if self.ratelimits.remaining is not None and self.ratelimits.remaining == 0:
-            raise AIOGitHubRatelimit("GitHub Ratelimit error")
-
         async with async_timeout.timeout(20, loop=get_event_loop()):
             response = await self.session.get(url, headers=self.headers)
+            self.ratelimits.load_from_resp(response.headers)
+
+            if response.status is RATELIMIT_HTTP_CODE:
+                raise AIOGitHubRatelimit('GitHub Ratelimit error')
             if response.status not in GOOD_HTTP_CODES:
                 raise AIOGitHubException(f"GitHub returned {response.status} for {url}")
             response = await response.json()
@@ -203,12 +204,12 @@ class AIOGithubRepository(AIOGitHub):
         endpoint = "/repos/" + self.full_name + "/commits/" + self.default_branch
         url = BASE_URL + endpoint
 
-        await self.get_ratelimit()
-        if self.ratelimits.remaining is not None and self.ratelimits.remaining == 0:
-            raise AIOGitHubRatelimit("GitHub Ratelimit error")
-
         async with async_timeout.timeout(20, loop=get_event_loop()):
             response = await self.session.get(url, headers=self.headers)
+            self.ratelimits.load_from_resp(response.headers)
+
+            if response.status is RATELIMIT_HTTP_CODE:
+                raise AIOGitHubRatelimit('GitHub Ratelimit error')
             if response.status not in GOOD_HTTP_CODES:
                 raise AIOGitHubException(f"GitHub returned {response.status} for {url}")
 
@@ -227,12 +228,12 @@ class AIOGithubRepository(AIOGitHub):
         endpoint = f"/repos/{self.full_name}/issues/{issue}"
         url = BASE_URL + endpoint
 
-        await self.get_ratelimit()
-        if self.ratelimits.remaining is not None and self.ratelimits.remaining == 0:
-            raise AIOGitHubRatelimit("GitHub Ratelimit error")
-
         async with async_timeout.timeout(20, loop=get_event_loop()):
             response = await self.session.get(url, headers=self.headers)
+            self.ratelimits.load_from_resp(response.headers)
+
+            if response.status is RATELIMIT_HTTP_CODE:
+                raise AIOGitHubRatelimit('GitHub Ratelimit error')
             if response.status not in GOOD_HTTP_CODES:
                 raise AIOGitHubException(f"GitHub returned {response.status} for {url}")
 
@@ -247,12 +248,12 @@ class AIOGithubRepository(AIOGitHub):
         endpoint = f"/repos/{self.full_name}/issues/{issue}/comments"
         url = BASE_URL + endpoint
 
-        await self.get_ratelimit()
-        if self.ratelimits.remaining is not None and self.ratelimits.remaining == 0:
-            raise AIOGitHubRatelimit("GitHub Ratelimit error")
-
         async with async_timeout.timeout(20, loop=get_event_loop()):
             response = await self.session.get(url, headers=self.headers)
+            self.ratelimits.load_from_resp(response.headers)
+
+            if response.status is RATELIMIT_HTTP_CODE:
+                raise AIOGitHubRatelimit('GitHub Ratelimit error')
             if response.status not in GOOD_HTTP_CODES:
                 raise AIOGitHubException(f"GitHub returned {response.status} for {url}")
 
@@ -270,14 +271,14 @@ class AIOGithubRepository(AIOGitHub):
         endpoint = f"/repos/{self.full_name}/issues/{issue}/comments"
         url = BASE_URL + endpoint
 
-        await self.get_ratelimit()
-        if self.ratelimits.remaining is not None and self.ratelimits.remaining == 0:
-            raise AIOGitHubRatelimit("GitHub Ratelimit error")
-
         async with async_timeout.timeout(20, loop=get_event_loop()):
             response = await self.session.post(
                 url, headers=self.headers, json={"body": body}
             )
+            self.ratelimits.load_from_resp(response.headers)
+
+            if response.status is RATELIMIT_HTTP_CODE:
+                raise AIOGitHubRatelimit('GitHub Ratelimit error')
             if response.status not in GOOD_HTTP_CODES:
                 raise AIOGitHubException(f"GitHub returned {response.status} for {url}")
 
@@ -289,14 +290,14 @@ class AIOGithubRepository(AIOGitHub):
         endpoint = f"/repos/{self.full_name}/issues/comments/{comment}"
         url = BASE_URL + endpoint
 
-        await self.get_ratelimit()
-        if self.ratelimits.remaining is not None and self.ratelimits.remaining == 0:
-            raise AIOGitHubRatelimit("GitHub Ratelimit error")
-
         async with async_timeout.timeout(20, loop=get_event_loop()):
             response = await self.session.patch(
                 url, headers=self.headers, json={"body": body}
             )
+            self.ratelimits.load_from_resp(response.headers)
+
+            if response.status is RATELIMIT_HTTP_CODE:
+                raise AIOGitHubRatelimit('GitHub Ratelimit error')
             if response.status not in GOOD_HTTP_CODES:
                 raise AIOGitHubException(f"GitHub returned {response.status} for {url}")
 
@@ -317,10 +318,6 @@ class AIOGithubRepository(AIOGitHub):
         endpoint = f"/repos/{self.full_name}/issues/{issue}"
         url = BASE_URL + endpoint
 
-        await self.get_ratelimit()
-        if self.ratelimits.remaining is not None and self.ratelimits.remaining == 0:
-            raise AIOGitHubRatelimit("GitHub Ratelimit error")
-
         data = {}
         if title is not None:
             data["title"] = title
@@ -339,6 +336,10 @@ class AIOGithubRepository(AIOGitHub):
 
         async with async_timeout.timeout(20, loop=get_event_loop()):
             response = await self.session.patch(url, headers=self.headers, json=data)
+            self.ratelimits.load_from_resp(response.headers)
+
+            if response.status is RATELIMIT_HTTP_CODE:
+                raise AIOGitHubRatelimit('GitHub Ratelimit error')
             if response.status not in GOOD_HTTP_CODES:
                 raise AIOGitHubException(f"GitHub returned {response.status} for {url}")
 

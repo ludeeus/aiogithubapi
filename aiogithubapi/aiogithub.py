@@ -16,11 +16,12 @@ from aiogithubapi import (
     BASE_HEADERS,
     BASE_URL,
     GOOD_HTTP_CODES,
+    RATELIMIT_HTTP_CODE,
     AIOGitHubAuthentication,
     AIOGitHubException,
     AIOGitHubRatelimit,
 )
-from aiogithubapi.ratelimit import AIOGithubRateLimits
+from aiogithubapi.ratelimit import RateLimitResources, AIOGithubRateLimits
 
 _LOGGER = logging.getLogger("AioGitHub")
 
@@ -32,7 +33,8 @@ class AIOGitHub(object):
         """Must be called before anything else."""
         self.token = token
         self.session = session
-        self.ratelimits = AIOGithubRateLimits({})
+        # Only track the "core" ratelimits here, use `get_ratelimit` for full info
+        self.ratelimits = RateLimitResources()
         self.headers = BASE_HEADERS
         self.headers["Authorization"] = "token {}".format(token)
 
@@ -48,12 +50,13 @@ class AIOGitHub(object):
         headers = self.headers
         headers["Accept"] = "application/vnd.github.mercy-preview+json"
 
-        await self.get_ratelimit()
-        if self.ratelimits.remaining is not None and self.ratelimits.remaining == 0:
-            raise AIOGitHubRatelimit("GitHub Ratelimit error")
-
         async with async_timeout.timeout(20, loop=get_event_loop()):
             response = await self.session.get(url, headers=headers)
+            self.ratelimits.load_from_resp(response.headers)
+
+            if response.status is RATELIMIT_HTTP_CODE:
+                raise AIOGitHubRatelimit('GitHub Ratelimit error')
+
             if response.status not in GOOD_HTTP_CODES:
                 raise AIOGitHubException(f"GitHub returned {response.status} for {url}")
             response = await response.json()
@@ -78,12 +81,12 @@ class AIOGitHub(object):
         headers = self.headers
         headers["Accept"] = "application/vnd.github.mercy-preview+json"
 
-        await self.get_ratelimit()
-        if self.ratelimits.remaining is not None and self.ratelimits.remaining == 0:
-            raise AIOGitHubRatelimit("GitHub Ratelimit error")
-
         async with async_timeout.timeout(20, loop=get_event_loop()):
             response = await self.session.get(url, headers=headers, params=params)
+            self.ratelimits.load_from_resp(response.headers)
+
+            if response.status is RATELIMIT_HTTP_CODE:
+                raise AIOGitHubRatelimit('GitHub Ratelimit error')
             if response.status not in GOOD_HTTP_CODES:
                 raise AIOGitHubException(f"GitHub returned {response.status} for {url}")
 
@@ -113,12 +116,12 @@ class AIOGitHub(object):
         headers = self.headers
         headers["Content-Type"] = "text/plain"
 
-        await self.get_ratelimit()
-        if self.ratelimits.remaining is not None and self.ratelimits.remaining == 0:
-            raise AIOGitHubRatelimit("GitHub Ratelimit error")
-
         async with async_timeout.timeout(20, loop=get_event_loop()):
             response = await self.session.post(url, headers=headers, data=content)
+            self.ratelimits.load_from_resp(response.headers)
+
+            if response.status is RATELIMIT_HTTP_CODE:
+                raise AIOGitHubRatelimit('GitHub Ratelimit error')
             if response.status not in GOOD_HTTP_CODES:
                 raise AIOGitHubException(f"GitHub returned {response.status} for {url}")
             response = await response.text()
@@ -152,10 +155,5 @@ class AIOGitHub(object):
 
             # Ready AIOGithubRateLimits object
             ratelimit = AIOGithubRateLimits(response_json)
-            self.ratelimits = ratelimit
 
-            # Workaround for ratelimit issues
-            self.ratelimits.core.remaining = response.headers["X-RateLimit-Remaining"]
-            self.ratelimits.core.reset = int(response.headers["X-RateLimit-Reset"])
-
-        return self.ratelimits
+        return ratelimit
