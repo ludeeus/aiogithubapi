@@ -1,5 +1,5 @@
 """AioGitHub: AioGitHubClient"""
-# pylint: disable=redefined-builtin
+# pylint: disable=redefined-builtin, too-many-arguments
 import logging
 from asyncio import CancelledError, TimeoutError, get_event_loop
 
@@ -17,7 +17,7 @@ from aiogithubapi import (
     AIOGitHubException,
     AIOGitHubRatelimit,
 )
-from aiogithubapi.ratelimit import RateLimitResources, AIOGithubRateLimits
+from aiogithubapi.ratelimit import RateLimitResources
 
 _LOGGER = logging.getLogger("AioGitHub")
 
@@ -33,18 +33,41 @@ class AioGitHubAPIClient:
         self.headers = BASE_HEADERS
         self.headers["Authorization"] = "token {}".format(token)
 
+    async def get(self, endpoint, returnjson=True, headers=None, params=None):
+        """Execute a GET request."""
+        return await self.call_api("GET", endpoint, returnjson, headers, params)
+
+    async def post(
+        self, endpoint, returnjson=False, headers=None, params=None, data=None
+    ):
+        """Execute a POST request."""
+        return await self.call_api("POST", endpoint, returnjson, headers, params, data)
+
     @backoff.on_exception(
         backoff.expo, (ClientError, CancelledError, TimeoutError, KeyError), max_tries=5
     )
-    async def get(self, endpoint, returnjson=True, headers=None):
-        """Execute a GET request."""
+    async def call_api(self, call, endpoint, returnjson, headers, params, data=None):
+        """Execute the API call."""
         _url = f"{BASE_URL}{endpoint}"
         _headers = self.headers
+        _params = {}
+
         for header in headers or []:
             _headers[header] = headers[header]
 
+        for param in params or []:
+            _params[param] = params[param]
+
         async with async_timeout.timeout(20, loop=get_event_loop()):
-            response = await self.session.get(_url, headers=_headers)
+            if call == "GET":
+                response = await self.session.get(
+                    _url, params=_params, headers=_headers
+                )
+            else:
+                response = await self.session.post(
+                    _url, params=_params, headers=_headers, data=data
+                )
+            _LOGGER.debug(response.headers)
             self.ratelimits.load_from_response_headers(response.headers)
 
             if response.status is RATELIMIT_HTTP_CODE:
@@ -57,21 +80,14 @@ class AioGitHubAPIClient:
 
             if returnjson:
                 response = await response.json()
+            else:
+                response = await response.text()
+
+            if isinstance(response, dict):
                 if response.get("message"):
                     if response["message"] == "Bad credentials":
                         raise AIOGitHubAuthentication("Access token is not valid!")
                     raise AIOGitHubException(response["message"])
-            else:
-                response = await response.text()
-                if isinstance(response, dict):
-                    if response.get("message"):
-                        if response["message"] == "Bad credentials":
-                            raise AIOGitHubAuthentication("Access token is not valid!")
-                        raise AIOGitHubException(response["message"])
-        return response
 
-    @backoff.on_exception(
-        backoff.expo, (ClientError, CancelledError, TimeoutError, KeyError), max_tries=5
-    )
-    async def post(self, endpoint, headers=None, data=None):
-        """Execute a POST request."""
+        _LOGGER.debug(response)
+        return response
