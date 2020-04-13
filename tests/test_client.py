@@ -73,3 +73,35 @@ async def test_post_ratelimited(aresponses, event_loop, base_response):
         with pytest.raises(AIOGitHubException):
             await github.client.post("/")
         assert github.client.ratelimits.remaining == "0"
+
+
+@pytest.mark.asyncio
+async def test_get_error(aresponses, event_loop, base_response):
+    aresponses.add(
+        "api.github.com",
+        "/",
+        "get",
+        aresponses.Response(
+            text=json.dumps(base_response), status=500, headers=NOT_RATELIMITED,
+        ),
+    )
+    async with aiohttp.ClientSession(loop=event_loop) as session:
+        github = AIOGitHub(TOKEN, session)
+        with pytest.raises(AIOGitHubException):
+            await github.client.get("/")
+
+
+@pytest.mark.asyncio
+async def test_post_error(aresponses, event_loop, base_response):
+    aresponses.add(
+        "api.github.com",
+        "/",
+        "post",
+        aresponses.Response(
+            text=json.dumps(base_response), status=500, headers=NOT_RATELIMITED,
+        ),
+    )
+    async with aiohttp.ClientSession(loop=event_loop) as session:
+        github = AIOGitHub(TOKEN, session)
+        with pytest.raises(AIOGitHubException):
+            await github.client.post("/")
