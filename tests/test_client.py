@@ -6,7 +6,7 @@ from aiogithubapi import AIOGitHub, AIOGitHubException
 
 from tests.commmon import TOKEN
 from tests.responses.headers import NOT_RATELIMITED, RATELIMITED
-from tests.responses.base import base_response
+from tests.responses.base import bad_response, base_response, bad_auth_response
 
 
 @pytest.mark.asyncio
@@ -42,13 +42,13 @@ async def test_post(aresponses, event_loop, base_response):
 
 
 @pytest.mark.asyncio
-async def test_get_ratelimited(aresponses, event_loop, base_response):
+async def test_get_ratelimited(aresponses, event_loop, bad_auth_response):
     aresponses.add(
         "api.github.com",
         "/",
         "get",
         aresponses.Response(
-            text=json.dumps(base_response), status=403, headers=RATELIMITED,
+            text=json.dumps(bad_auth_response), status=403, headers=RATELIMITED,
         ),
     )
     async with aiohttp.ClientSession(loop=event_loop) as session:
@@ -59,13 +59,13 @@ async def test_get_ratelimited(aresponses, event_loop, base_response):
 
 
 @pytest.mark.asyncio
-async def test_post_ratelimited(aresponses, event_loop, base_response):
+async def test_post_ratelimited(aresponses, event_loop, bad_auth_response):
     aresponses.add(
         "api.github.com",
         "/",
         "post",
         aresponses.Response(
-            text=json.dumps(base_response), status=403, headers=RATELIMITED,
+            text=json.dumps(bad_auth_response), status=403, headers=RATELIMITED,
         ),
     )
     async with aiohttp.ClientSession(loop=event_loop) as session:
@@ -76,13 +76,13 @@ async def test_post_ratelimited(aresponses, event_loop, base_response):
 
 
 @pytest.mark.asyncio
-async def test_get_error(aresponses, event_loop, base_response):
+async def test_get_error(aresponses, event_loop, bad_response):
     aresponses.add(
         "api.github.com",
         "/",
         "get",
         aresponses.Response(
-            text=json.dumps(base_response), status=500, headers=NOT_RATELIMITED,
+            text=json.dumps(bad_response), status=500, headers=NOT_RATELIMITED,
         ),
     )
     async with aiohttp.ClientSession(loop=event_loop) as session:
@@ -92,16 +92,48 @@ async def test_get_error(aresponses, event_loop, base_response):
 
 
 @pytest.mark.asyncio
-async def test_post_error(aresponses, event_loop, base_response):
+async def test_post_error(aresponses, event_loop, bad_response):
     aresponses.add(
         "api.github.com",
         "/",
         "post",
         aresponses.Response(
-            text=json.dumps(base_response), status=500, headers=NOT_RATELIMITED,
+            text=json.dumps(bad_response), status=500, headers=NOT_RATELIMITED,
         ),
     )
     async with aiohttp.ClientSession(loop=event_loop) as session:
         github = AIOGitHub(TOKEN, session)
         with pytest.raises(AIOGitHubException):
             await github.client.post("/")
+
+
+@pytest.mark.asyncio
+async def test_ok_get_auth_error(aresponses, event_loop, bad_auth_response):
+    aresponses.add(
+        "api.github.com",
+        "/",
+        "get",
+        aresponses.Response(
+            text=json.dumps(bad_auth_response), status=200, headers=NOT_RATELIMITED,
+        ),
+    )
+    async with aiohttp.ClientSession(loop=event_loop) as session:
+        github = AIOGitHub(TOKEN, session)
+        with pytest.raises(AIOGitHubException):
+            await github.client.get("/")
+
+
+@pytest.mark.asyncio
+async def test_ok_get_error(aresponses, event_loop, bad_response):
+    aresponses.add(
+        "api.github.com",
+        "/",
+        "get",
+        aresponses.Response(
+            text=json.dumps(bad_response), status=200, headers=NOT_RATELIMITED,
+        ),
+    )
+    async with aiohttp.ClientSession(loop=event_loop) as session:
+        github = AIOGitHub(TOKEN, session)
+        with pytest.raises(AIOGitHubException):
+            await github.client.get("/")

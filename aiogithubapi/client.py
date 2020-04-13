@@ -85,7 +85,7 @@ class AioGitHubAPIClient:
             _LOGGER.debug(response.headers)
             self.ratelimits.load_from_response_headers(response.headers)
 
-            if response.status is RATELIMIT_HTTP_CODE:
+            if response.status == RATELIMIT_HTTP_CODE:
                 raise AIOGitHubRatelimit("GitHub Ratelimit error")
 
             if response.status not in GOOD_HTTP_CODES:
