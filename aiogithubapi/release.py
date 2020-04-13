@@ -39,7 +39,6 @@ class AIOGithubRepositoryRelease:
 
     @property
     def assets(self):
-        assetlist = []
-        for item in self.attributes.get("assets"):
-            assetlist.append(AIOGithubRepositoryContent(item))
-        return assetlist
+        return [
+            AIOGithubRepositoryContent(x) for x in self.attributes.get("assets", [])
+        ]
