@@ -55,7 +55,7 @@ async def test_get_ratelimited(aresponses, event_loop, base_response):
         github = AIOGitHub(TOKEN, session)
         with pytest.raises(AIOGitHubException):
             await github.client.get("/")
-            assert github.client.ratelimits.remaining == "0"
+        assert github.client.ratelimits.remaining == "0"
 
 
 @pytest.mark.asyncio
@@ -72,4 +72,4 @@ async def test_post_ratelimited(aresponses, event_loop, base_response):
         github = AIOGitHub(TOKEN, session)
         with pytest.raises(AIOGitHubException):
             await github.client.post("/")
-            assert github.client.ratelimits.remaining == "0"
+        assert github.client.ratelimits.remaining == "0"
