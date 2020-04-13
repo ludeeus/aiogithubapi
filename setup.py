@@ -10,7 +10,7 @@ setuptools.setup(
     author="Joakim Sorensen (@ludeeus)",
     author_email="hi@ludeeus.dev",
     description="Python async client for the GitHub API.",
-    install_requires=["aiohttp", "async_timeout", "backoff"],
+    install_requires=["aiohttp>=3.6.1,<4.0", "async_timeout", "backoff"],
     long_description=LONG,
     long_description_content_type="text/markdown",
     url="https://github.com/ludeeus/aiogithubapi",
