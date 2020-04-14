@@ -1,4 +1,5 @@
 # AIOGitHubAPI
+[![codecov](https://codecov.io/gh/ludeeus/aiogithubapi/branch/master/graph/badge.svg)](https://codecov.io/gh/ludeeus/aiogithubapi)
 
 _Asynchronous Python client for the GitHub API_
 
