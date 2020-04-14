@@ -233,3 +233,32 @@ async def test_get_issue(aresponses, repository_response, issue_response):
         repository = await github.get_repo("octocat/Hello-World")
         issue = await repository.get_issue(1)
         assert issue.title == "Found a bug"
+
+
+@pytest.mark.asyncio
+async def test_create_issue(aresponses, repository_response):
+    aresponses.add(
+        "api.github.com",
+        "/repos/octocat/Hello-World",
+        "get",
+        aresponses.Response(
+            text=json.dumps(repository_response), status=200, headers=NOT_RATELIMITED,
+        ),
+    )
+    aresponses.add(
+        "api.github.com",
+        "/repos/octocat/Hello-World/issues",
+        "post",
+        aresponses.Response(status=200, headers=NOT_RATELIMITED,),
+    )
+    async with GitHub(TOKEN) as github:
+        repository = await github.get_repo("octocat/Hello-World")
+        data = {
+            "title": "test",
+            "body": "body",
+            "state": "closed",
+            "milestone": "v1.0",
+            "labels": ["test"],
+            "assignees": ["octocat"],
+        }
+        await repository.create_issue(**data)

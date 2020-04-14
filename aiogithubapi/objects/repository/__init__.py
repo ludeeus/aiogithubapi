@@ -141,3 +141,31 @@ class AIOGitHubAPIRepository(AIOGitHubAPIBase):
 
         response = await self.client.get(endpoint=_endpoint)
         return AIOGitHubAPIRepositoryIssue(self.client, response)
+
+    async def create_issue(
+        self,
+        title: str or None = None,
+        body: str or None = None,
+        state: str or None = None,
+        milestone: str or None = None,
+        labels: [str] or None = None,
+        assignees: [str] or None = None,
+    ):
+        """Updates an issue comment."""
+        _endpoint = f"/repos/{self.full_name}/issues"
+
+        data = {}
+        if title is not None:
+            data["title"] = title
+        if body is not None:
+            data["body"] = body
+        if state is not None:
+            data["state"] = state
+        if milestone is not None:
+            data["milestone"] = milestone
+        if labels is not None:
+            data["labels"] = labels
+        if assignees is not None:
+            data["assignees"] = assignees
+
+        await self.client.post(endpoint=_endpoint, data=data, jsondata=True)
