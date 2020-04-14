@@ -1,2 +1,6 @@
 *egg*
 __pycache__
+.coverage
+coverage.xml
+.vscode
+htmlcov

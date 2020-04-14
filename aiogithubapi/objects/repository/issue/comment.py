@@ -1,13 +1,14 @@
 """
-AioGitHub: Issue Comment
+AIOGitHubAPI: Issue Comment
 
 https://developer.github.com/v3/issues/comments/
 """
 # pylint: disable=missing-docstring
+from aiogithubapi.objects.base import AIOGitHubAPIBase
 
 
-class AIOGithubIssueCommentUser:
-    """Issue commment user Github API implementation."""
+class AIOGitHubAPIRepositoryIssueCommentUser(AIOGitHubAPIBase):
+    """Issue commment user GitHub API implementation."""
 
     def __init__(self, attributes):
         """Initialize."""
@@ -38,12 +39,14 @@ class AIOGithubIssueCommentUser:
         return self.attributes.get("site_admin")
 
 
-class AIOGithubIssueComment:
-    """Issue comment Github API implementation."""
+class AIOGitHubAPIRepositoryIssueComment(AIOGitHubAPIBase):
+    """Issue comment GitHub API implementation."""
 
-    def __init__(self, attributes):
+    def __init__(self, client: "AIOGitHubAPIClient", attributes: dict, repository: str):
         """Initialize."""
+        self.client = client
         self.attributes = attributes
+        self.repository = repository
 
     @property
     def html_url(self):
@@ -67,4 +70,10 @@ class AIOGithubIssueComment:
 
     @property
     def user(self):
-        return AIOGithubIssueCommentUser(self.attributes.get("user"))
+        return AIOGitHubAPIRepositoryIssueCommentUser(self.attributes.get("user"))
+
+    async def update(self, body: str) -> None:
+        """Updates an issue comment."""
+        _endpoint = f"/repos/{self.repository}/issues/comments/{self.id}"
+
+        await self.client.post(endpoint=_endpoint, data={"body": body}, jsondata=True)

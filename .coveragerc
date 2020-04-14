@@ -1,0 +1,12 @@
+[run]
+source = aiogithubapi
+
+omit =
+    # omit tests
+    tests/*
+
+    # omit examples
+    example.py
+
+    # omit setup
+    setup.py

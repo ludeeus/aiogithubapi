@@ -1,0 +1,20 @@
+"""Fixtures."""
+# pylint: disable=missing-docstring
+import pytest
+
+
+@pytest.fixture()
+def rate_limit_response():
+    return {
+        "resources": {
+            "core": {"limit": 5000, "remaining": 4999, "reset": 1372700873},
+            "search": {"limit": 30, "remaining": 18, "reset": 1372697452},
+            "graphql": {"limit": 5000, "remaining": 4993, "reset": 1372700389},
+            "integration_manifest": {
+                "limit": 5000,
+                "remaining": 4999,
+                "reset": 1551806725,
+            },
+        },
+        "rate": {"limit": 5000, "remaining": 4999, "reset": 1372700873},
+    }
