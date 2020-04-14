@@ -1,4 +1,4 @@
-# AIOGitHub
+# AIOGitHubAPI
 
 _Python async client for the GitHub API._
 

@@ -2,10 +2,9 @@
 import json
 import aiohttp
 import pytest
-from aiogithubapi import AIOGitHub, AIOGitHubException
+from aiogithubapi import GitHub, AIOGitHubAPIException
 
-from tests.commmon import TOKEN
-from tests.responses.headers import NOT_RATELIMITED, RATELIMITED
+from tests.const import TOKEN, NOT_RATELIMITED, RATELIMITED
 from tests.responses.base import base_response
 
 
@@ -20,7 +19,7 @@ async def test_get_rate_limit(aresponses, event_loop, base_response):
         ),
     )
     async with aiohttp.ClientSession(loop=event_loop) as session:
-        github = AIOGitHub(TOKEN, session)
+        github = GitHub(session, TOKEN)
         await github.get_ratelimit()
         assert github.client.ratelimits.remaining == "1337"
 
@@ -36,6 +35,6 @@ async def test_get_ratelimit_error(aresponses, event_loop, base_response):
         ),
     )
     async with aiohttp.ClientSession(loop=event_loop) as session:
-        github = AIOGitHub(TOKEN, session)
-        with pytest.raises(AIOGitHubException):
+        github = GitHub(session, TOKEN)
+        with pytest.raises(AIOGitHubAPIException):
             await github.get_ratelimit()

@@ -2,10 +2,9 @@
 import json
 import aiohttp
 import pytest
-from aiogithubapi import AIOGitHub, AIOGitHubException
+from aiogithubapi import GitHub, AIOGitHubAPIException
 
-from tests.commmon import TOKEN
-from tests.responses.headers import NOT_RATELIMITED, RATELIMITED
+from tests.const import TOKEN, NOT_RATELIMITED, RATELIMITED
 from tests.responses.base import bad_response, base_response, bad_auth_response
 
 
@@ -20,7 +19,7 @@ async def test_get(aresponses, event_loop, base_response):
         ),
     )
     async with aiohttp.ClientSession(loop=event_loop) as session:
-        github = AIOGitHub(TOKEN, session)
+        github = GitHub(session, TOKEN)
         await github.client.get("/")
         assert github.client.ratelimits.remaining == "1337"
 
@@ -36,8 +35,24 @@ async def test_post(aresponses, event_loop, base_response):
         ),
     )
     async with aiohttp.ClientSession(loop=event_loop) as session:
-        github = AIOGitHub(TOKEN, session)
+        github = GitHub(session, TOKEN)
         await github.client.post("/")
+        assert github.client.ratelimits.remaining == "1337"
+
+
+@pytest.mark.asyncio
+async def test_post_with_json(aresponses, event_loop, base_response):
+    aresponses.add(
+        "api.github.com",
+        "/",
+        "post",
+        aresponses.Response(
+            text=json.dumps(base_response), status=200, headers=NOT_RATELIMITED,
+        ),
+    )
+    async with aiohttp.ClientSession(loop=event_loop) as session:
+        github = GitHub(session, TOKEN)
+        await github.client.post("/", data={"test": "test"}, jsondata=True)
         assert github.client.ratelimits.remaining == "1337"
 
 
@@ -52,8 +67,8 @@ async def test_get_ratelimited(aresponses, event_loop, bad_auth_response):
         ),
     )
     async with aiohttp.ClientSession(loop=event_loop) as session:
-        github = AIOGitHub(TOKEN, session)
-        with pytest.raises(AIOGitHubException):
+        github = GitHub(session, TOKEN)
+        with pytest.raises(AIOGitHubAPIException):
             await github.client.get("/")
         assert github.client.ratelimits.remaining == "0"
 
@@ -69,8 +84,8 @@ async def test_post_ratelimited(aresponses, event_loop, bad_auth_response):
         ),
     )
     async with aiohttp.ClientSession(loop=event_loop) as session:
-        github = AIOGitHub(TOKEN, session)
-        with pytest.raises(AIOGitHubException):
+        github = GitHub(session, TOKEN)
+        with pytest.raises(AIOGitHubAPIException):
             await github.client.post("/")
         assert github.client.ratelimits.remaining == "0"
 
@@ -86,8 +101,8 @@ async def test_get_error(aresponses, event_loop, bad_response):
         ),
     )
     async with aiohttp.ClientSession(loop=event_loop) as session:
-        github = AIOGitHub(TOKEN, session)
-        with pytest.raises(AIOGitHubException):
+        github = GitHub(session, TOKEN)
+        with pytest.raises(AIOGitHubAPIException):
             await github.client.get("/")
 
 
@@ -102,8 +117,8 @@ async def test_post_error(aresponses, event_loop, bad_response):
         ),
     )
     async with aiohttp.ClientSession(loop=event_loop) as session:
-        github = AIOGitHub(TOKEN, session)
-        with pytest.raises(AIOGitHubException):
+        github = GitHub(session, TOKEN)
+        with pytest.raises(AIOGitHubAPIException):
             await github.client.post("/")
 
 
@@ -118,8 +133,8 @@ async def test_ok_get_auth_error(aresponses, event_loop, bad_auth_response):
         ),
     )
     async with aiohttp.ClientSession(loop=event_loop) as session:
-        github = AIOGitHub(TOKEN, session)
-        with pytest.raises(AIOGitHubException):
+        github = GitHub(session, TOKEN)
+        with pytest.raises(AIOGitHubAPIException):
             await github.client.get("/")
 
 
@@ -134,6 +149,6 @@ async def test_ok_get_error(aresponses, event_loop, bad_response):
         ),
     )
     async with aiohttp.ClientSession(loop=event_loop) as session:
-        github = AIOGitHub(TOKEN, session)
-        with pytest.raises(AIOGitHubException):
+        github = GitHub(session, TOKEN)
+        with pytest.raises(AIOGitHubAPIException):
             await github.client.get("/")

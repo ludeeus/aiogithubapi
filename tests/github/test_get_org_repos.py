@@ -2,10 +2,9 @@
 import json
 import aiohttp
 import pytest
-from aiogithubapi import AIOGitHub, AIOGitHubException
+from aiogithubapi import GitHub, AIOGitHubAPIException
 
-from tests.commmon import TOKEN
-from tests.responses.headers import NOT_RATELIMITED, RATELIMITED
+from tests.const import TOKEN, NOT_RATELIMITED, RATELIMITED
 from tests.responses.base import base_response
 from tests.responses.org_repositories import org_repositories_response
 
@@ -23,7 +22,7 @@ async def test_get_org_repos(aresponses, event_loop, org_repositories_response):
         ),
     )
     async with aiohttp.ClientSession(loop=event_loop) as session:
-        github = AIOGitHub(TOKEN, session)
+        github = GitHub(session, TOKEN)
         org = await github.get_org_repos("octocat")
         first_repo = org[0]
         assert first_repo.description == "This your first repo!"
@@ -41,7 +40,7 @@ async def test_get_org_repos_ratelimited(aresponses, event_loop, base_response):
         ),
     )
     async with aiohttp.ClientSession(loop=event_loop) as session:
-        github = AIOGitHub(TOKEN, session)
-        with pytest.raises(AIOGitHubException):
+        github = GitHub(session, TOKEN)
+        with pytest.raises(AIOGitHubAPIException):
             await github.get_org_repos("octocat")
         assert github.client.ratelimits.remaining == "0"

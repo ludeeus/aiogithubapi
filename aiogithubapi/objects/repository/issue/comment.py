@@ -1,13 +1,14 @@
 """
-AioGitHub: Issue Comment
+AIOGitHubAPI: Issue Comment
 
 https://developer.github.com/v3/issues/comments/
 """
 # pylint: disable=missing-docstring
+from aiogithubapi.objects.base import AIOGitHubAPIBase
 
 
-class AIOGithubIssueCommentUser:
-    """Issue commment user Github API implementation."""
+class AIOGitHubAPIRepositoryIssueCommentUser(AIOGitHubAPIBase):
+    """Issue commment user GitHub API implementation."""
 
     def __init__(self, attributes):
         """Initialize."""
@@ -38,8 +39,8 @@ class AIOGithubIssueCommentUser:
         return self.attributes.get("site_admin")
 
 
-class AIOGithubIssueComment:
-    """Issue comment Github API implementation."""
+class AIOGitHubAPIRepositoryIssueComment(AIOGitHubAPIBase):
+    """Issue comment GitHub API implementation."""
 
     def __init__(self, attributes):
         """Initialize."""
@@ -67,4 +68,4 @@ class AIOGithubIssueComment:
 
     @property
     def user(self):
-        return AIOGithubIssueCommentUser(self.attributes.get("user"))
+        return AIOGitHubAPIRepositoryIssueCommentUser(self.attributes.get("user"))
