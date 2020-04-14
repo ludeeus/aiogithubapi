@@ -66,7 +66,9 @@ class AIOGitHubAPIRepository(AIOGitHubAPIBase):
     def last_commit(self) -> None:
         return self._last_commit
 
-    async def get_contents(self, path, ref=None):
+    async def get_contents(
+        self, path: str, ref: str or None = None
+    ) -> ["AIOGitHubAPIRepositoryContent"] or "AIOGitHubAPIRepositoryContent":
         """Retrun a list of repository content objects."""
         _endpoint = f"/repos/{self.full_name}/contents/{path}"
         _params = {"path": path}
@@ -75,9 +77,13 @@ class AIOGitHubAPIRepository(AIOGitHubAPIBase):
             _params["ref"] = ref.replace("tags/", "")
 
         response = await self.client.get(endpoint=_endpoint, params=_params)
-        return [AIOGitHubAPIRepositoryContent(x) for x in response or []]
+        if isinstance(response, list):
+            return [AIOGitHubAPIRepositoryContent(x) for x in response]
+        return AIOGitHubAPIRepositoryContent(response)
 
-    async def get_tree(self, ref=None):
+    async def get_tree(
+        self, ref: str or None = None
+    ) -> ["AIOGitHubAPIRepositoryTreeContent"] or list:
         """Retrun a list of repository tree objects."""
         if ref is None:
             raise AIOGitHubAPIException("Missing ref")
@@ -91,7 +97,7 @@ class AIOGitHubAPIRepository(AIOGitHubAPIBase):
             for x in response.get("tree", [])
         ]
 
-    async def get_rendered_contents(self, path, ref=None):
+    async def get_rendered_contents(self, path: str, ref: str or None = None) -> str:
         """Retrun a redered representation of a file."""
         _endpoint = f"/repos/{self.full_name}/contents/{path}"
         _headers = {"Accept": "application/vnd.github.v3.html"}
@@ -104,7 +110,9 @@ class AIOGitHubAPIRepository(AIOGitHubAPIBase):
             endpoint=_endpoint, params=_params, headers=_headers, returnjson=False
         )
 
-    async def get_releases(self, prerelease=False, returnlimit=5):
+    async def get_releases(
+        self, prerelease: bool = False, returnlimit: int = 5
+    ) -> ["AIOGitHubAPIRepositoryRelease"] or list:
         """Retrun a list of repository release objects."""
         _endpoint = f"/repos/{self.full_name}/releases"
 
@@ -127,14 +135,16 @@ class AIOGitHubAPIRepository(AIOGitHubAPIBase):
         response = await self.client.get(endpoint=_endpoint)
         self._last_commit = response["commit"]["sha"][0:7]
 
-    async def get_issue(self, issue: int):
+    async def get_issue(self, issue: int) -> "AIOGitHubAPIRepositoryIssue":
         """Updates an issue comment."""
         _endpoint = f"/repos/{self.full_name}/issues/{issue}"
 
         response = await self.client.get(endpoint=_endpoint)
         return AIOGitHubAPIRepositoryIssue(response)
 
-    async def list_issue_comments(self, issue: int):
+    async def list_issue_comments(
+        self, issue: int
+    ) -> ["AIOGitHubAPIRepositoryIssueComment"] or list:
         """Updates an issue comment."""
         _endpoint = f"/repos/{self.full_name}/issues/{issue}/comments"
 
@@ -142,13 +152,13 @@ class AIOGitHubAPIRepository(AIOGitHubAPIBase):
 
         return [AIOGitHubAPIRepositoryIssueComment(x) for x in response or []]
 
-    async def comment_on_issue(self, issue: int, body: str):
+    async def comment_on_issue(self, issue: int, body: str) -> None:
         """Adds a comment to an issue."""
         _endpoint = f"/repos/{self.full_name}/issues/{issue}/comments"
 
         await self.client.post(endpoint=_endpoint, data={"body": body}, jsondata=True)
 
-    async def update_comment_on_issue(self, comment: int, body: str):
+    async def update_comment_on_issue(self, comment: int, body: str) -> None:
         """Updates an issue comment."""
         _endpoint = f"/repos/{self.full_name}/issues/comments/{comment}"
 
@@ -157,12 +167,12 @@ class AIOGitHubAPIRepository(AIOGitHubAPIBase):
     async def update_issue(
         self,
         issue: int,
-        title=None,
-        body=None,
-        state=None,
-        milestone=None,
-        labels=None,
-        assignees=None,
+        title: str or None = None,
+        body: str or None = None,
+        state: str or None = None,
+        milestone: str or None = None,
+        labels: [str] or None = None,
+        assignees: [str] or None = None,
     ):
         """Updates an issue comment."""
         _endpoint = f"/repos/{self.full_name}/issues/{issue}"

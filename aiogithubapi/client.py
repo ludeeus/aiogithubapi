@@ -30,7 +30,8 @@ class AIOGitHubAPIClient(AIOGitHubAPIBase):
         self.token = token
         self.ratelimits = AIOGitHubAPIRateLimit()
         self.headers = BASE_API_HEADERS
-        self.headers["Authorization"] = "token {}".format(token)
+        if token is not None:
+            self.headers["Authorization"] = "token {}".format(token)
 
     async def get(
         self,

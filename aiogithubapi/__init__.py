@@ -1,9 +1,8 @@
 """
 AIOGitHubAPI: AIOGitHubAPI
 
-Python3 async client for the GitHub API.
-
-https://developer.github.com/v3/
+Asynchronous Python client for the GitHub API
+https://github.com/ludeeus/aiogithubapi
 """
 from aiogithubapi.github import AIOGitHubAPI as GitHub
 

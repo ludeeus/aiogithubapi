@@ -1,21 +1,14 @@
-"""Example usage of AIOGitHub."""
+"""Example usage of AIOGitHubAPI"""
 import asyncio
-import aiohttp
-from aiogithubapi import AIOGitHub
-
-TOKEN = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+from aiogithubapi import GitHub
 
 
 async def example():
-    """Example usage of pyhaversion."""
-    async with aiohttp.ClientSession() as session:
-        aiogithub = AIOGitHub(TOKEN, session)
-        repository = await aiogithub.get_repo("ludeeus/aiogithubapi")
-
-        print("Ratelimit remaining:", aiogithub.ratelimits.remaining)
-        print("Ratelimit reset UTC:", aiogithub.ratelimits.reset_utc)
+    """Example usage of AIOGitHubAPI."""
+    async with GitHub() as github:
+        repository = await github.get_repo("ludeeus/aiogithubapi")
+        print("Repository description:", repository.full_name)
         print("Repository description:", repository.description)
 
 
-LOOP = asyncio.get_event_loop()
-LOOP.run_until_complete(example())
+asyncio.get_event_loop().run_until_complete(example())

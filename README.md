@@ -1,6 +1,6 @@
 # AIOGitHubAPI
 
-_Python async client for the GitHub API._
+_Asynchronous Python client for the GitHub API_
 
 This is not a full client for the API (Have you seen it, it's huge), and will probably never be.
 Things are added when needed.
