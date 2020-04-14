@@ -147,7 +147,7 @@ class AIOGitHubAPIRepository(AIOGitHubAPIBase):
         title: str or None = None,
         body: str or None = None,
         state: str or None = None,
-        milestone: str or None = None,
+        milestone: int or None = None,
         labels: [str] or None = None,
         assignees: [str] or None = None,
     ):
