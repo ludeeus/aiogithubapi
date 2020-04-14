@@ -1,8 +1,0 @@
-"""Fixtures."""
-# pylint: disable=missing-docstring
-import pytest
-
-
-@pytest.fixture()
-def xxx _response():
-    return

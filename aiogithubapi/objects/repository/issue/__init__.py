@@ -14,8 +14,9 @@ from aiogithubapi.objects.repository.issue.comment import (
 class AIOGitHubAPIRepositoryIssue(AIOGitHubAPIBase):
     """Issue commment user GitHub API implementation."""
 
-    def __init__(self, attributes):
+    def __init__(self, client: "AIOGitHubAPIClient", attributes: dict):
         """Initialize."""
+        self.client = client
         self.attributes = attributes
 
     @property
@@ -51,5 +52,55 @@ class AIOGitHubAPIRepositoryIssue(AIOGitHubAPIBase):
         return self.attributes.get("body")
 
     @property
+    def repository(self):
+        repository_url = self.attributes.get("repository_url").split("/")
+        return f"{repository_url[-2]}/{repository_url[-1]}"
+
+    @property
     def user(self):
         return AIOGitHubAPIRepositoryIssueCommentUser(self.attributes.get("user"))
+
+    async def get_comments(self,) -> ["AIOGitHubAPIRepositoryIssueComment"] or list:
+        """Updates an issue comment."""
+        _endpoint = f"/repos/{self.repository}/issues/{self.id}/comments"
+
+        response = await self.client.get(endpoint=_endpoint)
+
+        return [
+            AIOGitHubAPIRepositoryIssueComment(self.client, x, self.repository)
+            for x in response or []
+        ]
+
+    async def comment(self, body: str) -> None:
+        """Adds a comment to an issue."""
+        _endpoint = f"/repos/{self.repository}/issues/{self.id}/comments"
+
+        await self.client.post(endpoint=_endpoint, data={"body": body}, jsondata=True)
+
+    async def update(
+        self,
+        title: str or None = None,
+        body: str or None = None,
+        state: str or None = None,
+        milestone: str or None = None,
+        labels: [str] or None = None,
+        assignees: [str] or None = None,
+    ):
+        """Updates an issue comment."""
+        _endpoint = f"/repos/{self.repository}/issues/{self.id}"
+
+        data = {}
+        if title is not None:
+            data["title"] = title
+        if body is not None:
+            data["body"] = body
+        if state is not None:
+            data["state"] = state
+        if milestone is not None:
+            data["milestone"] = milestone
+        if labels is not None:
+            data["labels"] = labels
+        if assignees is not None:
+            data["assignees"] = assignees
+
+        await self.client.post(endpoint=_endpoint, data=data, jsondata=True)

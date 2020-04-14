@@ -49,7 +49,7 @@ def contents_file_response():
         "size": 5362,
         "name": "README.md",
         "path": "README.md",
-        "content": "encoded content ...",
+        "content": "",
         "sha": "3d21ec53a331a6f037a91c368710b99387d012c1",
         "url": "https://api.github.com/repos/octokit/octokit.rb/contents/README.md",
         "git_url": "https://api.github.com/repos/octokit/octokit.rb/git/blobs/3d21ec53a331a6f037a91c368710b99387d012c1",

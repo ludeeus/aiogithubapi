@@ -42,9 +42,11 @@ class AIOGitHubAPIRepositoryIssueCommentUser(AIOGitHubAPIBase):
 class AIOGitHubAPIRepositoryIssueComment(AIOGitHubAPIBase):
     """Issue comment GitHub API implementation."""
 
-    def __init__(self, attributes):
+    def __init__(self, client: "AIOGitHubAPIClient", attributes: dict, repository: str):
         """Initialize."""
+        self.client = client
         self.attributes = attributes
+        self.repository = repository
 
     @property
     def html_url(self):
@@ -69,3 +71,9 @@ class AIOGitHubAPIRepositoryIssueComment(AIOGitHubAPIBase):
     @property
     def user(self):
         return AIOGitHubAPIRepositoryIssueCommentUser(self.attributes.get("user"))
+
+    async def update(self, body: str) -> None:
+        """Updates an issue comment."""
+        _endpoint = f"/repos/{self.repository}/issues/comments/{self.id}"
+
+        await self.client.post(endpoint=_endpoint, data={"body": body}, jsondata=True)

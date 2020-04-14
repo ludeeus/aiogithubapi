@@ -16,7 +16,15 @@ def tree_response():
                 "size": 132,
                 "sha": "7c258a9869f33c1e1e1f74fbb32f07c86cb5a75b",
                 "url": "https://api.github.com/repos/octocat/Hello-World/git/7c258a9869f33c1e1e1f74fbb32f07c86cb5a75b",
-            }
+            },
+            {
+                "path": "subdir",
+                "mode": "100644",
+                "type": "tree",
+                "size": 132,
+                "sha": "7c258a9869f33c1e1e1f74fbb32f07c86cb5a75b",
+                "url": "https://api.github.com/repos/octocat/Hello-World/git/7c258a9869f33c1e1e1f74fbb32f07c86cb5a75b",
+            },
         ],
         "truncated": False,
     }

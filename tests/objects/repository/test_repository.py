@@ -11,6 +11,7 @@ from tests.responses.branch import branch_response
 from tests.responses.contents import contents_list_response, contents_file_response
 from tests.responses.tree import tree_response
 from tests.responses.releases import releases_response
+from tests.responses.issue import issue_response
 
 
 @pytest.mark.asyncio
@@ -208,3 +209,27 @@ async def test_get_releases(aresponses, repository_response, releases_response):
         assert not releases[0].prerelease
         releases = await repository.get_releases(prerelease=True, returnlimit=1)
         assert len(releases) == 1
+
+
+@pytest.mark.asyncio
+async def test_get_issue(aresponses, repository_response, issue_response):
+    aresponses.add(
+        "api.github.com",
+        "/repos/octocat/Hello-World",
+        "get",
+        aresponses.Response(
+            text=json.dumps(repository_response), status=200, headers=NOT_RATELIMITED,
+        ),
+    )
+    aresponses.add(
+        "api.github.com",
+        "/repos/octocat/Hello-World/issues/1",
+        "get",
+        aresponses.Response(
+            text=json.dumps(issue_response), status=200, headers=NOT_RATELIMITED,
+        ),
+    )
+    async with GitHub(TOKEN) as github:
+        repository = await github.get_repo("octocat/Hello-World")
+        issue = await repository.get_issue(1)
+        assert issue.title == "Found a bug"
