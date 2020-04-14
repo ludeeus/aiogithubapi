@@ -1,5 +1,5 @@
 # pylint: disable=missing-docstring, redefined-outer-name, unused-import
-from aiogithubapi import AIOGitHubAPIRateLimit
+from aiogithubapi.objects.ratelimit import AIOGitHubAPIRateLimit
 
 
 def test_ratelimit():
