@@ -10,7 +10,7 @@ from tests.responses.org_repositories import org_repositories_response
 
 
 @pytest.mark.asyncio
-async def test_get_org_repos(aresponses, event_loop, org_repositories_response):
+async def test_get_org_repos(aresponses, org_repositories_response):
     aresponses.add(
         "api.github.com",
         "/orgs/octocat/repos",
@@ -21,8 +21,8 @@ async def test_get_org_repos(aresponses, event_loop, org_repositories_response):
             headers=NOT_RATELIMITED,
         ),
     )
-    async with aiohttp.ClientSession(loop=event_loop) as session:
-        github = GitHub(session, TOKEN)
+
+    async with GitHub(TOKEN) as github:
         org = await github.get_org_repos("octocat")
         first_repo = org[0]
         assert first_repo.description == "This your first repo!"
@@ -30,7 +30,7 @@ async def test_get_org_repos(aresponses, event_loop, org_repositories_response):
 
 
 @pytest.mark.asyncio
-async def test_get_org_repos_ratelimited(aresponses, event_loop, base_response):
+async def test_get_org_repos_ratelimited(aresponses, base_response):
     aresponses.add(
         "api.github.com",
         "/orgs/octocat/repos",
@@ -39,8 +39,8 @@ async def test_get_org_repos_ratelimited(aresponses, event_loop, base_response):
             text=json.dumps(base_response), status=403, headers=RATELIMITED,
         ),
     )
-    async with aiohttp.ClientSession(loop=event_loop) as session:
-        github = GitHub(session, TOKEN)
+
+    async with GitHub(TOKEN) as github:
         with pytest.raises(AIOGitHubAPIException):
             await github.get_org_repos("octocat")
         assert github.client.ratelimits.remaining == "0"

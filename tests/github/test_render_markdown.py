@@ -9,7 +9,7 @@ from tests.responses.base import base_response
 
 
 @pytest.mark.asyncio
-async def test_render_markdown(aresponses, event_loop, base_response):
+async def test_render_markdown(aresponses, base_response):
     aresponses.add(
         "api.github.com",
         "/markdown/raw",
@@ -18,15 +18,14 @@ async def test_render_markdown(aresponses, event_loop, base_response):
             text=json.dumps(base_response), status=200, headers=NOT_RATELIMITED,
         ),
     )
-    async with aiohttp.ClientSession(loop=event_loop) as session:
-        github = GitHub(session, TOKEN)
+    async with GitHub(TOKEN) as github:
         render = await github.render_markdown("test")
         assert github.client.ratelimits.remaining == "1337"
         assert isinstance(render, str)
 
 
 @pytest.mark.asyncio
-async def test_render_markdown_rate_limited(aresponses, event_loop, base_response):
+async def test_render_markdown_rate_limited(aresponses, base_response):
     aresponses.add(
         "api.github.com",
         "/markdown/raw",
@@ -35,15 +34,14 @@ async def test_render_markdown_rate_limited(aresponses, event_loop, base_respons
             text=json.dumps(base_response), status=403, headers=RATELIMITED,
         ),
     )
-    async with aiohttp.ClientSession(loop=event_loop) as session:
-        github = GitHub(session, TOKEN)
+    async with GitHub(TOKEN) as github:
         with pytest.raises(AIOGitHubAPIException):
             await github.render_markdown("test")
         assert github.client.ratelimits.remaining == "0"
 
 
 @pytest.mark.asyncio
-async def test_render_markdown_error(aresponses, event_loop, base_response):
+async def test_render_markdown_error(aresponses, base_response):
     aresponses.add(
         "api.github.com",
         "/markdown/raw",
@@ -52,7 +50,6 @@ async def test_render_markdown_error(aresponses, event_loop, base_response):
             text=json.dumps(base_response), status=500, headers=NOT_RATELIMITED,
         ),
     )
-    async with aiohttp.ClientSession(loop=event_loop) as session:
-        github = GitHub(session, TOKEN)
+    async with GitHub(TOKEN) as github:
         with pytest.raises(AIOGitHubAPIException):
             await github.render_markdown("test")

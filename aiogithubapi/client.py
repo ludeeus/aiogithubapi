@@ -1,7 +1,7 @@
 """AIOGitHubAPI: AioGitHubClient"""
 # pylint: disable=redefined-builtin, too-many-arguments
 from asyncio import CancelledError, TimeoutError, get_event_loop
-from aiohttp import ClientSession, ClientError
+from aiohttp import ClientError
 
 import async_timeout
 import backoff
@@ -17,13 +17,14 @@ from aiogithubapi.common.const import (
     HTTP_STATUS_CODE_GOOD_LIST,
     HTTP_STATUS_CODE_RATELIMIT,
 )
-from aiogithubapi.objects import AIOGitHubAPIBase, AIOGitHubAPIRateLimit
+from aiogithubapi.objects.base import AIOGitHubAPIBase
+from aiogithubapi.objects.ratelimit import AIOGitHubAPIRateLimit
 
 
 class AIOGitHubAPIClient(AIOGitHubAPIBase):
     """Client to handle API calls."""
 
-    def __init__(self, session: type(ClientSession), token: str) -> None:
+    def __init__(self, session: "aiohttp.ClientSession", token: str) -> None:
         """Initialize the client."""
         self.session = session
         self.token = token

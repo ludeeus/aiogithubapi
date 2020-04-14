@@ -6,7 +6,6 @@ https://developer.github.com/v3/repos/#get
 # pylint: disable=redefined-builtin, missing-docstring, invalid-name, unused-import
 from datetime import datetime
 
-from aiogithubapi.client import AIOGitHubAPIClient
 from aiogithubapi.common.exceptions import AIOGitHubAPIException
 from aiogithubapi.objects.base import AIOGitHubAPIBase
 
@@ -25,7 +24,7 @@ from aiogithubapi.objects.repository.release import AIOGitHubAPIRepositoryReleas
 class AIOGitHubAPIRepository(AIOGitHubAPIBase):
     """Repository GitHub API implementation."""
 
-    def __init__(self, client: type(AIOGitHubAPIClient), attributes: dict) -> None:
+    def __init__(self, client: "AIOGitHubAPIClient", attributes: dict) -> None:
         """Initialise."""
         self.client = client
         self.attributes = attributes
@@ -125,9 +124,8 @@ class AIOGitHubAPIRepository(AIOGitHubAPIBase):
     async def set_last_commit(self) -> None:
         """Retrun a list of repository release objects."""
         _endpoint = f"/repos/{self.full_name}/commits/{self.default_branch}"
-
         response = await self.client.get(endpoint=_endpoint)
-        self._last_commit = response["sha"][0:7]
+        self._last_commit = response["commit"]["sha"][0:7]
 
     async def get_issue(self, issue: int):
         """Updates an issue comment."""

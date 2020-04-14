@@ -19,8 +19,8 @@ async def test_get_repo(aresponses, event_loop, repository_response):
             text=json.dumps(repository_response), status=200, headers=NOT_RATELIMITED,
         ),
     )
-    async with aiohttp.ClientSession(loop=event_loop) as session:
-        github = GitHub(session, TOKEN)
+
+    async with GitHub(TOKEN) as github:
         repository = await github.get_repo("octocat/Hello-World")
         assert repository.description == "This your first repo!"
         assert github.client.ratelimits.remaining == "1337"
@@ -36,8 +36,7 @@ async def test_get_repo_ratelimited(aresponses, event_loop, base_response):
             text=json.dumps(base_response), status=403, headers=RATELIMITED,
         ),
     )
-    async with aiohttp.ClientSession(loop=event_loop) as session:
-        github = GitHub(session, TOKEN)
+    async with GitHub(TOKEN) as github:
         with pytest.raises(AIOGitHubAPIException):
             await github.get_repo("octocat/Hello-World")
         assert github.client.ratelimits.remaining == "0"
