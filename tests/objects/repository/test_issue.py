@@ -6,7 +6,7 @@ from aiogithubapi import GitHub
 
 from tests.const import TOKEN, NOT_RATELIMITED
 from tests.responses.repository import repository_response
-from tests.responses.issue import issue_response
+from tests.responses.issue import issue_response, issues_response
 from tests.responses.issue_comments import issue_comments_response
 
 
@@ -276,3 +276,28 @@ async def test_update_issue_comment(
         issue = await repository.get_issue(1)
         comments = await issue.get_comments()
         await comments[0].update("test")
+
+
+@pytest.mark.asyncio
+async def test_get_issues(aresponses, repository_response, issues_response):
+    aresponses.add(
+        "api.github.com",
+        "/repos/octocat/Hello-World",
+        "get",
+        aresponses.Response(
+            text=json.dumps(repository_response), status=200, headers=NOT_RATELIMITED,
+        ),
+    )
+    aresponses.add(
+        "api.github.com",
+        "/repos/octocat/Hello-World/issues",
+        "get",
+        aresponses.Response(
+            text=json.dumps(issues_response), status=200, headers=NOT_RATELIMITED,
+        ),
+    )
+
+    async with GitHub(TOKEN) as github:
+        repository = await github.get_repo("octocat/Hello-World")
+        issue = await repository.get_issues()
+        assert len(issue) == 1

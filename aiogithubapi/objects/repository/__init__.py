@@ -142,6 +142,13 @@ class AIOGitHubAPIRepository(AIOGitHubAPIBase):
         response = await self.client.get(endpoint=_endpoint)
         return AIOGitHubAPIRepositoryIssue(self.client, response)
 
+    async def get_issues(self) -> ["AIOGitHubAPIRepositoryIssue"]:
+        """Updates an issue comment."""
+        _endpoint = f"/repos/{self.full_name}/issues"
+
+        response = await self.client.get(endpoint=_endpoint)
+        return [AIOGitHubAPIRepositoryIssue(self.client, x) for x in response or []]
+
     async def create_issue(
         self,
         title: str or None = None,
