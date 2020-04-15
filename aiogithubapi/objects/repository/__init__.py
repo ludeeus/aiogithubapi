@@ -168,4 +168,5 @@ class AIOGitHubAPIRepository(AIOGitHubAPIBase):
         if assignees is not None:
             data["assignees"] = assignees
 
-        await self.client.post(endpoint=_endpoint, data=data, jsondata=True)
+        issue = await self.client.post(endpoint=_endpoint, data=data, jsondata=True)
+        return AIOGitHubAPIRepositoryIssue(self.client, issue)
