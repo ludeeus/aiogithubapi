@@ -73,6 +73,13 @@ class AIOGitHubAPI(AIOGitHubAPIBase):
 
         return [AIOGitHubAPIRepository(self.client, x) for x in response or []]
 
+    async def get_rate_limit(self) -> dict:
+        """Retrun current rate limits."""
+        _endpoint = f"/rate_limit"
+
+        await self.client.get(endpoint=_endpoint)
+        return self.client.ratelimits.__dict__
+
     async def render_markdown(self, content: str) -> str:
         """
         Retrun AIOGitHubAPIRepository object.
