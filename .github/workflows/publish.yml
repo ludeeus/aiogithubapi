@@ -19,6 +19,13 @@ jobs:
           python -m pip install --upgrade pip
           pip install setuptools wheel twine
 
+      - uses: olegtarasov/get-tag@v2
+        name: Set tag envronment variable
+
+      - name: Set version number
+        run: |
+          sed -i "s/version=\"0.0.0\"/version=\"$GIT_TAG_NAME\"/" ${{github.workspace}}/setup.py
+
       - name: Publish to PyPi
         env:
           TWINE_USERNAME: __token__
