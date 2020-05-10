@@ -49,7 +49,7 @@ async def test_set_last_commit(aresponses, repository_response, branch_response)
     )
     aresponses.add(
         "api.github.com",
-        "/repos/octocat/Hello-World/commits/master",
+        "/repos/octocat/Hello-World/branches/master",
         "get",
         aresponses.Response(
             text=json.dumps(branch_response), status=200, headers=NOT_RATELIMITED,
@@ -59,6 +59,7 @@ async def test_set_last_commit(aresponses, repository_response, branch_response)
         repository = await github.get_repo("octocat/Hello-World")
         assert repository.last_commit is None
         await repository.set_last_commit()
+        assert repository.last_commit == "7fd1a60"
 
 
 @pytest.mark.asyncio
