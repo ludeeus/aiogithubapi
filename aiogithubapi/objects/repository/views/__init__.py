@@ -1,7 +1,7 @@
 """
-AIOGitHubAPI: Clones
+AIOGitHubAPI: Views
 
-https://docs.github.com/en/rest/reference/repos#get-repository-clones
+https://docs.github.com/en/rest/reference/repos#get-page-views
 """
 # pylint: disable=missing-docstring, unused-import
 from aiogithubapi.objects.base import AIOGitHubAPIBase
