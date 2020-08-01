@@ -7,7 +7,7 @@ https://developer.github.com/v3/repos/#get
 from datetime import datetime
 
 from aiogithubapi.common.exceptions import AIOGitHubAPIException
-from aiogithubapi.objects.base import AIOGitHubAPIBase
+from aiogithubapi.objects.base import AIOGitHubAPIBaseClient
 
 from aiogithubapi.objects.repository.commit import AIOGitHubAPIRepositoryCommit
 
@@ -25,13 +25,12 @@ from aiogithubapi.objects.repository.issue import (
 from aiogithubapi.objects.repository.release import AIOGitHubAPIRepositoryRelease
 
 
-class AIOGitHubAPIRepository(AIOGitHubAPIBase):
+class AIOGitHubAPIRepository(AIOGitHubAPIBaseClient):
     """Repository GitHub API implementation."""
 
     def __init__(self, client: "AIOGitHubAPIClient", attributes: dict) -> None:
         """Initialise."""
-        self.client = client
-        self.attributes = attributes
+        super().__init__(client, attributes)
         self._last_commit = None
 
     @property

@@ -4,15 +4,12 @@ AIOGitHubAPI: Issue Comment
 https://developer.github.com/v3/issues/comments/
 """
 # pylint: disable=missing-docstring
-from aiogithubapi.objects.base import AIOGitHubAPIBase
+from aiogithubapi.objects.base import AIOGitHubAPIBase, AIOGitHubAPIBaseClient
+from aiogithubapi.objects.user import AIOGitHubAPIUser
 
 
-class AIOGitHubAPIRepositoryIssueCommentUser(AIOGitHubAPIBase):
+class AIOGitHubAPIRepositoryIssueCommentUser(AIOGitHubAPIUser):
     """Issue commment user GitHub API implementation."""
-
-    def __init__(self, attributes):
-        """Initialize."""
-        self.attributes = attributes
 
     @property
     def login(self):
@@ -39,13 +36,12 @@ class AIOGitHubAPIRepositoryIssueCommentUser(AIOGitHubAPIBase):
         return self.attributes.get("site_admin")
 
 
-class AIOGitHubAPIRepositoryIssueComment(AIOGitHubAPIBase):
+class AIOGitHubAPIRepositoryIssueComment(AIOGitHubAPIBaseClient):
     """Issue comment GitHub API implementation."""
 
     def __init__(self, client: "AIOGitHubAPIClient", attributes: dict, repository: str):
         """Initialize."""
-        self.client = client
-        self.attributes = attributes
+        super().__init__(client, attributes)
         self.repository = repository
 
     @property
@@ -70,7 +66,7 @@ class AIOGitHubAPIRepositoryIssueComment(AIOGitHubAPIBase):
 
     @property
     def user(self):
-        return AIOGitHubAPIRepositoryIssueCommentUser(self.attributes.get("user"))
+        return AIOGitHubAPIRepositoryIssueCommentUser(self.attributes.get("user", {}))
 
     async def update(self, body: str) -> None:
         """Updates an issue comment."""

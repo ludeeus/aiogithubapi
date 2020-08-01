@@ -10,10 +10,6 @@ from aiogithubapi.objects.base import AIOGitHubAPIBase
 class AIOGitHubAPIUser(AIOGitHubAPIBase):
     """User GitHub API implementation."""
 
-    def __init__(self, attributes):
-        """Initialize."""
-        self.attributes = attributes
-
     @property
     def login(self):
         return self.attributes.get("login")
