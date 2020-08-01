@@ -9,15 +9,19 @@ from datetime import datetime
 from aiogithubapi.common.exceptions import AIOGitHubAPIException
 from aiogithubapi.objects.base import AIOGitHubAPIBase
 
+from aiogithubapi.objects.repository.commit import AIOGitHubAPIRepositoryCommit
+
 from aiogithubapi.objects.repository.content import (
     AIOGitHubAPIRepositoryContent,
     AIOGitHubAPIRepositoryTreeContent,
 )
+
 from aiogithubapi.objects.repository.issue import (
     AIOGitHubAPIRepositoryIssue,
     AIOGitHubAPIRepositoryIssueComment,
     AIOGitHubAPIRepositoryIssueCommentUser,
 )
+
 from aiogithubapi.objects.repository.release import AIOGitHubAPIRepositoryRelease
 
 
@@ -64,6 +68,10 @@ class AIOGitHubAPIRepository(AIOGitHubAPIBase):
 
     @property
     def last_commit(self) -> None:
+        if self._last_commit is None:
+            self.logger.warning(
+                "You need to call .set_last_commit to set this property"
+            )
         return self._last_commit
 
     async def get_contents(
@@ -134,6 +142,12 @@ class AIOGitHubAPIRepository(AIOGitHubAPIBase):
         _endpoint = f"/repos/{self.full_name}/branches/{self.default_branch}"
         response = await self.client.get(endpoint=_endpoint)
         self._last_commit = response["commit"]["sha"][0:7]
+
+    async def get_last_commit(self) -> None:
+        """Retrun a list of repository release objects."""
+        _endpoint = f"/repos/{self.full_name}/branches/{self.default_branch}"
+        response = await self.client.get(endpoint=_endpoint)
+        return AIOGitHubAPIRepositoryCommit(response)
 
     async def get_issue(self, issue: int) -> "AIOGitHubAPIRepositoryIssue":
         """Updates an issue comment."""
