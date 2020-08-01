@@ -153,7 +153,7 @@ class AIOGitHubAPIRepository(AIOGitHubAPIBaseClient):
         """Retrun a list of repository release objects."""
         _endpoint = f"/repos/{self.full_name}/branches/{self.default_branch}"
         response = await self.client.get(endpoint=_endpoint)
-        self._last_commit = response["commit"]
+        self._last_commit = response["commit"]["sha"][0:7]
 
     async def get_last_commit(self) -> None:
         """Retrun a list of repository release objects."""
