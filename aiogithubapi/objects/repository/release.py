@@ -13,10 +13,6 @@ from aiogithubapi.objects.repository.content import AIOGitHubAPIRepositoryConten
 class AIOGitHubAPIRepositoryRelease(AIOGitHubAPIBase):
     """Repository Release GitHub API implementation."""
 
-    def __init__(self, attributes):
-        """Initialize."""
-        self.attributes = attributes
-
     @property
     def tag_name(self):
         return self.attributes.get("tag_name")

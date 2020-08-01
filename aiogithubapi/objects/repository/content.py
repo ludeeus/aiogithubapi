@@ -12,10 +12,6 @@ from aiogithubapi.objects.content import AIOGitHubAPIContentBase
 class AIOGitHubAPIRepositoryContent(AIOGitHubAPIContentBase):
     """Repository Conetent GitHub API implementation."""
 
-    def __init__(self, attributes):
-        """Initialize."""
-        self.attributes = attributes
-
     @property
     def type(self):
         return self.attributes.get("type", "file")

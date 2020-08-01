@@ -8,11 +8,7 @@ from aiogithubapi.objects.base import AIOGitHubAPIBase
 from aiogithubapi.objects.user import AIOGitHubAPIUser
 
 
-class _ParentObject:
-    def __init__(self, attributes):
-        """Initialize."""
-        self.attributes = attributes
-
+class _ParentObject(AIOGitHubAPIBase):
     @property
     def url(self):
         return self.attributes.get("url")
@@ -30,11 +26,7 @@ class _Parents(_ParentObject):
     pass
 
 
-class _Actor:
-    def __init__(self, attributes):
-        """Initialize."""
-        self.attributes = attributes
-
+class _Actor(AIOGitHubAPIBase):
     @property
     def name(self):
         return self.attributes.get("name")
@@ -48,11 +40,7 @@ class _Actor:
         return self.attributes.get("date")
 
 
-class _Verification:
-    def __init__(self, attributes):
-        """Initialize."""
-        self.attributes = attributes
-
+class _Verification(AIOGitHubAPIBase):
     @property
     def verified(self):
         return self.attributes.get("verified")
@@ -70,11 +58,7 @@ class _Verification:
         return self.attributes.get("payload")
 
 
-class _Commit:
-    def __init__(self, attributes):
-        """Initialize."""
-        self.attributes = attributes
-
+class _Commit(AIOGitHubAPIBase):
     @property
     def url(self):
         return self.attributes.get("url")
@@ -108,11 +92,7 @@ class _Commit:
         return _Verification(self.attributes.get("verification", {}))
 
 
-class _Stats:
-    def __init__(self, attributes):
-        """Initialize."""
-        self.attributes = attributes
-
+class _Stats(AIOGitHubAPIBase):
     @property
     def additions(self):
         return self.attributes.get("additions")
@@ -126,11 +106,7 @@ class _Stats:
         return self.attributes.get("total")
 
 
-class _Files:
-    def __init__(self, attributes):
-        """Initialize."""
-        self.attributes = attributes
-
+class _Files(AIOGitHubAPIBase):
     @property
     def filename(self):
         return self.attributes.get("filename")
@@ -166,10 +142,6 @@ class _Files:
 
 class AIOGitHubAPIRepositoryCommit(AIOGitHubAPIBase):
     """Commit GitHub API implementation."""
-
-    def __init__(self, attributes):
-        """Initialize."""
-        self.attributes = attributes
 
     @property
     def url(self):
