@@ -92,6 +92,10 @@ class _Commit:
         return self.attributes.get("message")
 
     @property
+    def message_short(self):
+        return self.attributes.get("message", "").split("\n")[0]
+
+    @property
     def tree(self):
         return _Tree(self.attributes.get("tree", []))
 

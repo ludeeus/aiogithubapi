@@ -58,6 +58,7 @@ async def test_get_last_commit(aresponses, repository_response, commit_response)
         )
 
         assert commit.commit.message == commit_response["commit"]["message"]
+        assert commit.commit.message_short == commit_response["commit"]["message"]
         assert commit.commit.tree.url == commit_response["commit"]["tree"]["url"]
         assert commit.commit.tree.sha == commit_response["commit"]["tree"]["sha"]
 
