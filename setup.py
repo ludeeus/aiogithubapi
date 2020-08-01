@@ -14,7 +14,9 @@ setuptools.setup(
     long_description=DESCRIPTION,
     long_description_content_type="text/markdown",
     url="https://github.com/ludeeus/aiogithubapi",
-    packages=setuptools.find_packages(exclude=["tests", "tests.*"]),
+    packages=setuptools.find_packages(
+        exclude=["tests", "tests.*", "generate", "generate.*"]
+    ),
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
