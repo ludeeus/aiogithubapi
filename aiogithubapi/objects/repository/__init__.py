@@ -4,7 +4,6 @@ AIOGitHubAPI: Repository
 https://developer.github.com/v3/repos/#get
 """
 # pylint: disable=redefined-builtin, missing-docstring, invalid-name, unused-import
-import logging
 from datetime import datetime
 
 from aiogithubapi.common.exceptions import AIOGitHubAPIException
@@ -24,8 +23,6 @@ from aiogithubapi.objects.repository.issue import (
 )
 
 from aiogithubapi.objects.repository.release import AIOGitHubAPIRepositoryRelease
-
-_LOGGER = logging.getLogger(__name__)
 
 
 class AIOGitHubAPIRepository(AIOGitHubAPIBase):
@@ -72,7 +69,9 @@ class AIOGitHubAPIRepository(AIOGitHubAPIBase):
     @property
     def last_commit(self) -> None:
         if self._last_commit is None:
-            _LOGGER.error("You need to call .set_last_commit to set this property")
+            self.logger.warning(
+                "You need to call .set_last_commit to set this property"
+            )
         return self._last_commit
 
     async def get_contents(
