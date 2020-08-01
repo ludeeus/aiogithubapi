@@ -39,6 +39,10 @@ class AIOGitHubAPIRepository(AIOGitHubAPIBaseClient):
         return self.attributes.get("id")
 
     @property
+    def name(self) -> None:
+        return self.attributes.get("name")
+
+    @property
     def full_name(self) -> None:
         return self.attributes.get("full_name")
 
@@ -63,6 +67,10 @@ class AIOGitHubAPIRepository(AIOGitHubAPIBaseClient):
         return self.attributes.get("fork")
 
     @property
+    def forks(self) -> int:
+        return self.attributes.get("forks")
+
+    @property
     def default_branch(self) -> None:
         return self.attributes.get("default_branch")
 
@@ -73,6 +81,10 @@ class AIOGitHubAPIRepository(AIOGitHubAPIBaseClient):
                 "You need to call .set_last_commit to set this property"
             )
         return self._last_commit
+
+    @property
+    def owner(self) -> str:
+        return self.attributes.get("owner").get("login")
 
     async def get_contents(
         self, path: str, ref: str or None = None
