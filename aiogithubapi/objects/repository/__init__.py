@@ -9,7 +9,7 @@ from datetime import datetime
 from aiogithubapi.common.exceptions import AIOGitHubAPIException
 from aiogithubapi.objects.base import AIOGitHubAPIBaseClient
 from aiogithubapi.objects.repository.traffic import AIOGitHubAPIRepositoryTraffic
-from aiogithubapi.objects.repository.commit import AIOGitHubAPIRepositoryCommit
+from aiogithubapi.objects.repos.commit import AIOGitHubAPIReposCommit
 
 from aiogithubapi.objects.repository.content import (
     AIOGitHubAPIRepositoryContent,
@@ -173,7 +173,7 @@ class AIOGitHubAPIRepository(AIOGitHubAPIBaseClient):
         """Retrun a list of repository release objects."""
         _endpoint = f"/repos/{self.full_name}/branches/{self.default_branch}"
         response = await self.client.get(endpoint=_endpoint)
-        return AIOGitHubAPIRepositoryCommit(response.get("commit", {}))
+        return AIOGitHubAPIReposCommit(response.get("commit", {}))
 
     async def get_issue(self, issue: int) -> "AIOGitHubAPIRepositoryIssue":
         """Updates an issue comment."""
