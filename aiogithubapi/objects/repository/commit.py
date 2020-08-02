@@ -5,7 +5,7 @@ https://docs.github.com/en/rest/reference/repos#get-a-commit
 """
 # pylint: disable=missing-docstring
 from aiogithubapi.objects.base import AIOGitHubAPIBase
-from aiogithubapi.objects.user import AIOGitHubAPIUser
+from aiogithubapi.objects.users.user import AIOGitHubAPIUsersUser
 
 
 class _ParentObject(AIOGitHubAPIBase):
@@ -173,11 +173,11 @@ class AIOGitHubAPIRepositoryCommit(AIOGitHubAPIBase):
 
     @property
     def author(self):
-        return AIOGitHubAPIUser(self.attributes.get("author", {}))
+        return AIOGitHubAPIUsersUser(self.attributes.get("author", {}))
 
     @property
     def committer(self):
-        return AIOGitHubAPIUser(self.attributes.get("committer", {}))
+        return AIOGitHubAPIUsersUser(self.attributes.get("committer", {}))
 
     @property
     def parents(self):

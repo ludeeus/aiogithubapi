@@ -24,7 +24,7 @@ from aiogithubapi.objects.repository.issue import (
 
 from aiogithubapi.objects.repository.release import AIOGitHubAPIRepositoryRelease
 
-from aiogithubapi.objects.user import AIOGitHubAPIUser
+from aiogithubapi.objects.users.user import AIOGitHubAPIUsersUser
 
 
 class AIOGitHubAPIRepository(AIOGitHubAPIBaseClient):
@@ -97,8 +97,8 @@ class AIOGitHubAPIRepository(AIOGitHubAPIBaseClient):
         return self._last_commit
 
     @property
-    def owner(self) -> AIOGitHubAPIUser:
-        return AIOGitHubAPIUser(self.attributes.get("owner"))
+    def owner(self) -> AIOGitHubAPIUsersUser:
+        return AIOGitHubAPIUsersUser(self.attributes.get("owner"))
 
     async def get_contents(
         self, path: str, ref: str or None = None
