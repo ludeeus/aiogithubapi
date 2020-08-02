@@ -263,3 +263,4 @@ async def test_create_issue(aresponses, repository_response):
             "assignees": ["octocat"],
         }
         await repository.create_issue(**data)
+
