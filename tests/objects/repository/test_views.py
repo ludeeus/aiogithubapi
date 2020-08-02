@@ -21,7 +21,8 @@ async def test_views(aresponses, views_response):
     )
 
     async with GitHub(TOKEN) as github:
-        views = AIOGitHubAPIRepositoryViews()
-        await views.get("octocat/Hello-World")
+        views = AIOGitHubAPIRepositoryViews(
+            github.client, await views.get("octocat/Hello-World")
+        )
         assert views.count == 14850
         assert views.uniques == 3782

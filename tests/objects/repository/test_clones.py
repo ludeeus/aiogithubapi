@@ -21,7 +21,8 @@ async def test_clones(aresponses, clones_response):
     )
 
     async with GitHub(TOKEN) as github:
-        clones = AIOGitHubAPIRepositoryClones()
-        await clones.get("octocat/Hello-World")
+        clones = AIOGitHubAPIRepositoryClones(
+            github.client, await clones.get("octocat/Hello-World")
+        )
         assert clones.count == 173
         assert clones.uniques == 128
