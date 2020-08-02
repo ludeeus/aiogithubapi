@@ -8,7 +8,7 @@ from datetime import datetime
 
 from aiogithubapi.common.exceptions import AIOGitHubAPIException
 from aiogithubapi.objects.base import AIOGitHubAPIBaseClient
-
+from aiogithubapi.objects.repository.traffic import AIOGitHubAPIRepositoryTraffic
 from aiogithubapi.objects.repository.commit import AIOGitHubAPIRepositoryCommit
 
 from aiogithubapi.objects.repository.content import (
@@ -32,6 +32,7 @@ class AIOGitHubAPIRepository(AIOGitHubAPIBaseClient):
         """Initialise."""
         super().__init__(client, attributes)
         self._last_commit = None
+        self.traffic = AIOGitHubAPIRepositoryTraffic(client, attributes)
 
     @property
     def id(self) -> None:
