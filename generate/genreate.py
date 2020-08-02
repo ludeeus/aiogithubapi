@@ -154,6 +154,16 @@ def generateclass(name, data, primary=False):
                     assertions.append(
                         f"    assert obj.{key}.{akey} == {fixtruename}['{key}']['{akey}']"
                     )
+                if isinstance(data[key][akey], list):
+                    if not isinstance(data[key][akey][0], (dict, list)):
+                        assertions.append(
+                            f"    assert obj.{key}.{akey}[0] == {fixtruename}['{key}']['{akey}'][0]"
+                        )
+                    if isinstance(data[key][akey][0], dict):
+                        for sakey in data[key][akey][0]:
+                            assertions.append(
+                                f"    assert obj.{key}.{akey}[0].{sakey} == {fixtruename}['{key}']['{akey}'][0]['{sakey}']"
+                            )
                 if isinstance(data[key][akey], dict):
                     for bkey in data[key][akey]:
                         if not isinstance(data[key][akey][bkey], (dict, list)):
@@ -165,6 +175,11 @@ def generateclass(name, data, primary=False):
                                 assertions.append(
                                     f"    assert obj.{key}.{akey}.{bkey}[0] == {fixtruename}['{key}']['{akey}']['{bkey}'][0]"
                                 )
+                            if isinstance(data[key][akey][bkey][0], dict):
+                                for sakey in data[key][akey][bkey][0]:
+                                    assertions.append(
+                                        f"    assert obj.{key}.{akey}.{bkey}[0].{sakey} == {fixtruename}['{key}']['{akey}']['{bkey}'][0]['{sakey}']"
+                                    )
                         if isinstance(data[key][akey][bkey], dict):
                             for ckey in data[key][akey][bkey]:
                                 if not isinstance(
@@ -173,6 +188,18 @@ def generateclass(name, data, primary=False):
                                     assertions.append(
                                         f"    assert obj.{key}.{akey}.{bkey}.{ckey} == {fixtruename}['{key}']['{akey}']['{bkey}']['{ckey}']"
                                     )
+                                if isinstance(data[key][akey][bkey][ckey], list):
+                                    if not isinstance(
+                                        data[key][akey][bkey][ckey][0], (dict, list)
+                                    ):
+                                        assertions.append(
+                                            f"    assert obj.{key}.{akey}.{bkey}.{ckey}[0] == {fixtruename}['{key}']['{akey}']['{bkey}']['{ckey}'][0]"
+                                        )
+                                    if isinstance(data[key][akey][bkey][ckey][0], dict):
+                                        for sakey in data[key][akey][bkey][ckey][0]:
+                                            assertions.append(
+                                                f"    assert obj.{key}.{akey}.{bkey}.{ckey}[0].{sakey} == {fixtruename}['{key}']['{akey}']['{bkey}']['{ckey}'][0]['{sakey}']"
+                                            )
                                 if isinstance(data[key][akey][bkey][ckey], dict):
                                     for dkey in data[key][akey][bkey][ckey]:
                                         if not isinstance(
@@ -183,6 +210,26 @@ def generateclass(name, data, primary=False):
                                             assertions.append(
                                                 f"    assert obj.{key}.{akey}.{bkey}.{ckey}.{dkey} == {fixtruename}['{key}']['{akey}']['{bkey}']['{ckey}']['{dkey}']"
                                             )
+                                        if isinstance(
+                                            data[key][akey][bkey][ckey][dkey], list
+                                        ):
+                                            if not isinstance(
+                                                data[key][akey][bkey][ckey][dkey][0],
+                                                (dict, list),
+                                            ):
+                                                assertions.append(
+                                                    f"    assert obj.{key}.{akey}.{bkey}.{ckey}.{dkey}[0] == {fixtruename}['{key}']['{akey}']['{bkey}']['{ckey}']['{dkey}'][0]"
+                                                )
+                                            if isinstance(
+                                                data[key][akey][bkey][ckey][dkey][0],
+                                                dict,
+                                            ):
+                                                for sakey in data[key][akey][bkey][
+                                                    ckey
+                                                ][dkey][0]:
+                                                    assertions.append(
+                                                        f"    assert obj.{key}.{akey}.{bkey}.{ckey}.{dkey}[0].{sakey} == {fixtruename}['{key}']['{akey}']['{bkey}']['{ckey}']['{dkey}'][0]['{sakey}']"
+                                                    )
             continue
 
     if not os.path.exists(os.path.dirname(testfilename)):
