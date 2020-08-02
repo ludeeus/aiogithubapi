@@ -102,9 +102,9 @@ def generateclass(name, data, primary=False):
 
     if not primary:
         return CLASS.format(classname=name, properties="".join(properties))
-    docs = "https://docs.github.com/en/rest/reference/repos#get-a-branch"  # input("Documentation URL: ")
-    path = "/repos/{owner}/{repo}/branches/{branch}"  # input("API path: ")
-    classname = "RepositoryBranch"  # input("Main Classname: ")
+    docs = input("Documentation URL: ")
+    path = input("API path: ")
+    classname = input("Main Classname: ")
     INHERIT.append(
         CLASS.format(
             classname=f"AIOGitHubAPI{classname}", properties="".join(properties)
