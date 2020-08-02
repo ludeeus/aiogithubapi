@@ -69,8 +69,8 @@ class AIOGitHubAPIRepository(AIOGitHubAPIBaseClient):
         return self.attributes.get("fork")
 
     @property
-    def forks(self) -> int:
-        return self.attributes.get("forks")
+    def forks_count(self) -> int:
+        return self.attributes.get("forks_count")
 
     @property
     def default_branch(self) -> None:
