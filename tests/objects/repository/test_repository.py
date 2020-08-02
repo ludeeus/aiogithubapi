@@ -6,7 +6,7 @@ from aiogithubapi import GitHub, AIOGitHubAPIException
 
 from tests.const import TOKEN, NOT_RATELIMITED, RATELIMITED
 from tests.responses.base import base_response
-from tests.responses.repository import repository_response
+from tests.responses.repository_fixture import repository_response
 from tests.responses.branch import branch_response
 from tests.responses.contents import contents_list_response, contents_file_response
 from tests.responses.tree import tree_response
