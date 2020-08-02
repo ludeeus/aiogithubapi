@@ -10,7 +10,7 @@ from tests.responses.clones_fixture import clones_response
 
 
 @pytest.mark.asyncio
-async def test_clones(aresponses, clones_response, issue_response):
+async def test_clones(aresponses, clones_response):
     aresponses.add(
         "api.github.com",
         "/repos/octocat/Hello-World/traffic/clones",

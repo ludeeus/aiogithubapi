@@ -10,7 +10,7 @@ from tests.responses.views_fixture import views_response
 
 
 @pytest.mark.asyncio
-async def test_views(aresponses, views_response, issue_response):
+async def test_views(aresponses, views_response):
     aresponses.add(
         "api.github.com",
         "/repos/octocat/Hello-World/traffic/views",
