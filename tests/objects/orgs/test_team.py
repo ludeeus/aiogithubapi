@@ -5,7 +5,7 @@ from aiogithubapi.objects.orgs.team import AIOGitHubAPIOrgsTeam
 from tests.responses.orgs.team_fixtrue import team_fixtrue_response
 
 
-def test_team_fixtrue(team_fixtrue_response):
+def test_team(team_fixtrue_response):
     obj = AIOGitHubAPIOrgsTeam(team_fixtrue_response)
     assert obj.id == team_fixtrue_response["id"]
     assert obj.node_id == team_fixtrue_response["node_id"]

@@ -5,7 +5,7 @@ from aiogithubapi.objects.repos.label import AIOGitHubAPIReposLabel
 from tests.responses.repos.label_fixtrue import label_fixtrue_response
 
 
-def test_label_fixtrue(label_fixtrue_response):
+def test_label(label_fixtrue_response):
     obj = AIOGitHubAPIReposLabel(label_fixtrue_response)
     assert obj.id == label_fixtrue_response["id"]
     assert obj.node_id == label_fixtrue_response["node_id"]

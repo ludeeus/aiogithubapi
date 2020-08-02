@@ -9,7 +9,7 @@ from tests.responses.repository.collaborator_fixtrue import (
 )
 
 
-def test_collaborator_fixtrue(collaborator_fixtrue_response):
+def test_collaborator(collaborator_fixtrue_response):
     obj = AIOGitHubAPIRepositoryCollaborator(collaborator_fixtrue_response)
     assert obj.login == collaborator_fixtrue_response["login"]
     assert obj.id == collaborator_fixtrue_response["id"]

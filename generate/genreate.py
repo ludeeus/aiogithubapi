@@ -136,7 +136,7 @@ def generateclass(name, data, primary=False):
     tmpr = tmpfilename.pop()
     tmpfilename.append(f"test_{tmpr}")
     testfilename = f"tests/objects/{'/'.join(tmpfilename)}.py"
-    testname = f"test_{fixturefilename.split('/')[-1].replace('.py', '')}"
+    testname = f"test_{tmpr}"
     assertions = []
 
     for key in data:

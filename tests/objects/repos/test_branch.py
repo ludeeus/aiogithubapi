@@ -5,7 +5,7 @@ from aiogithubapi.objects.repos.branch import AIOGitHubAPIReposBranch
 from tests.responses.repos.branch_fixtrue import branch_fixtrue_response
 
 
-def test_branch_fixtrue(branch_fixtrue_response):
+def test_branch(branch_fixtrue_response):
     obj = AIOGitHubAPIReposBranch(branch_fixtrue_response)
     assert obj.name == branch_fixtrue_response["name"]
     assert obj.commit.sha == branch_fixtrue_response["commit"]["sha"]

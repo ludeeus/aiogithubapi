@@ -33,7 +33,7 @@ asyncio.get_event_loop().run_until_complete(example())
 
 ## Add Data Objects
 
-_Currently this will only work properly on single GET responses._
+_Currently this will only work properly on single GET responses, if the sample response is a list, just use the first dict in the list_
 
 1. Find the response you want from <https://docs.github.com/en/rest/reference>
 1. Find the URL directly to the correct section (like <https://docs.github.com/en/rest/reference/issues#get-a-label>)

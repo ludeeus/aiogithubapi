@@ -7,7 +7,7 @@ from aiogithubapi.objects.repository.pullrequest import (
 from tests.responses.repository.pullrequest_fixtrue import pullrequest_fixtrue_response
 
 
-def test_pullrequest_fixtrue(pullrequest_fixtrue_response):
+def test_pullrequest(pullrequest_fixtrue_response):
     obj = AIOGitHubAPIRepositoryPullrequest(pullrequest_fixtrue_response)
     assert obj.url == pullrequest_fixtrue_response["url"]
     assert obj.id == pullrequest_fixtrue_response["id"]
