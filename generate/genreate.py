@@ -112,6 +112,8 @@ def generateclass(name, data, primary=False):
     objectfilename = f"aiogithubapi/objects/{'/'.join([x.lower() for x in re.findall('[A-Z][a-z]*', classname)])}.py"
     if not os.path.exists(os.path.dirname(objectfilename)):
         os.makedirs(os.path.dirname(objectfilename))
+        with open(os.path.join(os.path.dirname(objectfilename), "__init__.py")) as f:
+            f.write()
 
     with open(objectfilename, "w",) as objfile:
         objfile.write(
