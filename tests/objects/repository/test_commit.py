@@ -5,7 +5,7 @@ import pytest
 from aiogithubapi import GitHub
 
 from tests.const import TOKEN, NOT_RATELIMITED
-from tests.responses.repository import repository_response
+from tests.responses.repository_fixture import repository_response
 from tests.responses.commit import commit_response
 
 
