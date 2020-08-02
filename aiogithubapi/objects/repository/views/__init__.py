@@ -23,8 +23,8 @@ class AIOGitHubAPIRepositoryViews(AIOGitHubAPIBase):
     def uniques(self):
         return self.attributes.get("uniques")
 
-    async def get(self,) -> dict:
+    async def get(self, repository: str) -> dict:
         """Gets views traffic."""
-        _endpoint = f"/repos/{self.repository.full_name}/traffic/views"
+        _endpoint = f"/repos/{repository}/traffic/views"
 
         return await self.client.get(endpoint=_endpoint)
