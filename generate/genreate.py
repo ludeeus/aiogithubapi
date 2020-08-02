@@ -147,7 +147,16 @@ def generateclass(name, data, primary=False):
             continue
         if not isinstance(data[key], (dict, list)):
             assertions.append(f"    assert obj.{key} == {fixtruename}['{key}']")
-            continue
+        if isinstance(data[key], list):
+            if not isinstance(data[key][0], (dict, list)):
+                assertions.append(
+                    f"    assert obj.{key}[0] == {fixtruename}['{key}'][0]"
+                )
+            if isinstance(data[key][0], dict):
+                for sakey in data[key][0]:
+                    assertions.append(
+                        f"    assert obj.{key}[0].{sakey} == {fixtruename}['{key}'][0]['{sakey}']"
+                    )
         if isinstance(data[key], dict):
             for akey in data[key]:
                 if not isinstance(data[key][akey], (dict, list)):
