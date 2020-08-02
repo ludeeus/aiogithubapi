@@ -97,7 +97,7 @@ class AIOGitHubAPIRepository(AIOGitHubAPIBaseClient):
         return self._last_commit
 
     @property
-    def owner(self) -> str:
+    def owner(self) -> AIOGitHubAPIUser:
         return AIOGitHubAPIUser(self.attributes.get("owner"))
 
     async def get_contents(

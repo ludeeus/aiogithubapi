@@ -28,13 +28,19 @@ async def test_get_repository(aresponses, repository_response):
         repository = await github.get_repo("octocat/Hello-World")
         assert repository.description == "This your first repo!"
         assert repository.id == 1296269
+        assert repository.name == "Hello-World"
         assert repository.full_name == "octocat/Hello-World"
         assert repository.pushed_at == datetime.datetime(2011, 1, 26, 19, 6, 43)
         assert not repository.archived
         assert repository.topics == ["octocat", "atom", "electron", "api"]
         assert not repository.fork
+        assert repository.forks_count == 9
         assert repository.default_branch == "master"
         assert repository.last_commit is None
+        assert repository.homepage == "https://github.com"
+        assert repository.stargazers_count == 80
+        assert repository.watchers_count == 80
+        assert repository.owner.login == "octocat"
 
 
 @pytest.mark.asyncio
