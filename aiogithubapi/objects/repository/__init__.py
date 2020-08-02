@@ -24,6 +24,8 @@ from aiogithubapi.objects.repository.issue import (
 
 from aiogithubapi.objects.repository.release import AIOGitHubAPIRepositoryRelease
 
+from aiogithubapi.objects.user import AIOGitHubAPIUser
+
 
 class AIOGitHubAPIRepository(AIOGitHubAPIBaseClient):
     """Repository GitHub API implementation."""
@@ -96,7 +98,7 @@ class AIOGitHubAPIRepository(AIOGitHubAPIBaseClient):
 
     @property
     def owner(self) -> str:
-        return self.attributes.get("owner").get("login")
+        return AIOGitHubAPIUser(self.attributes.get("owner"))
 
     async def get_contents(
         self, path: str, ref: str or None = None
