@@ -173,7 +173,7 @@ class AIOGitHubAPIRepository(AIOGitHubAPIBaseClient):
         """Retrun a list of repository release objects."""
         _endpoint = f"/repos/{self.full_name}/branches/{self.default_branch}"
         response = await self.client.get(endpoint=_endpoint)
-        return AIOGitHubAPIRepositoryCommit(response)
+        return AIOGitHubAPIRepositoryCommit(response.get("commit", {}))
 
     async def get_issue(self, issue: int) -> "AIOGitHubAPIRepositoryIssue":
         """Updates an issue comment."""
