@@ -8,7 +8,6 @@ from aiogithubapi.objects.base import AIOGitHubAPIBase
 
 
 class Views(AIOGitHubAPIBase):
-
     @property
     def timestamp(self):
         return self.attributes.get("timestamp", "")
@@ -23,7 +22,6 @@ class Views(AIOGitHubAPIBase):
 
 
 class AIOGitHubAPIReposTrafficPageviews(AIOGitHubAPIBase):
-
     @property
     def count(self):
         return self.attributes.get("count", None)
@@ -35,5 +33,3 @@ class AIOGitHubAPIReposTrafficPageviews(AIOGitHubAPIBase):
     @property
     def views(self):
         return [Views(x) for x in self.attributes.get("views", [])]
-
-

@@ -8,7 +8,6 @@ from aiogithubapi.objects.base import AIOGitHubAPIBase
 
 
 class Clones(AIOGitHubAPIBase):
-
     @property
     def timestamp(self):
         return self.attributes.get("timestamp", "")
@@ -23,7 +22,6 @@ class Clones(AIOGitHubAPIBase):
 
 
 class AIOGitHubAPIReposTrafficClones(AIOGitHubAPIBase):
-
     @property
     def count(self):
         return self.attributes.get("count", None)
@@ -35,5 +33,3 @@ class AIOGitHubAPIReposTrafficClones(AIOGitHubAPIBase):
     @property
     def clones(self):
         return [Clones(x) for x in self.attributes.get("clones", [])]
-
-

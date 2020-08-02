@@ -270,3 +270,27 @@ async def test_create_issue(aresponses, repository_response):
         }
         await repository.create_issue(**data)
 
+
+@pytest.mark.asyncio
+async def test_get_last_commit(aresponses, repository_response, branch_response):
+    aresponses.add(
+        "api.github.com",
+        "/repos/octocat/Hello-World",
+        "get",
+        aresponses.Response(
+            text=json.dumps(repository_response), status=200, headers=NOT_RATELIMITED,
+        ),
+    )
+    aresponses.add(
+        "api.github.com",
+        "/repos/octocat/Hello-World/branches/master",
+        "get",
+        aresponses.Response(
+            text=json.dumps(branch_response), status=200, headers=NOT_RATELIMITED,
+        ),
+    )
+    async with GitHub(TOKEN) as github:
+        repository = await github.get_repo("octocat/Hello-World")
+        assert repository.last_commit is None
+        commit = await repository.get_last_commit()
+        assert commit.sha == "7fd1a60b01f91b314f59955a4e4d4e80d8edf11d"

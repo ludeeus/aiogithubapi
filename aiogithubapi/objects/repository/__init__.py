@@ -9,7 +9,7 @@ from datetime import datetime
 from aiogithubapi.common.exceptions import AIOGitHubAPIException
 from aiogithubapi.objects.base import AIOGitHubAPIBaseClient
 from aiogithubapi.objects.repository.traffic import AIOGitHubAPIRepositoryTraffic
-from aiogithubapi.objects.repository.commit import AIOGitHubAPIRepositoryCommit
+from aiogithubapi.objects.repos.commit import AIOGitHubAPIReposCommit
 
 from aiogithubapi.objects.repository.content import (
     AIOGitHubAPIRepositoryContent,
@@ -24,7 +24,7 @@ from aiogithubapi.objects.repository.issue import (
 
 from aiogithubapi.objects.repository.release import AIOGitHubAPIRepositoryRelease
 
-from aiogithubapi.objects.user import AIOGitHubAPIUser
+from aiogithubapi.objects.users.user import AIOGitHubAPIUsersUser
 
 
 class AIOGitHubAPIRepository(AIOGitHubAPIBaseClient):
@@ -97,8 +97,8 @@ class AIOGitHubAPIRepository(AIOGitHubAPIBaseClient):
         return self._last_commit
 
     @property
-    def owner(self) -> AIOGitHubAPIUser:
-        return AIOGitHubAPIUser(self.attributes.get("owner"))
+    def owner(self) -> AIOGitHubAPIUsersUser:
+        return AIOGitHubAPIUsersUser(self.attributes.get("owner"))
 
     async def get_contents(
         self, path: str, ref: str or None = None
@@ -173,7 +173,7 @@ class AIOGitHubAPIRepository(AIOGitHubAPIBaseClient):
         """Retrun a list of repository release objects."""
         _endpoint = f"/repos/{self.full_name}/branches/{self.default_branch}"
         response = await self.client.get(endpoint=_endpoint)
-        return AIOGitHubAPIRepositoryCommit(response)
+        return AIOGitHubAPIReposCommit(response.get("commit", {}))
 
     async def get_issue(self, issue: int) -> "AIOGitHubAPIRepositoryIssue":
         """Updates an issue comment."""

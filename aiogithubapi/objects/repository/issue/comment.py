@@ -5,10 +5,10 @@ https://developer.github.com/v3/issues/comments/
 """
 # pylint: disable=missing-docstring
 from aiogithubapi.objects.base import AIOGitHubAPIBase, AIOGitHubAPIBaseClient
-from aiogithubapi.objects.user import AIOGitHubAPIUser
+from aiogithubapi.objects.users.user import AIOGitHubAPIUsersUser
 
 
-class AIOGitHubAPIRepositoryIssueCommentUser(AIOGitHubAPIUser):
+class AIOGitHubAPIRepositoryIssueCommentUser(AIOGitHubAPIUsersUser):
     """Issue commment user GitHub API implementation."""
 
     @property
