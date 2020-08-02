@@ -11,7 +11,7 @@ from tests.responses.branch import branch_response
 from tests.responses.contents import contents_list_response, contents_file_response
 from tests.responses.tree import tree_response
 from tests.responses.releases import releases_response
-from tests.responses.issue import issue_response
+from tests.responses.issue_fixture import issue_response
 
 
 @pytest.mark.asyncio
