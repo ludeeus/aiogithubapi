@@ -75,6 +75,18 @@ class AIOGitHubAPIRepository(AIOGitHubAPIBaseClient):
         return self.attributes.get("default_branch")
 
     @property
+    def homepage(self) -> str:
+        return self.attributes.get("homepage")
+
+    @property
+    def stargazers_count(self) -> str:
+        return self.attributes.get("stargazers_count")
+
+    @property
+    def watchers_count(self) -> str:
+        return self.attributes.get("watchers_count")
+
+    @property
     def last_commit(self) -> None:
         if self._last_commit is None:
             self.logger.warning(
