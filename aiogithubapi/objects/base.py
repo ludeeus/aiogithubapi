@@ -6,7 +6,7 @@ import logging
 class AIOGitHubAPIBase:
     """Base class for AIOGitHubAPI."""
 
-    logger: logging.Logger = logging.getLogger("AIOGitHubAPI")
+    logger: logging.Logger = logging.getLogger("aiogithubapi")
 
     def __init__(self, attributes) -> None:
         """Initialize."""
@@ -27,9 +27,9 @@ class AIOGitHubAPIResponse:
 
     def __init__(self) -> None:
         """initialise."""
-        self.headers = {}
-        self.status = HttpStatusCode.OK
-        self.data = None
+        self.headers: dict = {}
+        self.status: HttpStatusCode = HttpStatusCode.OK
+        self.data: dict or str = {}
 
     def as_dict(self):
         """Return attributes as a dict."""
