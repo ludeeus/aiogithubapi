@@ -1,4 +1,5 @@
 # pylint: disable=missing-docstring, redefined-outer-name, unused-import
+from aiogithubapi.common.exceptions import AIOGitHubAPIRatelimitException
 import json
 import aiohttp
 import pytest
@@ -63,41 +64,37 @@ async def test_post_with_json(aresponses, base_response):
 
 
 @pytest.mark.asyncio
-async def test_get_ratelimited(aresponses, bad_auth_response):
+async def test_get_ratelimited(client, aresponses, base_response):
     aresponses.add(
         "api.github.com",
         "/",
         "get",
         aresponses.Response(
-            text=json.dumps(bad_auth_response),
+            text=json.dumps(base_response),
             status=403,
             headers=RATELIMITED,
         ),
     )
 
-    async with GitHub(TOKEN) as github:
-        with pytest.raises(AIOGitHubAPIException):
-            await github.client.get("/")
-        assert github.client.ratelimits.remaining == "0"
+    with pytest.raises(AIOGitHubAPIRatelimitException):
+        await client.get("/")
 
 
 @pytest.mark.asyncio
-async def test_post_ratelimited(aresponses, bad_auth_response):
+async def test_post_ratelimited(client, aresponses, base_response):
     aresponses.add(
         "api.github.com",
         "/",
         "post",
         aresponses.Response(
-            text=json.dumps(bad_auth_response),
+            text=json.dumps(base_response),
             status=403,
             headers=RATELIMITED,
         ),
     )
 
-    async with GitHub(TOKEN) as github:
-        with pytest.raises(AIOGitHubAPIException):
-            await github.client.post("/")
-        assert github.client.ratelimits.remaining == "0"
+    with pytest.raises(AIOGitHubAPIRatelimitException):
+        await client.post("/")
 
 
 @pytest.mark.asyncio

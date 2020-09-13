@@ -1,5 +1,4 @@
 """Helpers for AIOGitHubAPI."""
-import logging
 from asyncio import CancelledError, TimeoutError, get_event_loop
 from typing import Optional
 
@@ -21,14 +20,14 @@ from aiogithubapi.common.exceptions import (
 )
 from aiogithubapi.objects.base import AIOGitHubAPIResponse
 
-_LOGGER: logging.Logger = logging.getLogger("aiogithubapi")
-
 
 def short_sha(sha: str) -> str:
+    """Return the first 7 characters of the sha."""
     return sha[0:7]
 
 
 def short_message(message: str) -> str:
+    """Return the first line of a message"""
     return message.split("\n")[0]
 
 
@@ -74,7 +73,6 @@ async def async_call_api(
                     data=data or "",
                 )
 
-        _LOGGER.debug(result.headers)
         response.status = result.status
         response.headers = result.headers
 
@@ -102,5 +100,4 @@ async def async_call_api(
                     )
                 raise AIOGitHubAPIException(response.data)
 
-    _LOGGER.debug(response.as_dict())
     return response

@@ -31,6 +31,7 @@ class HttpStatusCode(int, Enum):
     RATELIMIT = 403
     NOT_FOUND = 404
     TEAPOT = 418
+    INTERNAL_SERVER_ERROR = 500
 
 
 class HttpMethod(str, Enum):

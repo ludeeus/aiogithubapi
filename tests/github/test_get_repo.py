@@ -1,4 +1,5 @@
 # pylint: disable=missing-docstring, redefined-outer-name, unused-import
+from aiogithubapi.common.exceptions import AIOGitHubAPIRatelimitException
 import json
 import aiohttp
 import pytest
@@ -29,7 +30,7 @@ async def test_get_repo(aresponses, event_loop, repository_response):
 
 
 @pytest.mark.asyncio
-async def test_get_repo_ratelimited(aresponses, event_loop, base_response):
+async def test_get_repo_ratelimited(aresponses, github, base_response):
     aresponses.add(
         "api.github.com",
         "/repos/octocat/Hello-World",
@@ -40,7 +41,5 @@ async def test_get_repo_ratelimited(aresponses, event_loop, base_response):
             headers=RATELIMITED,
         ),
     )
-    async with GitHub(TOKEN) as github:
-        with pytest.raises(AIOGitHubAPIException):
-            await github.get_repo("octocat/Hello-World")
-        assert github.client.ratelimits.remaining == "0"
+    with pytest.raises(AIOGitHubAPIRatelimitException):
+        await github.get_repo("octocat/Hello-World")
