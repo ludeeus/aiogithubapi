@@ -1,4 +1,5 @@
 # AIOGitHubAPI
+
 [![codecov](https://codecov.io/gh/ludeeus/aiogithubapi/branch/master/graph/badge.svg)](https://codecov.io/gh/ludeeus/aiogithubapi)
 
 _Asynchronous Python client for the GitHub API_
@@ -6,34 +7,12 @@ _Asynchronous Python client for the GitHub API_
 This is not a full client for the API (Have you seen it, it's huge), and will probably never be.
 Things are added when needed.
 
+For examples on how to use it see [the documentation](https://aiogithubapi.netlify.app/) and/or the tests dir.
+
 ## Install
 
 ```bash
 python3 -m pip install -U aiogithubapi
-```
-
-## Example
-
-```python
-"""Example usage of AIOGitHubAPI"""
-import asyncio
-from aiogithubapi import GitHub, GitHubDevice
-
-
-async def example():
-    """Example usage of AIOGitHubAPI."""
-    async with GitHubDevice() as device:
-        otp = await device.async_get_otp()
-        print("Open https://github.com/login/device and enter:", otp)
-        token = await device.async_get_access_token()
-
-    async with GitHub(token) as github:
-        repository = await github.get_repo("ludeeus/aiogithubapi")
-        print("Repository description:", repository.full_name)
-        print("Repository description:", repository.description)
-
-
-asyncio.get_event_loop().run_until_complete(example())
 ```
 
 ## Add Data Objects
