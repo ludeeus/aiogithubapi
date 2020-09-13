@@ -1,11 +1,12 @@
 """AIOGitHubAPI: objects.base"""
+from aiogithubapi.common.const import HttpStatusCode
 import logging
 
 
 class AIOGitHubAPIBase:
     """Base class for AIOGitHubAPI."""
 
-    logger = logging.getLogger("AIOGitHubAPI")
+    logger: logging.Logger = logging.getLogger("aiogithubapi")
 
     def __init__(self, attributes) -> None:
         """Initialize."""
@@ -19,3 +20,17 @@ class AIOGitHubAPIBaseClient(AIOGitHubAPIBase):
         """Initialise."""
         super().__init__(attributes)
         self.client = client
+
+
+class AIOGitHubAPIResponse:
+    """Response object for AIOGitHub."""
+
+    def __init__(self) -> None:
+        """initialise."""
+        self.headers: dict = {}
+        self.status: HttpStatusCode = HttpStatusCode.OK
+        self.data: dict or str = {}
+
+    def as_dict(self):
+        """Return attributes as a dict."""
+        return {"headers": self.headers, "status": self.status, "data": self.data}

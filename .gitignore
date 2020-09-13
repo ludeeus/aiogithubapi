@@ -6,3 +6,5 @@ coverage.xml
 htmlcov
 build
 dist
+docs
+example.py

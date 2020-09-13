@@ -1,10 +1,11 @@
 # pylint: disable=missing-docstring, redefined-outer-name, unused-import
 import json
-import aiohttp
-import pytest
-from aiogithubapi import GitHub, AIOGitHubAPIException
 
-from tests.const import TOKEN, NOT_RATELIMITED, RATELIMITED
+import pytest
+
+from aiogithubapi import GitHub
+from aiogithubapi.common.exceptions import AIOGitHubAPIRatelimitException
+from tests.const import NOT_RATELIMITED, RATELIMITED, TOKEN
 from tests.responses.base import base_response
 from tests.responses.org_repositories import org_repositories_response
 
@@ -30,17 +31,17 @@ async def test_get_org_repos(aresponses, org_repositories_response):
 
 
 @pytest.mark.asyncio
-async def test_get_org_repos_ratelimited(aresponses, base_response):
+async def test_get_org_repos_ratelimited(github, aresponses, base_response):
     aresponses.add(
         "api.github.com",
         "/orgs/octocat/repos",
         "get",
         aresponses.Response(
-            text=json.dumps(base_response), status=403, headers=RATELIMITED,
+            text=json.dumps(base_response),
+            status=403,
+            headers=RATELIMITED,
         ),
     )
 
-    async with GitHub(TOKEN) as github:
-        with pytest.raises(AIOGitHubAPIException):
-            await github.get_org_repos("octocat")
-        assert github.client.ratelimits.remaining == "0"
+    with pytest.raises(AIOGitHubAPIRatelimitException):
+        await github.get_org_repos("octocat")

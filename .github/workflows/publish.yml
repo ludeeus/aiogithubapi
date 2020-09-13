@@ -8,9 +8,9 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@master
       - name: Set up Python
-        uses: actions/setup-python@v1
+        uses: actions/setup-python@master
         with:
           python-version: "3.x"
 
@@ -24,7 +24,7 @@ jobs:
 
       - name: Set version number
         run: |
-          sed -i "s/version=\"0.0.0\"/version=\"$GIT_TAG_NAME\"/" ${{github.workspace}}/setup.py
+          sed -i "s/VERSION = \"0.0.0\"/VERSION = \"$GIT_TAG_NAME\"/" ${{github.workspace}}/aiogithubapi/common/const.py
 
       - name: Publish to PyPi
         env:

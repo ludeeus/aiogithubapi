@@ -21,7 +21,9 @@ async def test_get_repository(aresponses, repository_response):
         "/repos/octocat/Hello-World",
         "get",
         aresponses.Response(
-            text=json.dumps(repository_response), status=200, headers=NOT_RATELIMITED,
+            text=json.dumps(repository_response),
+            status=200,
+            headers=NOT_RATELIMITED,
         ),
     )
     async with GitHub(TOKEN) as github:
@@ -50,7 +52,9 @@ async def test_set_last_commit(aresponses, repository_response, branch_response)
         "/repos/octocat/Hello-World",
         "get",
         aresponses.Response(
-            text=json.dumps(repository_response), status=200, headers=NOT_RATELIMITED,
+            text=json.dumps(repository_response),
+            status=200,
+            headers=NOT_RATELIMITED,
         ),
     )
     aresponses.add(
@@ -58,7 +62,9 @@ async def test_set_last_commit(aresponses, repository_response, branch_response)
         "/repos/octocat/Hello-World/branches/master",
         "get",
         aresponses.Response(
-            text=json.dumps(branch_response), status=200, headers=NOT_RATELIMITED,
+            text=json.dumps(branch_response),
+            status=200,
+            headers=NOT_RATELIMITED,
         ),
     )
     async with GitHub(TOKEN) as github:
@@ -77,7 +83,9 @@ async def test_get_contents_file(
         "/repos/octocat/Hello-World",
         "get",
         aresponses.Response(
-            text=json.dumps(repository_response), status=200, headers=NOT_RATELIMITED,
+            text=json.dumps(repository_response),
+            status=200,
+            headers=NOT_RATELIMITED,
         ),
     )
     aresponses.add(
@@ -105,7 +113,9 @@ async def test_get_contents_list(
         "/repos/octocat/Hello-World",
         "get",
         aresponses.Response(
-            text=json.dumps(repository_response), status=200, headers=NOT_RATELIMITED,
+            text=json.dumps(repository_response),
+            status=200,
+            headers=NOT_RATELIMITED,
         ),
     )
     aresponses.add(
@@ -131,7 +141,9 @@ async def test_get_tree(aresponses, repository_response, tree_response):
         "/repos/octocat/Hello-World",
         "get",
         aresponses.Response(
-            text=json.dumps(repository_response), status=200, headers=NOT_RATELIMITED,
+            text=json.dumps(repository_response),
+            status=200,
+            headers=NOT_RATELIMITED,
         ),
     )
     aresponses.add(
@@ -139,7 +151,9 @@ async def test_get_tree(aresponses, repository_response, tree_response):
         "/repos/octocat/Hello-World/git/trees/master",
         "get",
         aresponses.Response(
-            text=json.dumps(tree_response), status=200, headers=NOT_RATELIMITED,
+            text=json.dumps(tree_response),
+            status=200,
+            headers=NOT_RATELIMITED,
         ),
     )
     async with GitHub(TOKEN) as github:
@@ -157,14 +171,20 @@ async def test_get_rendered_contents(aresponses, repository_response):
         "/repos/octocat/Hello-World",
         "get",
         aresponses.Response(
-            text=json.dumps(repository_response), status=200, headers=NOT_RATELIMITED,
+            text=json.dumps(repository_response),
+            status=200,
+            headers=NOT_RATELIMITED,
         ),
     )
     aresponses.add(
         "api.github.com",
         "/repos/octocat/Hello-World/contents/README.md",
         "get",
-        aresponses.Response(text="test", status=200, headers=NOT_RATELIMITED,),
+        aresponses.Response(
+            text="test",
+            status=200,
+            headers=NOT_RATELIMITED,
+        ),
     )
     async with GitHub(TOKEN) as github:
         repository = await github.get_repo("octocat/Hello-World")
@@ -179,7 +199,9 @@ async def test_get_releases(aresponses, repository_response, releases_response):
         "/repos/octocat/Hello-World",
         "get",
         aresponses.Response(
-            text=json.dumps(repository_response), status=200, headers=NOT_RATELIMITED,
+            text=json.dumps(repository_response),
+            status=200,
+            headers=NOT_RATELIMITED,
         ),
     )
     aresponses.add(
@@ -187,7 +209,9 @@ async def test_get_releases(aresponses, repository_response, releases_response):
         "/repos/octocat/Hello-World/releases",
         "get",
         aresponses.Response(
-            text=json.dumps(releases_response), status=200, headers=NOT_RATELIMITED,
+            text=json.dumps(releases_response),
+            status=200,
+            headers=NOT_RATELIMITED,
         ),
     )
     aresponses.add(
@@ -195,7 +219,9 @@ async def test_get_releases(aresponses, repository_response, releases_response):
         "/repos/octocat/Hello-World/releases",
         "get",
         aresponses.Response(
-            text=json.dumps(releases_response), status=200, headers=NOT_RATELIMITED,
+            text=json.dumps(releases_response),
+            status=200,
+            headers=NOT_RATELIMITED,
         ),
     )
     aresponses.add(
@@ -203,7 +229,9 @@ async def test_get_releases(aresponses, repository_response, releases_response):
         "/repos/octocat/Hello-World/releases",
         "get",
         aresponses.Response(
-            text=json.dumps(releases_response), status=200, headers=NOT_RATELIMITED,
+            text=json.dumps(releases_response),
+            status=200,
+            headers=NOT_RATELIMITED,
         ),
     )
     async with GitHub(TOKEN) as github:
@@ -225,7 +253,9 @@ async def test_get_issue(aresponses, repository_response, issue_response):
         "/repos/octocat/Hello-World",
         "get",
         aresponses.Response(
-            text=json.dumps(repository_response), status=200, headers=NOT_RATELIMITED,
+            text=json.dumps(repository_response),
+            status=200,
+            headers=NOT_RATELIMITED,
         ),
     )
     aresponses.add(
@@ -233,7 +263,9 @@ async def test_get_issue(aresponses, repository_response, issue_response):
         "/repos/octocat/Hello-World/issues/1",
         "get",
         aresponses.Response(
-            text=json.dumps(issue_response), status=200, headers=NOT_RATELIMITED,
+            text=json.dumps(issue_response),
+            status=200,
+            headers=NOT_RATELIMITED,
         ),
     )
     async with GitHub(TOKEN) as github:
@@ -249,14 +281,19 @@ async def test_create_issue(aresponses, repository_response):
         "/repos/octocat/Hello-World",
         "get",
         aresponses.Response(
-            text=json.dumps(repository_response), status=200, headers=NOT_RATELIMITED,
+            text=json.dumps(repository_response),
+            status=200,
+            headers=NOT_RATELIMITED,
         ),
     )
     aresponses.add(
         "api.github.com",
         "/repos/octocat/Hello-World/issues",
         "post",
-        aresponses.Response(status=200, headers=NOT_RATELIMITED,),
+        aresponses.Response(
+            status=200,
+            headers=NOT_RATELIMITED,
+        ),
     )
     async with GitHub(TOKEN) as github:
         repository = await github.get_repo("octocat/Hello-World")
@@ -278,7 +315,9 @@ async def test_get_last_commit(aresponses, repository_response, branch_response)
         "/repos/octocat/Hello-World",
         "get",
         aresponses.Response(
-            text=json.dumps(repository_response), status=200, headers=NOT_RATELIMITED,
+            text=json.dumps(repository_response),
+            status=200,
+            headers=NOT_RATELIMITED,
         ),
     )
     aresponses.add(
@@ -286,7 +325,9 @@ async def test_get_last_commit(aresponses, repository_response, branch_response)
         "/repos/octocat/Hello-World/branches/master",
         "get",
         aresponses.Response(
-            text=json.dumps(branch_response), status=200, headers=NOT_RATELIMITED,
+            text=json.dumps(branch_response),
+            status=200,
+            headers=NOT_RATELIMITED,
         ),
     )
     async with GitHub(TOKEN) as github:

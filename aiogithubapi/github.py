@@ -1,6 +1,9 @@
 """AIOGitHubAPI: AIOGitHubAPI"""
 import os
+from typing import List
+
 import aiohttp
+
 from aiogithubapi.client import AIOGitHubAPIClient
 from aiogithubapi.common.const import ACCEPT_HEADERS
 from aiogithubapi.objects.base import AIOGitHubAPIBase
@@ -17,14 +20,15 @@ class AIOGitHubAPI(AIOGitHubAPIBase):
     _close_session = False
 
     def __init__(
-        self, token: str = None, session: "aiohttp.ClientSession" = None
+        self, token: str = None, session: aiohttp.ClientSession = None
     ) -> None:
         """
         Initialises a GitHub API client.
 
-        :param session:     aiohttp.ClientSession to be used by this package.
-        :param token:       Your GitHub Personal Access Token
-                            https://github.com/settings/tokens
+        param | required | description
+        -- | -- | --
+        `token` | False | [Your GitHub Personal Access Token](https://github.com/settings/tokens).
+        `session` | False | `aiohttp.ClientSession` to be used by this package.
         """
         if session is None:
             session = aiohttp.ClientSession()
@@ -41,9 +45,9 @@ class AIOGitHubAPI(AIOGitHubAPIBase):
 
     async def __aexit__(self, *exc_info) -> None:
         """Async exit."""
-        await self.close()
+        await self._close()
 
-    async def get_repo(self, repo: str) -> "AIOGitHubAPIRepository":
+    async def get_repo(self, repo: str) -> AIOGitHubAPIRepository:
         """Retrun AIOGitHubAPIRepository object."""
         _endpoint = f"/repos/{repo}"
         _headers = {"Accept": ACCEPT_HEADERS["preview"]}
@@ -54,14 +58,14 @@ class AIOGitHubAPI(AIOGitHubAPIBase):
 
     async def get_org_repos(
         self, org: str, page: int = 1
-    ) -> ["AIOGitHubAPIRepository"]:
+    ) -> List[AIOGitHubAPIRepository]:
         """
         Retrun a list of AIOGitHubAPIRepository objects.
 
-        :param org:         The name of the organization
-                            Example: "octocat"
-        :param page:        The page number you want to fetch
-                            Default: 1
+        param | required | Default | description
+        -- | -- | -- | --
+        `org` | True | None | The name of the organization, example "octocat"
+        `page` | False | 1 | The page number you want to fetch.
         """
         _enpoint = f"/orgs/{org}/repos?page={str(page)}"
         _params = {"per_page": 100}
@@ -84,7 +88,11 @@ class AIOGitHubAPI(AIOGitHubAPIBase):
         """
         Retrun AIOGitHubAPIRepository object.
 
-        :param content:     The content (as markdown) you want to render
+        [API Docs](https://docs.github.com/en/rest/reference/markdown#render-a-markdown-document-in-raw-mode)
+
+        param | description
+        -- | --
+        `content` | The content (as markdown) you want to render as GHF Markdown
         """
         _endpoint = "/markdown/raw"
         _headers = {"Content-Type": "text/plain"}
@@ -93,7 +101,7 @@ class AIOGitHubAPI(AIOGitHubAPIBase):
             endpoint=_endpoint, headers=_headers, data=content
         )
 
-    async def close(self) -> None:
+    async def _close(self) -> None:
         """Close open client session."""
         if self.client.session and self._close_session:
             await self.client.session.close()

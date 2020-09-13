@@ -1,11 +1,15 @@
 # pylint: disable=missing-docstring, redefined-outer-name, unused-import
 import json
-import aiohttp
-import pytest
-from aiogithubapi import GitHub, AIOGitHubAPIException
 
-from tests.const import TOKEN, NOT_RATELIMITED, RATELIMITED
-from tests.responses.base import bad_response, base_response, bad_auth_response
+import pytest
+
+from aiogithubapi import AIOGitHubAPIException, GitHub
+from aiogithubapi.common.exceptions import (
+    AIOGitHubAPIAuthenticationException,
+    AIOGitHubAPIRatelimitException,
+)
+from tests.const import NOT_RATELIMITED, RATELIMITED, TOKEN
+from tests.responses.base import bad_auth_response, bad_response, base_response
 
 
 @pytest.mark.asyncio
@@ -15,7 +19,9 @@ async def test_get(aresponses, base_response):
         "/",
         "get",
         aresponses.Response(
-            text=json.dumps(base_response), status=200, headers=NOT_RATELIMITED,
+            text=json.dumps(base_response),
+            status=200,
+            headers=NOT_RATELIMITED,
         ),
     )
 
@@ -31,7 +37,9 @@ async def test_post(aresponses, base_response):
         "/",
         "post",
         aresponses.Response(
-            text=json.dumps(base_response), status=200, headers=NOT_RATELIMITED,
+            text=json.dumps(base_response),
+            status=200,
+            headers=NOT_RATELIMITED,
         ),
     )
 
@@ -47,7 +55,9 @@ async def test_post_with_json(aresponses, base_response):
         "/",
         "post",
         aresponses.Response(
-            text=json.dumps(base_response), status=200, headers=NOT_RATELIMITED,
+            text=json.dumps(base_response),
+            status=200,
+            headers=NOT_RATELIMITED,
         ),
     )
 
@@ -57,37 +67,54 @@ async def test_post_with_json(aresponses, base_response):
 
 
 @pytest.mark.asyncio
-async def test_get_ratelimited(aresponses, bad_auth_response):
+async def test_get_ratelimited(client, aresponses, base_response):
     aresponses.add(
         "api.github.com",
         "/",
         "get",
         aresponses.Response(
-            text=json.dumps(bad_auth_response), status=403, headers=RATELIMITED,
+            text=json.dumps(base_response),
+            status=403,
+            headers=RATELIMITED,
         ),
     )
 
-    async with GitHub(TOKEN) as github:
-        with pytest.raises(AIOGitHubAPIException):
-            await github.client.get("/")
-        assert github.client.ratelimits.remaining == "0"
+    with pytest.raises(AIOGitHubAPIRatelimitException):
+        await client.get("/")
 
 
 @pytest.mark.asyncio
-async def test_post_ratelimited(aresponses, bad_auth_response):
+async def test_get_unauthorized(client, aresponses, base_response):
+    aresponses.add(
+        "api.github.com",
+        "/",
+        "get",
+        aresponses.Response(
+            text=json.dumps(base_response),
+            status=401,
+            headers=NOT_RATELIMITED,
+        ),
+    )
+
+    with pytest.raises(AIOGitHubAPIAuthenticationException):
+        await client.get("/")
+
+
+@pytest.mark.asyncio
+async def test_post_ratelimited(client, aresponses, base_response):
     aresponses.add(
         "api.github.com",
         "/",
         "post",
         aresponses.Response(
-            text=json.dumps(bad_auth_response), status=403, headers=RATELIMITED,
+            text=json.dumps(base_response),
+            status=403,
+            headers=RATELIMITED,
         ),
     )
 
-    async with GitHub(TOKEN) as github:
-        with pytest.raises(AIOGitHubAPIException):
-            await github.client.post("/")
-        assert github.client.ratelimits.remaining == "0"
+    with pytest.raises(AIOGitHubAPIRatelimitException):
+        await client.post("/")
 
 
 @pytest.mark.asyncio
@@ -97,7 +124,9 @@ async def test_get_error(aresponses, bad_response):
         "/",
         "get",
         aresponses.Response(
-            text=json.dumps(bad_response), status=500, headers=NOT_RATELIMITED,
+            text=json.dumps(bad_response),
+            status=500,
+            headers=NOT_RATELIMITED,
         ),
     )
 
@@ -113,7 +142,9 @@ async def test_post_error(aresponses, bad_response):
         "/",
         "post",
         aresponses.Response(
-            text=json.dumps(bad_response), status=500, headers=NOT_RATELIMITED,
+            text=json.dumps(bad_response),
+            status=500,
+            headers=NOT_RATELIMITED,
         ),
     )
 
@@ -129,7 +160,9 @@ async def test_ok_get_auth_error(aresponses, bad_auth_response):
         "/",
         "get",
         aresponses.Response(
-            text=json.dumps(bad_auth_response), status=200, headers=NOT_RATELIMITED,
+            text=json.dumps(bad_auth_response),
+            status=200,
+            headers=NOT_RATELIMITED,
         ),
     )
 
@@ -145,7 +178,9 @@ async def test_ok_get_error(aresponses, bad_response):
         "/",
         "get",
         aresponses.Response(
-            text=json.dumps(bad_response), status=200, headers=NOT_RATELIMITED,
+            text=json.dumps(bad_response),
+            status=200,
+            headers=NOT_RATELIMITED,
         ),
     )
 

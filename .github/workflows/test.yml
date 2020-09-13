@@ -17,14 +17,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: "Get the repository content"
-      uses: actions/checkout@v1
+      uses: actions/checkout@master
 
     - name: Enable version ${{ matrix.python-version }} of Python
-      uses: actions/setup-python@v1
+      uses: actions/setup-python@master
       with:
         python-version: ${{ matrix.python-version }}
 
-    - uses: actions/cache@v1
+    - uses: actions/cache@master
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}

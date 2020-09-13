@@ -1,4 +1,5 @@
 # pylint: disable=missing-docstring, redefined-outer-name, unused-import
+from aiogithubapi.common.exceptions import AIOGitHubAPIRatelimitException
 import json
 import aiohttp
 import pytest
@@ -15,7 +16,9 @@ async def test_render_markdown(aresponses, base_response):
         "/markdown/raw",
         "post",
         aresponses.Response(
-            text=json.dumps(base_response), status=200, headers=NOT_RATELIMITED,
+            text=json.dumps(base_response),
+            status=200,
+            headers=NOT_RATELIMITED,
         ),
     )
     async with GitHub(TOKEN) as github:
@@ -25,19 +28,19 @@ async def test_render_markdown(aresponses, base_response):
 
 
 @pytest.mark.asyncio
-async def test_render_markdown_rate_limited(aresponses, base_response):
+async def test_render_markdown_rate_limited(aresponses, github, base_response):
     aresponses.add(
         "api.github.com",
         "/markdown/raw",
         "post",
         aresponses.Response(
-            text=json.dumps(base_response), status=403, headers=RATELIMITED,
+            text=json.dumps(base_response),
+            status=403,
+            headers=RATELIMITED,
         ),
     )
-    async with GitHub(TOKEN) as github:
-        with pytest.raises(AIOGitHubAPIException):
-            await github.render_markdown("test")
-        assert github.client.ratelimits.remaining == "0"
+    with pytest.raises(AIOGitHubAPIRatelimitException):
+        await github.render_markdown("test")
 
 
 @pytest.mark.asyncio
@@ -47,7 +50,9 @@ async def test_render_markdown_error(aresponses, base_response):
         "/markdown/raw",
         "post",
         aresponses.Response(
-            text=json.dumps(base_response), status=500, headers=NOT_RATELIMITED,
+            text=json.dumps(base_response),
+            status=500,
+            headers=NOT_RATELIMITED,
         ),
     )
     async with GitHub(TOKEN) as github:

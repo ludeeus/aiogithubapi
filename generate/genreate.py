@@ -1,6 +1,7 @@
 import json
 import re
 import os
+from time import sleep
 from datetime import datetime
 
 DATE = datetime.now()
@@ -112,10 +113,14 @@ def generateclass(name, data, primary=False):
     objectfilename = f"aiogithubapi/objects/{'/'.join([x.lower() for x in re.findall('[A-Z][a-z]*', classname)])}.py"
     if not os.path.exists(os.path.dirname(objectfilename)):
         os.makedirs(os.path.dirname(objectfilename))
+        sleep(1)
         with open(os.path.join(os.path.dirname(objectfilename), "__init__.py")) as f:
             f.write()
 
-    with open(objectfilename, "w",) as objfile:
+    with open(
+        objectfilename,
+        "w",
+    ) as objfile:
         objfile.write(
             OUT.format(
                 classname=f"AIOGitHubAPI{classname}",
@@ -131,8 +136,17 @@ def generateclass(name, data, primary=False):
 
     if not os.path.exists(os.path.dirname(fixturefilename)):
         os.makedirs(os.path.dirname(fixturefilename))
-    with open(fixturefilename, "w",) as fixturefile:
-        fixturefile.write(FIXSTURE.format(name=fixtruename, content=data, date=DATE,))
+    with open(
+        fixturefilename,
+        "w",
+    ) as fixturefile:
+        fixturefile.write(
+            FIXSTURE.format(
+                name=fixtruename,
+                content=data,
+                date=DATE,
+            )
+        )
 
     tmpfilename = [x.lower() for x in re.findall("[A-Z][a-z]*", classname)]
     tmpr = tmpfilename.pop()
@@ -242,7 +256,10 @@ def generateclass(name, data, primary=False):
 
     if not os.path.exists(os.path.dirname(testfilename)):
         os.makedirs(os.path.dirname(testfilename))
-    with open(testfilename, "w",) as fixturefile:
+    with open(
+        testfilename,
+        "w",
+    ) as fixturefile:
         fixturefile.write(
             TEST.format(
                 importfile=".".join(objectfilename.replace(".py", "").split("/")),
