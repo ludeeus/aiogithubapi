@@ -36,7 +36,9 @@ async def test_get_org_repos_ratelimited(aresponses, base_response):
         "/orgs/octocat/repos",
         "get",
         aresponses.Response(
-            text=json.dumps(base_response), status=403, headers=RATELIMITED,
+            text=json.dumps(base_response),
+            status=403,
+            headers=RATELIMITED,
         ),
     )
 

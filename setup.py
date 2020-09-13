@@ -1,12 +1,13 @@
 """Setup configuration."""
 import setuptools
+from aiogithubapi.common.const import VERSION
 
 with open("README.md", "r") as fh:
     DESCRIPTION = fh.read()
 
 setuptools.setup(
     name="aiogithubapi",
-    version="0.0.0",
+    version=VERSION,
     author="Joakim Sorensen (@ludeeus)",
     author_email="hi@ludeeus.dev",
     description="Asynchronous Python client for the GitHub API",

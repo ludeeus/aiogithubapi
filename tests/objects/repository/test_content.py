@@ -17,7 +17,9 @@ async def test_tree_content(aresponses, repository_response, tree_response):
         "/repos/octocat/Hello-World",
         "get",
         aresponses.Response(
-            text=json.dumps(repository_response), status=200, headers=NOT_RATELIMITED,
+            text=json.dumps(repository_response),
+            status=200,
+            headers=NOT_RATELIMITED,
         ),
     )
     aresponses.add(
@@ -25,7 +27,9 @@ async def test_tree_content(aresponses, repository_response, tree_response):
         "/repos/octocat/Hello-World/git/trees/master",
         "get",
         aresponses.Response(
-            text=json.dumps(tree_response), status=200, headers=NOT_RATELIMITED,
+            text=json.dumps(tree_response),
+            status=200,
+            headers=NOT_RATELIMITED,
         ),
     )
     async with GitHub(TOKEN) as github:
@@ -53,7 +57,9 @@ async def test_content(aresponses, repository_response, contents_file_response):
         "/repos/octocat/Hello-World",
         "get",
         aresponses.Response(
-            text=json.dumps(repository_response), status=200, headers=NOT_RATELIMITED,
+            text=json.dumps(repository_response),
+            status=200,
+            headers=NOT_RATELIMITED,
         ),
     )
     aresponses.add(

@@ -15,7 +15,9 @@ async def test_get(aresponses, base_response):
         "/",
         "get",
         aresponses.Response(
-            text=json.dumps(base_response), status=200, headers=NOT_RATELIMITED,
+            text=json.dumps(base_response),
+            status=200,
+            headers=NOT_RATELIMITED,
         ),
     )
 
@@ -31,7 +33,9 @@ async def test_post(aresponses, base_response):
         "/",
         "post",
         aresponses.Response(
-            text=json.dumps(base_response), status=200, headers=NOT_RATELIMITED,
+            text=json.dumps(base_response),
+            status=200,
+            headers=NOT_RATELIMITED,
         ),
     )
 
@@ -47,7 +51,9 @@ async def test_post_with_json(aresponses, base_response):
         "/",
         "post",
         aresponses.Response(
-            text=json.dumps(base_response), status=200, headers=NOT_RATELIMITED,
+            text=json.dumps(base_response),
+            status=200,
+            headers=NOT_RATELIMITED,
         ),
     )
 
@@ -63,7 +69,9 @@ async def test_get_ratelimited(aresponses, bad_auth_response):
         "/",
         "get",
         aresponses.Response(
-            text=json.dumps(bad_auth_response), status=403, headers=RATELIMITED,
+            text=json.dumps(bad_auth_response),
+            status=403,
+            headers=RATELIMITED,
         ),
     )
 
@@ -80,7 +88,9 @@ async def test_post_ratelimited(aresponses, bad_auth_response):
         "/",
         "post",
         aresponses.Response(
-            text=json.dumps(bad_auth_response), status=403, headers=RATELIMITED,
+            text=json.dumps(bad_auth_response),
+            status=403,
+            headers=RATELIMITED,
         ),
     )
 
@@ -97,7 +107,9 @@ async def test_get_error(aresponses, bad_response):
         "/",
         "get",
         aresponses.Response(
-            text=json.dumps(bad_response), status=500, headers=NOT_RATELIMITED,
+            text=json.dumps(bad_response),
+            status=500,
+            headers=NOT_RATELIMITED,
         ),
     )
 
@@ -113,7 +125,9 @@ async def test_post_error(aresponses, bad_response):
         "/",
         "post",
         aresponses.Response(
-            text=json.dumps(bad_response), status=500, headers=NOT_RATELIMITED,
+            text=json.dumps(bad_response),
+            status=500,
+            headers=NOT_RATELIMITED,
         ),
     )
 
@@ -129,7 +143,9 @@ async def test_ok_get_auth_error(aresponses, bad_auth_response):
         "/",
         "get",
         aresponses.Response(
-            text=json.dumps(bad_auth_response), status=200, headers=NOT_RATELIMITED,
+            text=json.dumps(bad_auth_response),
+            status=200,
+            headers=NOT_RATELIMITED,
         ),
     )
 
@@ -145,7 +161,9 @@ async def test_ok_get_error(aresponses, bad_response):
         "/",
         "get",
         aresponses.Response(
-            text=json.dumps(bad_response), status=200, headers=NOT_RATELIMITED,
+            text=json.dumps(bad_response),
+            status=200,
+            headers=NOT_RATELIMITED,
         ),
     )
 

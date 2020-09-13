@@ -1,6 +1,9 @@
 """AIOGitHubAPI: AIOGitHubAPI"""
 import os
+from typing import List
+
 import aiohttp
+
 from aiogithubapi.client import AIOGitHubAPIClient
 from aiogithubapi.common.const import ACCEPT_HEADERS
 from aiogithubapi.objects.base import AIOGitHubAPIBase
@@ -17,7 +20,7 @@ class AIOGitHubAPI(AIOGitHubAPIBase):
     _close_session = False
 
     def __init__(
-        self, token: str = None, session: "aiohttp.ClientSession" = None
+        self, token: str = None, session: aiohttp.ClientSession = None
     ) -> None:
         """
         Initialises a GitHub API client.
@@ -43,7 +46,7 @@ class AIOGitHubAPI(AIOGitHubAPIBase):
         """Async exit."""
         await self.close()
 
-    async def get_repo(self, repo: str) -> "AIOGitHubAPIRepository":
+    async def get_repo(self, repo: str) -> AIOGitHubAPIRepository:
         """Retrun AIOGitHubAPIRepository object."""
         _endpoint = f"/repos/{repo}"
         _headers = {"Accept": ACCEPT_HEADERS["preview"]}
@@ -54,7 +57,7 @@ class AIOGitHubAPI(AIOGitHubAPIBase):
 
     async def get_org_repos(
         self, org: str, page: int = 1
-    ) -> ["AIOGitHubAPIRepository"]:
+    ) -> List[AIOGitHubAPIRepository]:
         """
         Retrun a list of AIOGitHubAPIRepository objects.
 

@@ -17,7 +17,9 @@ async def test_get_clones(aresponses, repository_response, clones_fixtrue_respon
         "/repos/octocat/Hello-World",
         "get",
         aresponses.Response(
-            text=json.dumps(repository_response), status=200, headers=NOT_RATELIMITED,
+            text=json.dumps(repository_response),
+            status=200,
+            headers=NOT_RATELIMITED,
         ),
     )
     aresponses.add(
@@ -44,7 +46,9 @@ async def test_get_views(aresponses, repository_response, pageviews_fixtrue_resp
         "/repos/octocat/Hello-World",
         "get",
         aresponses.Response(
-            text=json.dumps(repository_response), status=200, headers=NOT_RATELIMITED,
+            text=json.dumps(repository_response),
+            status=200,
+            headers=NOT_RATELIMITED,
         ),
     )
     aresponses.add(

@@ -1,4 +1,5 @@
 black
+pdoc3
 aiohttp>=3.6.1,<4.0
 aresponses==2.0.0
 pytest==5.4.1

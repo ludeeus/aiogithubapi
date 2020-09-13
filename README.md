@@ -17,12 +17,17 @@ python3 -m pip install -U aiogithubapi
 ```python
 """Example usage of AIOGitHubAPI"""
 import asyncio
-from aiogithubapi import GitHub
+from aiogithubapi import GitHub, GitHubDevice
 
 
 async def example():
     """Example usage of AIOGitHubAPI."""
-    async with GitHub() as github:
+    async with GitHubDevice() as device:
+        otp = await device.async_get_otp()
+        print("Open https://github.com/login/device and enter:", otp)
+        token = await device.async_get_access_token()
+
+    async with GitHub(token) as github:
         repository = await github.get_repo("ludeeus/aiogithubapi")
         print("Repository description:", repository.full_name)
         print("Repository description:", repository.description)

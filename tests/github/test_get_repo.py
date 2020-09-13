@@ -16,7 +16,9 @@ async def test_get_repo(aresponses, event_loop, repository_response):
         "/repos/octocat/Hello-World",
         "get",
         aresponses.Response(
-            text=json.dumps(repository_response), status=200, headers=NOT_RATELIMITED,
+            text=json.dumps(repository_response),
+            status=200,
+            headers=NOT_RATELIMITED,
         ),
     )
 
@@ -33,7 +35,9 @@ async def test_get_repo_ratelimited(aresponses, event_loop, base_response):
         "/repos/octocat/Hello-World",
         "get",
         aresponses.Response(
-            text=json.dumps(base_response), status=403, headers=RATELIMITED,
+            text=json.dumps(base_response),
+            status=403,
+            headers=RATELIMITED,
         ),
     )
     async with GitHub(TOKEN) as github:

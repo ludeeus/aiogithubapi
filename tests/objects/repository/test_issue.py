@@ -17,7 +17,9 @@ async def test_issue(aresponses, repository_response, issue_response):
         "/repos/octocat/Hello-World",
         "get",
         aresponses.Response(
-            text=json.dumps(repository_response), status=200, headers=NOT_RATELIMITED,
+            text=json.dumps(repository_response),
+            status=200,
+            headers=NOT_RATELIMITED,
         ),
     )
     aresponses.add(
@@ -25,7 +27,9 @@ async def test_issue(aresponses, repository_response, issue_response):
         "/repos/octocat/Hello-World/issues/1",
         "get",
         aresponses.Response(
-            text=json.dumps(issue_response), status=200, headers=NOT_RATELIMITED,
+            text=json.dumps(issue_response),
+            status=200,
+            headers=NOT_RATELIMITED,
         ),
     )
 
@@ -86,7 +90,9 @@ async def test_update_issue(aresponses, repository_response, issue_response):
         "/repos/octocat/Hello-World",
         "get",
         aresponses.Response(
-            text=json.dumps(repository_response), status=200, headers=NOT_RATELIMITED,
+            text=json.dumps(repository_response),
+            status=200,
+            headers=NOT_RATELIMITED,
         ),
     )
     aresponses.add(
@@ -94,14 +100,19 @@ async def test_update_issue(aresponses, repository_response, issue_response):
         "/repos/octocat/Hello-World/issues/1",
         "get",
         aresponses.Response(
-            text=json.dumps(issue_response), status=200, headers=NOT_RATELIMITED,
+            text=json.dumps(issue_response),
+            status=200,
+            headers=NOT_RATELIMITED,
         ),
     )
     aresponses.add(
         "api.github.com",
         "/repos/octocat/Hello-World/issues/1",
         "post",
-        aresponses.Response(status=200, headers=NOT_RATELIMITED,),
+        aresponses.Response(
+            status=200,
+            headers=NOT_RATELIMITED,
+        ),
     )
     async with GitHub(TOKEN) as github:
         repository = await github.get_repo("octocat/Hello-World")
@@ -126,7 +137,9 @@ async def test_get_issue_comments(
         "/repos/octocat/Hello-World",
         "get",
         aresponses.Response(
-            text=json.dumps(repository_response), status=200, headers=NOT_RATELIMITED,
+            text=json.dumps(repository_response),
+            status=200,
+            headers=NOT_RATELIMITED,
         ),
     )
     aresponses.add(
@@ -134,7 +147,9 @@ async def test_get_issue_comments(
         "/repos/octocat/Hello-World/issues/1",
         "get",
         aresponses.Response(
-            text=json.dumps(issue_response), status=200, headers=NOT_RATELIMITED,
+            text=json.dumps(issue_response),
+            status=200,
+            headers=NOT_RATELIMITED,
         ),
     )
     aresponses.add(
@@ -161,7 +176,9 @@ async def test_comment_on_issue(aresponses, repository_response, issue_response)
         "/repos/octocat/Hello-World",
         "get",
         aresponses.Response(
-            text=json.dumps(repository_response), status=200, headers=NOT_RATELIMITED,
+            text=json.dumps(repository_response),
+            status=200,
+            headers=NOT_RATELIMITED,
         ),
     )
     aresponses.add(
@@ -169,14 +186,19 @@ async def test_comment_on_issue(aresponses, repository_response, issue_response)
         "/repos/octocat/Hello-World/issues/1",
         "get",
         aresponses.Response(
-            text=json.dumps(issue_response), status=200, headers=NOT_RATELIMITED,
+            text=json.dumps(issue_response),
+            status=200,
+            headers=NOT_RATELIMITED,
         ),
     )
     aresponses.add(
         "api.github.com",
         "/repos/octocat/Hello-World/issues/1/comments",
         "post",
-        aresponses.Response(status=200, headers=NOT_RATELIMITED,),
+        aresponses.Response(
+            status=200,
+            headers=NOT_RATELIMITED,
+        ),
     )
     async with GitHub(TOKEN) as github:
         repository = await github.get_repo("octocat/Hello-World")
@@ -193,7 +215,9 @@ async def test_issue_comments(
         "/repos/octocat/Hello-World",
         "get",
         aresponses.Response(
-            text=json.dumps(repository_response), status=200, headers=NOT_RATELIMITED,
+            text=json.dumps(repository_response),
+            status=200,
+            headers=NOT_RATELIMITED,
         ),
     )
     aresponses.add(
@@ -201,7 +225,9 @@ async def test_issue_comments(
         "/repos/octocat/Hello-World/issues/1",
         "get",
         aresponses.Response(
-            text=json.dumps(issue_response), status=200, headers=NOT_RATELIMITED,
+            text=json.dumps(issue_response),
+            status=200,
+            headers=NOT_RATELIMITED,
         ),
     )
     aresponses.add(
@@ -244,7 +270,9 @@ async def test_update_issue_comment(
         "/repos/octocat/Hello-World",
         "get",
         aresponses.Response(
-            text=json.dumps(repository_response), status=200, headers=NOT_RATELIMITED,
+            text=json.dumps(repository_response),
+            status=200,
+            headers=NOT_RATELIMITED,
         ),
     )
     aresponses.add(
@@ -252,7 +280,9 @@ async def test_update_issue_comment(
         "/repos/octocat/Hello-World/issues/1",
         "get",
         aresponses.Response(
-            text=json.dumps(issue_response), status=200, headers=NOT_RATELIMITED,
+            text=json.dumps(issue_response),
+            status=200,
+            headers=NOT_RATELIMITED,
         ),
     )
     aresponses.add(
@@ -285,7 +315,9 @@ async def test_get_issues(aresponses, repository_response, issues_response):
         "/repos/octocat/Hello-World",
         "get",
         aresponses.Response(
-            text=json.dumps(repository_response), status=200, headers=NOT_RATELIMITED,
+            text=json.dumps(repository_response),
+            status=200,
+            headers=NOT_RATELIMITED,
         ),
     )
     aresponses.add(
@@ -293,7 +325,9 @@ async def test_get_issues(aresponses, repository_response, issues_response):
         "/repos/octocat/Hello-World/issues",
         "get",
         aresponses.Response(
-            text=json.dumps(issues_response), status=200, headers=NOT_RATELIMITED,
+            text=json.dumps(issues_response),
+            status=200,
+            headers=NOT_RATELIMITED,
         ),
     )
 

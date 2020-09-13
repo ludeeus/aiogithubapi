@@ -15,7 +15,9 @@ async def test_get_rate_limit(aresponses, event_loop, base_response):
         "/rate_limit",
         "get",
         aresponses.Response(
-            text=json.dumps(base_response), status=200, headers=NOT_RATELIMITED,
+            text=json.dumps(base_response),
+            status=200,
+            headers=NOT_RATELIMITED,
         ),
     )
 

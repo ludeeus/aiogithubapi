@@ -55,7 +55,9 @@ class AIOGitHubAPIRepositoryIssue(AIOGitHubAPIBaseClient):
     def user(self):
         return AIOGitHubAPIRepositoryIssueCommentUser(self.attributes.get("user"))
 
-    async def get_comments(self,) -> ["AIOGitHubAPIRepositoryIssueComment"] or list:
+    async def get_comments(
+        self,
+    ) -> ["AIOGitHubAPIRepositoryIssueComment"] or list:
         """Updates an issue comment."""
         _endpoint = f"/repos/{self.repository}/issues/{self.id}/comments"
 

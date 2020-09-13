@@ -15,7 +15,9 @@ async def test_render_markdown(aresponses, base_response):
         "/markdown/raw",
         "post",
         aresponses.Response(
-            text=json.dumps(base_response), status=200, headers=NOT_RATELIMITED,
+            text=json.dumps(base_response),
+            status=200,
+            headers=NOT_RATELIMITED,
         ),
     )
     async with GitHub(TOKEN) as github:
@@ -31,7 +33,9 @@ async def test_render_markdown_rate_limited(aresponses, base_response):
         "/markdown/raw",
         "post",
         aresponses.Response(
-            text=json.dumps(base_response), status=403, headers=RATELIMITED,
+            text=json.dumps(base_response),
+            status=403,
+            headers=RATELIMITED,
         ),
     )
     async with GitHub(TOKEN) as github:
@@ -47,7 +51,9 @@ async def test_render_markdown_error(aresponses, base_response):
         "/markdown/raw",
         "post",
         aresponses.Response(
-            text=json.dumps(base_response), status=500, headers=NOT_RATELIMITED,
+            text=json.dumps(base_response),
+            status=500,
+            headers=NOT_RATELIMITED,
         ),
     )
     async with GitHub(TOKEN) as github:
