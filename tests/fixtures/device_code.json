@@ -3,5 +3,5 @@
     "user_code": "WDJB-MJHT",
     "verification_uri": "https://github.com/login/device",
     "expires_in": 900,
-    "interval": 5
+    "interval": 1
 }

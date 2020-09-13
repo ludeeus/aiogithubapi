@@ -29,6 +29,16 @@ async def test_device(aresponses, github_device: GitHubDevice):
         "/login/oauth/access_token",
         "post",
         aresponses.Response(
+            text=load_fixture("oauth_access_token_pending.json"),
+            status=200,
+            headers=NOT_RATELIMITED,
+        ),
+    )
+    aresponses.add(
+        "github.com",
+        "/login/oauth/access_token",
+        "post",
+        aresponses.Response(
             text=load_fixture("oauth_access_token.json"),
             status=200,
             headers=NOT_RATELIMITED,
