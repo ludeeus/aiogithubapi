@@ -1,4 +1,9 @@
-"""AIOGitHubAPI: AioGitHubClient"""
+"""
+AIOGitHubAPI: AioGitHubClient
+
+This is the class that do the requests against the API
+It also keeps track of ratelimits
+"""
 # pylint: disable=redefined-builtin, too-many-arguments
 import aiohttp
 from aiogithubapi.common.const import BASE_API_HEADERS, BASE_API_URL
@@ -11,7 +16,7 @@ class AIOGitHubAPIClient(AIOGitHubAPIBase):
     """Client to handle API calls."""
 
     def __init__(self, session: aiohttp.ClientSession, token: str) -> None:
-        """Initialize the client."""
+        """Initialize the API client."""
         self.session = session
         self.token = token
         self.ratelimits = AIOGitHubAPIRateLimit()

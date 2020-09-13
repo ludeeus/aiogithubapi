@@ -34,9 +34,11 @@ class AIOGitHubAPIDeviceLogin:
         """
         Initialises a GitHub API OAuth device flow.
 
-        :param client_id:   The client ID of your OAuth app.
-        :param scope:       Scope(s) that will be requested.
-        :param session:     aiohttp.ClientSession to be used by this package.
+        param | required | description
+        -- | -- | --
+        `client_id` | True | The client ID of your OAuth app.
+        `scope` | False | [Scope(s)](https://docs.github.com/en/developers/apps/scopes-for-oauth-apps) that will be requested.
+        `session` | False | `aiohttp.ClientSession` to be used by this package.
         """
         self.client_id = client_id
         self.scope = scope
@@ -55,7 +57,7 @@ class AIOGitHubAPIDeviceLogin:
 
     async def __aexit__(self, *exc_info) -> None:
         """Async exit."""
-        await self.close()
+        await self._close()
 
     async def async_register_device(self) -> AIOGitHubAPILoginDevice:
         """Register the device and return a object that contains the user code for authorization."""
@@ -74,39 +76,43 @@ class AIOGitHubAPIDeviceLogin:
 
         return device
 
-    async def async_device_activation(self) -> AIOGitHubAPILoginOauth or None:
+    async def async_device_activation(self) -> AIOGitHubAPILoginOauth:
         """Wait for the user to enter the code and activate the device."""
+        _activation = None
         params = {
             "client_id": self.client_id,
             "device_code": self._device_code,
             "grant_type": "urn:ietf:params:oauth:grant-type:device_code",
         }
 
-        if self._expires < datetime.timestamp(datetime.now()):
-            raise AIOGitHubAPIException("User took too long to enter key")
+        while _activation is None:
+            if self._expires < datetime.timestamp(datetime.now()):
+                raise AIOGitHubAPIException("User took too long to enter key")
 
-        try:
-            response = await async_call_api(
-                session=self.session,
-                method=HttpMethod.POST,
-                url=OAUTH_ACCESS_TOKEN,
-                params=params,
-                headers=HEADERS,
-            )
-            if response.data.get("error"):
-                if response.data["error"] == DeviceFlowError.AUTHORIZATION_PENDING:
-                    _LOGGER.debug(response.data["error_description"])
-                    await asyncio.sleep(self._interval)
-                    await self.async_device_activation()
+            try:
+                response = await async_call_api(
+                    session=self.session,
+                    method=HttpMethod.POST,
+                    url=OAUTH_ACCESS_TOKEN,
+                    params=params,
+                    headers=HEADERS,
+                )
+                if response.data.get("error"):
+                    if response.data["error"] == DeviceFlowError.AUTHORIZATION_PENDING:
+                        _LOGGER.debug(response.data["error_description"])
+                        await asyncio.sleep(self._interval)
+                    else:
+                        raise AIOGitHubAPIException(response.data["error_description"])
                 else:
-                    raise AIOGitHubAPIException(response.data["error_description"])
-            else:
-                return AIOGitHubAPILoginOauth(response.data)
+                    _activation = AIOGitHubAPILoginOauth(response.data)
+                    break
 
-        except AIOGitHubAPIException as exception:
-            raise AIOGitHubAPIException(exception)
+            except AIOGitHubAPIException as exception:
+                raise AIOGitHubAPIException(exception)
 
-    async def close(self) -> None:
+        return _activation
+
+    async def _close(self) -> None:
         """Close open client session."""
         if self.session and self._close_session:
             await self.session.close()

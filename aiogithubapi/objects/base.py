@@ -32,4 +32,5 @@ class AIOGitHubAPIResponse:
         self.data = None
 
     def as_dict(self):
+        """Return attributes as a dict."""
         return {"headers": self.headers, "status": self.status, "data": self.data}
