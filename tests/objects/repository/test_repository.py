@@ -38,7 +38,7 @@ async def test_get_repository(aresponses, repository_response):
         assert repository.topics == ["octocat", "atom", "electron", "api"]
         assert not repository.fork
         assert repository.forks_count == 9
-        assert repository.default_branch == "master"
+        assert repository.default_branch == "main"
         assert repository.last_commit is None
         assert repository.homepage == "https://github.com"
         assert repository.stargazers_count == 80
@@ -60,7 +60,7 @@ async def test_set_last_commit(aresponses, repository_response, branch_response)
     )
     aresponses.add(
         "api.github.com",
-        "/repos/octocat/Hello-World/branches/master",
+        "/repos/octocat/Hello-World/branches/main",
         "get",
         aresponses.Response(
             text=json.dumps(branch_response),
@@ -101,7 +101,7 @@ async def test_get_contents_file(
     )
     async with GitHub(TOKEN) as github:
         repository = await github.get_repo("octocat/Hello-World")
-        contents = await repository.get_contents("README.md", "master")
+        contents = await repository.get_contents("README.md", "main")
         assert contents.name == "README.md"
 
 
@@ -131,7 +131,7 @@ async def test_get_contents_list(
     )
     async with GitHub(TOKEN) as github:
         repository = await github.get_repo("octocat/Hello-World")
-        contents = await repository.get_contents("", "master")
+        contents = await repository.get_contents("", "main")
         assert len(contents) == 2
 
 
@@ -149,7 +149,7 @@ async def test_get_tree(aresponses, repository_response, tree_response):
     )
     aresponses.add(
         "api.github.com",
-        "/repos/octocat/Hello-World/git/trees/master",
+        "/repos/octocat/Hello-World/git/trees/main",
         "get",
         aresponses.Response(
             text=json.dumps(tree_response),
@@ -159,7 +159,7 @@ async def test_get_tree(aresponses, repository_response, tree_response):
     )
     async with GitHub(TOKEN) as github:
         repository = await github.get_repo("octocat/Hello-World")
-        contents = await repository.get_tree("master")
+        contents = await repository.get_tree("main")
         assert contents[0].full_path == "subdir/file.txt"
         with pytest.raises(AIOGitHubAPIException):
             await repository.get_tree()
@@ -189,7 +189,7 @@ async def test_get_rendered_contents(aresponses, repository_response):
     )
     async with GitHub(TOKEN) as github:
         repository = await github.get_repo("octocat/Hello-World")
-        rendered = await repository.get_rendered_contents("README.md", "master")
+        rendered = await repository.get_rendered_contents("README.md", "main")
         assert rendered == "test"
 
 
@@ -323,7 +323,7 @@ async def test_get_last_commit(aresponses, repository_response, branch_response)
     )
     aresponses.add(
         "api.github.com",
-        "/repos/octocat/Hello-World/branches/master",
+        "/repos/octocat/Hello-World/branches/main",
         "get",
         aresponses.Response(
             text=json.dumps(branch_response),

@@ -83,7 +83,7 @@ def org_repositories_response():
             "stargazers_count": 80,
             "watchers_count": 80,
             "size": 108,
-            "default_branch": "master",
+            "default_branch": "main",
             "open_issues_count": 0,
             "is_template": True,
             "topics": ["octocat", "atom", "electron", "api"],

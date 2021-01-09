@@ -23,6 +23,6 @@ setup(
     long_description=readme,
     name="aiogithubapi",
     packages=find_packages(include=["aiogithubapi", "aiogithubapi.*"]),
-    version="master",
+    version="main",
     url="https://github.com/ludeeus/aiogithubapi",
 )

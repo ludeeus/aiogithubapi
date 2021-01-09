@@ -6,7 +6,7 @@ import pytest
 @pytest.fixture()
 def branch_response():
     return {
-        "name": "master",
+        "name": "main",
         "commit": {
             "sha": "7fd1a60b01f91b314f59955a4e4d4e80d8edf11d",
             "node_id": "MDY6Q29tbWl0N2ZkMWE2MGIwMWY5MWIzMTRmNTk5NTVhNGU0ZDRlODBkOGVkZjExZA==",
@@ -61,8 +61,8 @@ def branch_response():
             },
         },
         "_links": {
-            "html": "https://github.com/octocat/Hello-World/tree/master",
-            "self": "https://api.github.com/repos/octocat/Hello-World/branches/master",
+            "html": "https://github.com/octocat/Hello-World/tree/main",
+            "self": "https://api.github.com/repos/octocat/Hello-World/branches/main",
         },
         "protected": True,
         "protection": {
@@ -72,5 +72,5 @@ def branch_response():
                 "contexts": ["ci-test", "linter"],
             },
         },
-        "protection_url": "https://api.github.com/repos/octocat/hello-world/branches/master/protection",
+        "protection_url": "https://api.github.com/repos/octocat/hello-world/branches/main/protection",
     }

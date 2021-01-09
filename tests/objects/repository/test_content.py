@@ -25,7 +25,7 @@ async def test_tree_content(aresponses, repository_response, tree_response):
     )
     aresponses.add(
         "api.github.com",
-        "/repos/octocat/Hello-World/git/trees/master",
+        "/repos/octocat/Hello-World/git/trees/main",
         "get",
         aresponses.Response(
             text=json.dumps(tree_response),
@@ -35,7 +35,7 @@ async def test_tree_content(aresponses, repository_response, tree_response):
     )
     async with GitHub(TOKEN) as github:
         repository = await github.get_repo("octocat/Hello-World")
-        contents = await repository.get_tree("master")
+        contents = await repository.get_tree("main")
         assert len([x for x in contents if x.is_directory]) == 1
         assert contents[0].full_path == "subdir/file.txt"
         assert not contents[0].is_directory
@@ -47,7 +47,7 @@ async def test_tree_content(aresponses, repository_response, tree_response):
         )
         assert (
             contents[0].download_url
-            == "https://raw.githubusercontent.com/octocat/Hello-World/master/subdir/file.txt"
+            == "https://raw.githubusercontent.com/octocat/Hello-World/main/subdir/file.txt"
         )
 
 
@@ -75,7 +75,7 @@ async def test_content(aresponses, repository_response, contents_file_response):
     )
     async with GitHub(TOKEN) as github:
         repository = await github.get_repo("octocat/Hello-World")
-        content = await repository.get_contents("README.md", "master")
+        content = await repository.get_contents("README.md", "main")
         assert content.type == "file"
         assert content.encoding == "base64"
         assert content.name == "README.md"
@@ -83,5 +83,5 @@ async def test_content(aresponses, repository_response, contents_file_response):
         assert content.content == ""
         assert (
             content.download_url
-            == "https://raw.githubusercontent.com/octokit/octokit.rb/master/README.md"
+            == "https://raw.githubusercontent.com/octokit/octokit.rb/main/README.md"
         )
