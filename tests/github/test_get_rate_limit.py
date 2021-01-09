@@ -1,10 +1,11 @@
 # pylint: disable=missing-docstring, redefined-outer-name, unused-import
 import json
+
 import aiohttp
 import pytest
-from aiogithubapi import GitHub, AIOGitHubAPIException
 
-from tests.const import TOKEN, NOT_RATELIMITED, RATELIMITED
+from aiogithubapi import AIOGitHubAPIException, GitHub
+from tests.const import NOT_RATELIMITED, RATELIMITED, TOKEN
 from tests.responses.base import base_response
 
 

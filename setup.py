@@ -1,26 +1,28 @@
 """Setup configuration."""
-import setuptools
-from aiogithubapi.common.const import VERSION
+from setuptools import find_packages, setup
 
-with open("README.md", "r") as fh:
-    DESCRIPTION = fh.read()
+with open("README.md") as readme_file:
+    readme = readme_file.read()
 
-setuptools.setup(
-    name="aiogithubapi",
-    version=VERSION,
-    author="Joakim Sorensen (@ludeeus)",
+setup(
+    author="Ludeeus",
     author_email="hi@ludeeus.dev",
-    description="Asynchronous Python client for the GitHub API",
-    install_requires=["aiohttp>=3.6.1,<4.0", "async_timeout", "backoff"],
-    long_description=DESCRIPTION,
-    long_description_content_type="text/markdown",
-    url="https://github.com/ludeeus/aiogithubapi",
-    packages=setuptools.find_packages(
-        exclude=["tests", "tests.*", "generate", "generate.*"]
-    ),
     classifiers=[
-        "Programming Language :: Python :: 3",
+        "Intended Audience :: Developers",
         "License :: OSI Approved :: MIT License",
-        "Operating System :: OS Independent",
+        "Natural Language :: English",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Topic :: Software Development :: Libraries :: Python Modules",
     ],
+    description="Asynchronous Python client for the GitHub API",
+    install_requires=["aiohttp>=3.6.1,<4.0", "async_timeout", "backoff>=1.10.0"],
+    license="MIT license",
+    long_description_content_type="text/markdown",
+    long_description=readme,
+    name="aiogithubapi",
+    packages=find_packages(include=["aiogithubapi", "aiogithubapi.*"]),
+    version="master",
+    url="https://github.com/ludeeus/aiogithubapi",
 )

@@ -8,22 +8,18 @@ from datetime import datetime
 
 from aiogithubapi.common.exceptions import AIOGitHubAPIException
 from aiogithubapi.objects.base import AIOGitHubAPIBaseClient
-from aiogithubapi.objects.repository.traffic import AIOGitHubAPIRepositoryTraffic
 from aiogithubapi.objects.repos.commit import AIOGitHubAPIReposCommit
-
 from aiogithubapi.objects.repository.content import (
     AIOGitHubAPIRepositoryContent,
     AIOGitHubAPIRepositoryTreeContent,
 )
-
 from aiogithubapi.objects.repository.issue import (
     AIOGitHubAPIRepositoryIssue,
     AIOGitHubAPIRepositoryIssueComment,
     AIOGitHubAPIRepositoryIssueCommentUser,
 )
-
 from aiogithubapi.objects.repository.release import AIOGitHubAPIRepositoryRelease
-
+from aiogithubapi.objects.repository.traffic import AIOGitHubAPIRepositoryTraffic
 from aiogithubapi.objects.users.user import AIOGitHubAPIUsersUser
 
 

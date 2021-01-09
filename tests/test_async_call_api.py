@@ -1,19 +1,19 @@
-import json
-from tests.const import NOT_RATELIMITED
 import aiohttp
 import pytest
+
 from aiogithubapi.helpers import async_call_api
-from tests.responses.base import base_response
+from tests.common import load_fixture
+from tests.const import NOT_RATELIMITED
 
 
 @pytest.mark.asyncio
-async def test_async_call_api(aresponses, base_response):
+async def test_async_call_api(aresponses):
     aresponses.add(
         "example.com",
         "/path",
         "get",
         aresponses.Response(
-            text=json.dumps(base_response),
+            text=load_fixture("base/response"),
             status=200,
             headers=NOT_RATELIMITED,
         ),

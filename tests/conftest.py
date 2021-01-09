@@ -1,8 +1,9 @@
-import pytest
 import aiohttp
+import pytest
+
 from aiogithubapi import GitHub, GitHubDevice
 from aiogithubapi.client import AIOGitHubAPIClient
-from tests.const import TOKEN, CLIENT_ID
+from tests.const import CLIENT_ID, TOKEN
 
 
 @pytest.fixture

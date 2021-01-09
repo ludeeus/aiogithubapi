@@ -1,8 +1,6 @@
 """AIOGitHubAPI: Constants"""
 from enum import Enum
 
-VERSION = "0.0.0"
-
 ACCEPT_HEADERS = {
     "base": "application/vnd.github.v3.raw+json",
     "preview": "application/vnd.github.mercy-preview+json",
@@ -32,6 +30,9 @@ class HttpStatusCode(int, Enum):
     NOT_FOUND = 404
     TEAPOT = 418
     INTERNAL_SERVER_ERROR = 500
+    BAD_GATEWAY = 502
+    SERVICE_UNAVAILABLE = 503
+    GATEWAY_TIMEOUT = 504
 
 
 class HttpMethod(str, Enum):
@@ -57,11 +58,9 @@ class DeviceFlowError(str, Enum):
     UNSUPPORTED_GRANT_TYPE = "unsupported_grant_type"
 
 
-HTTP_STATUS_CODE_OK = 200
-HTTP_STATUS_CODE_CREATED = 201
-HTTP_STATUS_CODE_ACCEPTED = 202
-HTTP_STATUS_CODE_NON_AUTHORITATIVE = 203
-HTTP_STATUS_CODE_RATELIMIT = 403
-HTTP_STATUS_CODE_TEAPOT = 418
-
-HTTP_STATUS_CODE_GOOD_LIST = [200, 201, 202, 203]
+HTTP_STATUS_CODE_GOOD_LIST = [
+    HttpStatusCode.OK,
+    HttpStatusCode.CREATED,
+    HttpStatusCode.ACCEPTED,
+    HttpStatusCode.NON_AUTHORITATIVE,
+]

@@ -1,9 +1,11 @@
 from datetime import datetime
+
 import aiohttp
+import pytest
+
+from aiogithubapi import AIOGitHubAPIException, GitHubDevice
 from tests.common import load_fixture
 from tests.const import NOT_RATELIMITED
-import pytest
-from aiogithubapi import GitHubDevice, AIOGitHubAPIException
 
 
 @pytest.mark.asyncio

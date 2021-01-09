@@ -1,13 +1,14 @@
 # pylint: disable=missing-docstring, redefined-outer-name, unused-import
 
 import json
-import pytest
-from aiogithubapi import GitHub
 
-from tests.const import TOKEN, NOT_RATELIMITED
-from tests.responses.repository_fixture import repository_response
-from tests.responses.issue_fixture import issue_response, issues_response
+import pytest
+
+from aiogithubapi import GitHub
+from tests.const import NOT_RATELIMITED, TOKEN
 from tests.responses.issue_comments import issue_comments_response
+from tests.responses.issue_fixture import issue_response, issues_response
+from tests.responses.repository_fixture import repository_response
 
 
 @pytest.mark.asyncio

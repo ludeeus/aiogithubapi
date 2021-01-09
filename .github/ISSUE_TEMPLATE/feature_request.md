@@ -1,17 +1,20 @@
 ---
-name: Feature request
-about: Suggest an idea for this project
-
+name: Feature request for aiogithubapi
+about: Suggest a feature/change to be added to aiogithubapi
+labels: enhancement
 ---
+## The idea
 
-**Is your feature request related to a problem? Please describe.**
-A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
+<!-- A good description of what you are suggesting. -->
 
-**Describe the solution you'd like**
-A clear and concise description of what you want to happen.
 
-**Describe alternatives you've considered**
-A clear and concise description of any alternative solutions or features you've considered.
+## Implementation
 
-**Additional context**
-Add any other context or screenshots about the feature request here.
+<!-- How do you see this being implemented? -->
+
+## Alternatives
+
+<!-- Are there any alternative solutions or features you've considered? -->
+
+## Additional context
+

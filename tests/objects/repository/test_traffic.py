@@ -1,10 +1,11 @@
 # pylint: disable=missing-docstring, redefined-outer-name, unused-import
 import datetime
 import json
-import pytest
-from aiogithubapi import GitHub
 
-from tests.const import TOKEN, NOT_RATELIMITED
+import pytest
+
+from aiogithubapi import GitHub
+from tests.const import NOT_RATELIMITED, TOKEN
 from tests.responses.repos.traffic.clones_fixtrue import clones_fixtrue_response
 from tests.responses.repos.traffic.pageviews_fixtrue import pageviews_fixtrue_response
 from tests.responses.repository_fixture import repository_response

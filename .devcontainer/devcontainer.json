@@ -1,12 +1,8 @@
 {
 	"name": "aiogithubapi",
+	"image": "ghcr.io/ludeeus/devcontainer/python:stable",
 	"context": "..",
-	"image": "ludeeus/container:python",
-	"postCreateCommand": "python3 -m pip install -r requirements.txt && python3 setup.py develop",
-	"runArgs": [
-		"-v",
-		"${env:HOME}${env:USERPROFILE}/.ssh:/tmp/.ssh"
-	],
+	"postCreateCommand": "make requirements",
 	"extensions": [
 		"ms-python.python",
 		"github.vscode-pull-request-github",
@@ -17,7 +13,8 @@
 		"files.eol": "\n",
 		"editor.tabSize": 4,
 		"terminal.integrated.shell.linux": "/bin/bash",
-		"python.pythonPath": "/usr/bin/python3",
+		"python.pythonPath": "/usr/local/python/bin/python",
+		"python.analysis.autoSearchPaths": false,
 		"python.linting.pylintEnabled": true,
 		"python.linting.enabled": true,
 		"python.formatting.provider": "black",

@@ -77,6 +77,15 @@ class AIOGitHubAPI(AIOGitHubAPIBase):
 
         return [AIOGitHubAPIRepository(self.client, x) for x in response or []]
 
+    async def graphql(self, query: str, variables: dict = {}) -> dict:
+        response = await self.client.post(
+            endpoint="/graphql",
+            returnjson=True,
+            data={"query": query, "variables": variables},
+            jsondata=True,
+        )
+        return response.get("data")
+
     async def get_rate_limit(self) -> dict:
         """Retrun current rate limits."""
         _endpoint = f"/rate_limit"
