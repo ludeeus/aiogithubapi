@@ -5,6 +5,7 @@ https://developer.github.com/v3/rate_limit/
 """
 # pylint: disable=missing-docstring
 from datetime import datetime
+
 from aiogithubapi.objects.base import AIOGitHubAPIBase
 
 

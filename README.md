@@ -1,6 +1,9 @@
 # AIOGitHubAPI
 
 [![codecov](https://codecov.io/gh/ludeeus/aiogithubapi/branch/master/graph/badge.svg)](https://codecov.io/gh/ludeeus/aiogithubapi)
+![python version](https://img.shields.io/badge/Python-3.7=><=3.9-blue.svg)
+[![PyPI](https://img.shields.io/pypi/v/aiogithubapi)](https://pypi.org/project/aiogithubapi)
+![Actions](https://github.com/ludeeus/aiogithubapi/workflows/Actions/badge.svg?branch=master)
 
 _Asynchronous Python client for the GitHub API_
 
@@ -12,7 +15,7 @@ For examples on how to use it see [the documentation](https://aiogithubapi.netli
 ## Install
 
 ```bash
-python3 -m pip install -U aiogithubapi
+python3 -m pip install aiogithubapi
 ```
 
 ## Add Data Objects
@@ -32,3 +35,16 @@ Examples:
 - `projects#get-a-project-card` Would be `ProjectCard`
 - `pulls#get-a-pull-request` Would be `PullRequest`
 - `repos#get-a-branch` Would be `ReposBranch`
+
+## Contribute
+
+**All** contributions are welcome!
+
+1. Fork the repository
+2. Clone the repository locally and open the devcontainer or use GitHub codespaces
+3. Do your changes
+4. Lint the files with `make black`
+5. Ensure all tests passes with `make test`
+6. Ensure 100% coverage with `make coverage`
+7. Commit your work, and push it to GitHub
+8. Create a PR against the `master` branch

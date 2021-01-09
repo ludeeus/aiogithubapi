@@ -1,4 +1,4 @@
-from aiogithubapi.helpers import short_sha, short_message
+from aiogithubapi.helpers import short_message, short_sha
 
 
 def test_short_sha():

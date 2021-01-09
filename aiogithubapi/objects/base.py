@@ -1,6 +1,7 @@
 """AIOGitHubAPI: objects.base"""
-from aiogithubapi.common.const import HttpStatusCode
 import logging
+
+from aiogithubapi.common.const import HttpStatusCode
 
 
 class AIOGitHubAPIBase:
