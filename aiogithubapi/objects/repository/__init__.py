@@ -101,8 +101,7 @@ class AIOGitHubAPIRepository(AIOGitHubAPIBaseClient):
     ) -> ["AIOGitHubAPIRepositoryContent"] or "AIOGitHubAPIRepositoryContent":
         """Retrun a list of repository content objects."""
         _endpoint = f"/repos/{self.full_name}/contents/{path}"
-        _params = {"path": path}
-
+        _params = {}
         if ref is not None:
             _params["ref"] = ref.replace("tags/", "")
 

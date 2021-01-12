@@ -43,10 +43,11 @@ class AIOGitHubAPIClient:
     ) -> AIOGitHubAPIResponse:
         """Execute a GET request."""
         url = f"{BASE_API_URL}{endpoint}"
-        if self._response_cache.get(endpoint, {}).get(ATTR_ETAG):
+        cachekey = f"{endpoint}{headers}{params}".lower()
+        if self._response_cache.get(cachekey, {}).get(ATTR_ETAG):
             if not headers:
                 headers = {}
-            headers[HEADER_IF_NONE_MATCH] = self._response_cache[endpoint][ATTR_ETAG]
+            headers[HEADER_IF_NONE_MATCH] = self._response_cache[cachekey][ATTR_ETAG]
         response = await async_call_api(
             session=self.session,
             method="GET",
@@ -58,11 +59,11 @@ class AIOGitHubAPIClient:
 
         self.ratelimits.load_from_response_headers(response.headers)
         if (
-            endpoint in self._response_cache
+            cachekey in self._response_cache
             and response.status == HttpStatusCode.NOT_MODIFIED
         ):
-            return self._response_cache[endpoint][ATTR_DATA]
-        self._response_cache[endpoint] = {
+            return self._response_cache[cachekey][ATTR_DATA]
+        self._response_cache[cachekey] = {
             ATTR_ETAG: response.headers.get(ATTR_ETAG),
             ATTR_DATA: response.data,
         }
