@@ -9,28 +9,30 @@ import aiohttp
 
 from aiogithubapi.common.const import (
     ATTR_DATA,
+    ATTR_ETAG,
     BASE_API_HEADERS,
     BASE_API_URL,
-    ATTR_ETAG,
+    HEADER_IF_NONE_MATCH,
     HttpStatusCode,
 )
 from aiogithubapi.helpers import async_call_api
-from aiogithubapi.objects.base import AIOGitHubAPIBase, AIOGitHubAPIResponse
+from aiogithubapi.objects.base import AIOGitHubAPIResponse
 from aiogithubapi.objects.ratelimit import AIOGitHubAPIRateLimit
 
 
-class AIOGitHubAPIClient(AIOGitHubAPIBase):
+class AIOGitHubAPIClient:
     """Client to handle API calls."""
 
     def __init__(self, session: aiohttp.ClientSession, token: str) -> None:
         """Initialize the API client."""
-        self._cache = {}
         self.session = session
         self.token = token
         self.ratelimits = AIOGitHubAPIRateLimit()
         self.headers = BASE_API_HEADERS
         if token is not None:
             self.headers["Authorization"] = f"token {token}"
+
+        self._response_cache = {}
 
     async def get(
         self,
@@ -41,8 +43,10 @@ class AIOGitHubAPIClient(AIOGitHubAPIBase):
     ) -> AIOGitHubAPIResponse:
         """Execute a GET request."""
         url = f"{BASE_API_URL}{endpoint}"
-        if self._cache.get(endpoint, {}).get(ATTR_ETAG):
-            headers["If-None-Match"] = self._cache[endpoint][ATTR_ETAG]
+        if self._response_cache.get(endpoint, {}).get(ATTR_ETAG):
+            if not headers:
+                headers = {}
+            headers[HEADER_IF_NONE_MATCH] = self._response_cache[endpoint][ATTR_ETAG]
         response = await async_call_api(
             session=self.session,
             method="GET",
@@ -53,9 +57,12 @@ class AIOGitHubAPIClient(AIOGitHubAPIBase):
         )
 
         self.ratelimits.load_from_response_headers(response.headers)
-        if endpoint in self._cache and response.status == HttpStatusCode.NOT_MODIFIED:
-            return self._cache[endpoint][ATTR_DATA]
-        self._cache[endpoint] = {
+        if (
+            endpoint in self._response_cache
+            and response.status == HttpStatusCode.NOT_MODIFIED
+        ):
+            return self._response_cache[endpoint][ATTR_DATA]
+        self._response_cache[endpoint] = {
             ATTR_ETAG: response.headers.get(ATTR_ETAG),
             ATTR_DATA: response.data,
         }

@@ -14,20 +14,36 @@ from tests.responses.base import bad_auth_response, bad_response, base_response
 
 @pytest.mark.asyncio
 async def test_get(aresponses, base_response):
+    headers = NOT_RATELIMITED
+    headers["Etag"] = "test"
     aresponses.add(
         "api.github.com",
-        "/",
+        "/test",
         "get",
         aresponses.Response(
             text=json.dumps(base_response),
             status=200,
-            headers=NOT_RATELIMITED,
+            headers=headers,
+        ),
+    )
+    aresponses.add(
+        "api.github.com",
+        "/test",
+        "get",
+        aresponses.Response(
+            text=json.dumps(base_response),
+            status=304,
+            headers=headers,
         ),
     )
 
     async with GitHub(TOKEN) as github:
-        await github.client.get("/")
+        response = await github.client.get("/test")
         assert github.client.ratelimits.remaining == "1337"
+        assert response == {"key": "value"}
+        response = await github.client.get("/test")
+        assert github.client.ratelimits.remaining == "1337"
+        assert response == {"key": "value"}
 
 
 @pytest.mark.asyncio

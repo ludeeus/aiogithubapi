@@ -12,6 +12,8 @@ BASE_API_HEADERS = {
     "User-Agent": "python/AIOGitHubAPI",
 }
 
+HEADER_IF_NONE_MATCH = "If-None-Match"
+
 ATTR_ETAG = "Etag"
 ATTR_DATA = "data"
 
