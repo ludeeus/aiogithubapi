@@ -25,6 +25,10 @@ class HttpStatusCode(int, Enum):
     CREATED = 201
     ACCEPTED = 202
     NON_AUTHORITATIVE = 203
+    MOVED_PERMANENTLY = 301
+    FOUND = 302
+    SEE_OTHER = 303
+    NOT_MODIFIED = 304
     UNAUTHORIZED = 401
     RATELIMIT = 403
     NOT_FOUND = 404
@@ -61,6 +65,7 @@ class DeviceFlowError(str, Enum):
 HTTP_STATUS_CODE_GOOD_LIST = [
     HttpStatusCode.OK,
     HttpStatusCode.CREATED,
+    HttpStatusCode.NOT_MODIFIED,
     HttpStatusCode.ACCEPTED,
     HttpStatusCode.NON_AUTHORITATIVE,
 ]
