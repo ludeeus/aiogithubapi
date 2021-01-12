@@ -5,7 +5,6 @@ This is the class that do the requests against the API
 It also keeps track of ratelimits
 """
 # pylint: disable=redefined-builtin, too-many-arguments
-from functools import cache
 import aiohttp
 
 from aiogithubapi.common.const import BASE_API_HEADERS, BASE_API_URL, HttpStatusCode
