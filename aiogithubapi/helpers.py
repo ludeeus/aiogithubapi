@@ -79,10 +79,13 @@ async def async_call_api(
         if response.status == HttpStatusCode.RATELIMIT:
             raise AIOGitHubAPIRatelimitException("GitHub Ratelimit error")
 
-        elif response.status == HttpStatusCode.UNAUTHORIZED:
+        if response.status == HttpStatusCode.NOT_MODIFIED:
+            return response
+
+        if response.status == HttpStatusCode.UNAUTHORIZED:
             raise AIOGitHubAPIAuthenticationException(HttpStatusCode.UNAUTHORIZED)
 
-        elif response.status not in HTTP_STATUS_CODE_GOOD_LIST:
+        if response.status not in HTTP_STATUS_CODE_GOOD_LIST:
             raise AIOGitHubAPIException(
                 f"GitHub returned {HttpStatusCode(response.status)} for {url}"
             )
