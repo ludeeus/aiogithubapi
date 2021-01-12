@@ -12,6 +12,9 @@ BASE_API_HEADERS = {
     "User-Agent": "python/AIOGitHubAPI",
 }
 
+ATTR_ETAG = "Etag"
+ATTR_DATA = "data"
+
 BASE_API_URL = "https://api.github.com"
 OAUTH_DEVICE_LOGIN = "https://github.com/login/device/code"
 OAUTH_USER_LOGIN = "https://github.com/login/device"

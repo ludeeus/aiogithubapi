@@ -7,7 +7,13 @@ It also keeps track of ratelimits
 # pylint: disable=redefined-builtin, too-many-arguments
 import aiohttp
 
-from aiogithubapi.common.const import BASE_API_HEADERS, BASE_API_URL, HttpStatusCode
+from aiogithubapi.common.const import (
+    ATTR_DATA,
+    BASE_API_HEADERS,
+    BASE_API_URL,
+    ATTR_ETAG,
+    HttpStatusCode,
+)
 from aiogithubapi.helpers import async_call_api
 from aiogithubapi.objects.base import AIOGitHubAPIBase, AIOGitHubAPIResponse
 from aiogithubapi.objects.ratelimit import AIOGitHubAPIRateLimit
@@ -24,7 +30,7 @@ class AIOGitHubAPIClient(AIOGitHubAPIBase):
         self.ratelimits = AIOGitHubAPIRateLimit()
         self.headers = BASE_API_HEADERS
         if token is not None:
-            self.headers["Authorization"] = "token {}".format(token)
+            self.headers["Authorization"] = f"token {token}"
 
     async def get(
         self,
@@ -35,8 +41,8 @@ class AIOGitHubAPIClient(AIOGitHubAPIBase):
     ) -> AIOGitHubAPIResponse:
         """Execute a GET request."""
         url = f"{BASE_API_URL}{endpoint}"
-        if self._cache.get(endpoint, {}).get("Etag"):
-            headers["If-None-Match"] = self._cache[endpoint]["Etag"]
+        if self._cache.get(endpoint, {}).get(ATTR_ETAG):
+            headers["If-None-Match"] = self._cache[endpoint][ATTR_ETAG]
         response = await async_call_api(
             session=self.session,
             method="GET",
@@ -48,10 +54,10 @@ class AIOGitHubAPIClient(AIOGitHubAPIBase):
 
         self.ratelimits.load_from_response_headers(response.headers)
         if endpoint in self._cache and response.status == HttpStatusCode.NOT_MODIFIED:
-            return self._cache[endpoint]["data"]
+            return self._cache[endpoint][ATTR_DATA]
         self._cache[endpoint] = {
-            "Etag": response.headers.get("Etag"),
-            "data": response.data,
+            ATTR_ETAG: response.headers.get(ATTR_ETAG),
+            ATTR_DATA: response.data,
         }
         return response.data
 
