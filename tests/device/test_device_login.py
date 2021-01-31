@@ -101,3 +101,21 @@ async def test_device_error(aresponses, github_device: GitHubDevice):
 
     with pytest.raises(AIOGitHubAPIException, match="Unsupported grant type"):
         await github_device.async_device_activation()
+
+
+@pytest.mark.asyncio
+async def test_no_device_code(aresponses, github_device: GitHubDevice):
+    aresponses.add(
+        "github.com",
+        "/login/device/code",
+        "post",
+        aresponses.Response(
+            text=load_fixture("device_code.json"),
+            status=200,
+            headers=NOT_RATELIMITED,
+        ),
+    )
+
+    with pytest.raises(AIOGitHubAPIException, match="User took too long to enter key"):
+        github_device._expires = datetime.timestamp(datetime.now())
+        await github_device.async_device_activation()

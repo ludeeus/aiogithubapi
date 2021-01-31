@@ -42,8 +42,10 @@ class AIOGitHubAPIDeviceLogin:
         """
         self.client_id = client_id
         self.scope = scope
-        self._interval = None
+        self._interval = 5
         self._expires_in = None
+        self._expires = None
+        self._device_code = None
 
         if session is None:
             self.session = aiohttp.ClientSession()
@@ -79,13 +81,16 @@ class AIOGitHubAPIDeviceLogin:
     async def async_device_activation(self) -> AIOGitHubAPILoginOauth:
         """Wait for the user to enter the code and activate the device."""
         _activation = None
-        params = {
-            "client_id": self.client_id,
-            "device_code": self._device_code,
-            "grant_type": "urn:ietf:params:oauth:grant-type:device_code",
-        }
-
         while _activation is None:
+            if self._expires is None or self._device_code is None:
+                await asyncio.sleep(self._interval)
+
+            params = {
+                "client_id": self.client_id,
+                "device_code": self._device_code,
+                "grant_type": "urn:ietf:params:oauth:grant-type:device_code",
+            }
+
             if self._expires < datetime.timestamp(datetime.now()):
                 raise AIOGitHubAPIException("User took too long to enter key")
 
@@ -108,7 +113,7 @@ class AIOGitHubAPIDeviceLogin:
                     break
 
             except AIOGitHubAPIException as exception:
-                raise AIOGitHubAPIException(exception)
+                raise AIOGitHubAPIException(exception) from exception
 
         return _activation
 
