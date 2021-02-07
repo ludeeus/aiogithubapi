@@ -1,7 +1,11 @@
 """AIOGitHubAPI: objects.base"""
 import logging
+from typing import TYPE_CHECKING
 
 from aiogithubapi.common.const import HttpStatusCode
+
+if TYPE_CHECKING:
+    from ..client import AIOGitHubAPIClient
 
 
 class AIOGitHubAPIBase:
@@ -30,7 +34,7 @@ class AIOGitHubAPIResponse:
         """initialise."""
         self.headers: dict = {}
         self.status: HttpStatusCode = HttpStatusCode.OK
-        self.data: dict or str = {}
+        self.data: dict or str or list = {}
 
     def as_dict(self):
         """Return attributes as a dict."""

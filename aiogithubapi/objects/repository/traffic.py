@@ -22,9 +22,9 @@ class AIOGitHubAPIRepositoryTraffic(AIOGitHubAPIBaseClient):
     async def get_views(self):
         _endpoint = f"/repos/{self.full_name}/traffic/views"
         response = await self.client.get(endpoint=_endpoint)
-        return AIOGitHubAPIReposTrafficPageviews(response)
+        return AIOGitHubAPIReposTrafficPageviews(response.data)
 
     async def get_clones(self) -> None:
         _endpoint = f"/repos/{self.full_name}/traffic/clones"
         response = await self.client.get(endpoint=_endpoint)
-        return AIOGitHubAPIReposTrafficClones(response)
+        return AIOGitHubAPIReposTrafficClones(response.data)

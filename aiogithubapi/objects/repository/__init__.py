@@ -107,9 +107,9 @@ class AIOGitHubAPIRepository(AIOGitHubAPIBaseClient):
             _params["ref"] = ref.replace("tags/", "")
 
         response = await self.client.get(endpoint=_endpoint, params=_params)
-        if isinstance(response, list):
-            return [AIOGitHubAPIRepositoryContent(x) for x in response]
-        return AIOGitHubAPIRepositoryContent(response)
+        if isinstance(response.data, list):
+            return [AIOGitHubAPIRepositoryContent(x) for x in response.data]
+        return AIOGitHubAPIRepositoryContent(response.data)
 
     async def get_tree(
         self, ref: str or None = None
@@ -124,7 +124,7 @@ class AIOGitHubAPIRepository(AIOGitHubAPIBaseClient):
 
         return [
             AIOGitHubAPIRepositoryTreeContent(x, self.full_name, ref)
-            for x in response.get("tree", [])
+            for x in response.data.get("tree", [])
         ]
 
     async def get_rendered_contents(self, path: str, ref: str or None = None) -> str:
@@ -136,9 +136,10 @@ class AIOGitHubAPIRepository(AIOGitHubAPIBaseClient):
         if ref is not None:
             _params["ref"] = ref.replace("tags/", "")
 
-        return await self.client.get(
+        response = await self.client.get(
             endpoint=_endpoint, params=_params, headers=_headers, returnjson=False
         )
+        return response.data
 
     async def get_releases(
         self, prerelease: bool = False, returnlimit: int = 5
@@ -149,7 +150,7 @@ class AIOGitHubAPIRepository(AIOGitHubAPIBaseClient):
         response = await self.client.get(endpoint=_endpoint)
         contents = []
 
-        for content in response or []:
+        for content in response.data or []:
             if len(contents) == returnlimit:
                 break
             if not prerelease:
@@ -163,27 +164,29 @@ class AIOGitHubAPIRepository(AIOGitHubAPIBaseClient):
         """Retrun a list of repository release objects."""
         _endpoint = f"/repos/{self.full_name}/branches/{self.default_branch}"
         response = await self.client.get(endpoint=_endpoint)
-        self._last_commit = response["commit"]["sha"][0:7]
+        self._last_commit = response.data["commit"]["sha"][0:7]
 
     async def get_last_commit(self) -> None:
         """Retrun a list of repository release objects."""
         _endpoint = f"/repos/{self.full_name}/branches/{self.default_branch}"
         response = await self.client.get(endpoint=_endpoint)
-        return AIOGitHubAPIReposCommit(response.get("commit", {}))
+        return AIOGitHubAPIReposCommit(response.data.get("commit", {}))
 
     async def get_issue(self, issue: int) -> "AIOGitHubAPIRepositoryIssue":
         """Updates an issue comment."""
         _endpoint = f"/repos/{self.full_name}/issues/{issue}"
 
         response = await self.client.get(endpoint=_endpoint)
-        return AIOGitHubAPIRepositoryIssue(self.client, response)
+        return AIOGitHubAPIRepositoryIssue(self.client, response.data)
 
     async def get_issues(self) -> ["AIOGitHubAPIRepositoryIssue"]:
         """Updates an issue comment."""
         _endpoint = f"/repos/{self.full_name}/issues"
 
         response = await self.client.get(endpoint=_endpoint)
-        return [AIOGitHubAPIRepositoryIssue(self.client, x) for x in response or []]
+        return [
+            AIOGitHubAPIRepositoryIssue(self.client, x) for x in response.data or []
+        ]
 
     async def create_issue(
         self,
@@ -211,5 +214,5 @@ class AIOGitHubAPIRepository(AIOGitHubAPIBaseClient):
         if assignees is not None:
             data["assignees"] = assignees
 
-        issue = await self.client.post(endpoint=_endpoint, data=data, jsondata=True)
-        return AIOGitHubAPIRepositoryIssue(self.client, issue)
+        response = await self.client.post(endpoint=_endpoint, data=data, jsondata=True)
+        return AIOGitHubAPIRepositoryIssue(self.client, response.data)

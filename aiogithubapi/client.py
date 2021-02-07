@@ -5,6 +5,7 @@ This is the class that do the requests against the API
 It also keeps track of ratelimits
 """
 # pylint: disable=redefined-builtin, too-many-arguments
+from typing import Optional
 import aiohttp
 
 from aiogithubapi.common.const import BASE_API_HEADERS, BASE_API_URL
@@ -19,6 +20,7 @@ class AIOGitHubAPIClient(AIOGitHubAPIBase):
     def __init__(self, session: aiohttp.ClientSession, token: str) -> None:
         """Initialize the API client."""
         self.session = session
+        self.last_response: Optional[AIOGitHubAPIResponse] = None
         self.token = token
         self.ratelimits = AIOGitHubAPIRateLimit()
         self.headers = BASE_API_HEADERS
@@ -43,7 +45,8 @@ class AIOGitHubAPIClient(AIOGitHubAPIBase):
             params=params,
         )
         self.ratelimits.load_from_response_headers(response.headers)
-        return response.data
+        self.last_response = response
+        return response
 
     async def post(
         self,
@@ -67,4 +70,5 @@ class AIOGitHubAPIClient(AIOGitHubAPIBase):
             jsondata=jsondata,
         )
         self.ratelimits.load_from_response_headers(response.headers)
-        return response.data
+        self.last_response = response
+        return response
