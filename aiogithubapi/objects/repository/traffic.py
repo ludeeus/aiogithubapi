@@ -3,8 +3,8 @@ AIOGitHubAPI: Repository Traffic
 
 https://docs.github.com/en/rest/reference/repos#traffic
 """
-from datetime import datetime
-
+from aiohttp.hdrs import IF_NONE_MATCH
+from typing import Optional
 from aiogithubapi.objects.base import AIOGitHubAPIBaseClient
 from aiogithubapi.objects.repos.traffic.clones import AIOGitHubAPIReposTrafficClones
 from aiogithubapi.objects.repos.traffic.pageviews import (
@@ -19,12 +19,18 @@ class AIOGitHubAPIRepositoryTraffic(AIOGitHubAPIBaseClient):
     def full_name(self) -> None:
         return self.attributes.get("full_name")
 
-    async def get_views(self):
+    async def get_views(self, etag: Optional[str] = None):
         _endpoint = f"/repos/{self.full_name}/traffic/views"
-        response = await self.client.get(endpoint=_endpoint)
+        _headers = {}
+        if etag:
+            _headers[IF_NONE_MATCH] = etag
+        response = await self.client.get(endpoint=_endpoint, headers=_headers)
         return AIOGitHubAPIReposTrafficPageviews(response.data)
 
-    async def get_clones(self) -> None:
+    async def get_clones(self, etag: Optional[str] = None) -> None:
         _endpoint = f"/repos/{self.full_name}/traffic/clones"
-        response = await self.client.get(endpoint=_endpoint)
+        _headers = {}
+        if etag:
+            _headers[IF_NONE_MATCH] = etag
+        response = await self.client.get(endpoint=_endpoint, headers=_headers)
         return AIOGitHubAPIReposTrafficClones(response.data)

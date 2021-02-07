@@ -4,7 +4,7 @@ import json
 import aiohttp
 import pytest
 
-from aiogithubapi import AIOGitHubAPIException, GitHub
+from aiogithubapi import AIOGitHubAPIException, GitHub, AIOGitHubAPINotModifiedException
 from aiogithubapi.common.exceptions import AIOGitHubAPIRatelimitException
 from tests.const import NOT_RATELIMITED, RATELIMITED, TOKEN
 from tests.responses.base import base_response
@@ -22,10 +22,19 @@ async def test_render_markdown(aresponses, base_response):
             headers=NOT_RATELIMITED,
         ),
     )
+    aresponses.add(
+        "api.github.com",
+        "/markdown/raw",
+        "post",
+        aresponses.Response(status=304),
+    )
     async with GitHub(TOKEN) as github:
         render = await github.render_markdown("test")
         assert github.client.ratelimits.remaining == "1337"
         assert isinstance(render, str)
+
+        with pytest.raises(AIOGitHubAPINotModifiedException):
+            await github.render_markdown("test", etag=github.client.last_response.etag)
 
 
 @pytest.mark.asyncio

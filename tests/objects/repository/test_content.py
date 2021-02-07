@@ -4,7 +4,7 @@ import json
 
 import pytest
 
-from aiogithubapi import GitHub
+from aiogithubapi import GitHub, AIOGitHubAPINotModifiedException
 from tests.const import NOT_RATELIMITED, TOKEN
 from tests.responses.contents import contents_file_response
 from tests.responses.repository_fixture import repository_response
@@ -33,6 +33,12 @@ async def test_tree_content(aresponses, repository_response, tree_response):
             headers=NOT_RATELIMITED,
         ),
     )
+    aresponses.add(
+        "api.github.com",
+        "/repos/octocat/Hello-World/git/trees/main",
+        "get",
+        aresponses.Response(status=304),
+    )
     async with GitHub(TOKEN) as github:
         repository = await github.get_repo("octocat/Hello-World")
         contents = await repository.get_tree("main")
@@ -49,6 +55,9 @@ async def test_tree_content(aresponses, repository_response, tree_response):
             contents[0].download_url
             == "https://raw.githubusercontent.com/octocat/Hello-World/main/subdir/file.txt"
         )
+
+        with pytest.raises(AIOGitHubAPINotModifiedException):
+            await repository.get_tree("main", etag=github.client.last_response.etag)
 
 
 @pytest.mark.asyncio
@@ -73,6 +82,12 @@ async def test_content(aresponses, repository_response, contents_file_response):
             headers=NOT_RATELIMITED,
         ),
     )
+    aresponses.add(
+        "api.github.com",
+        "/repos/octocat/Hello-World/contents/README.md",
+        "get",
+        aresponses.Response(status=304),
+    )
     async with GitHub(TOKEN) as github:
         repository = await github.get_repo("octocat/Hello-World")
         content = await repository.get_contents("README.md", "main")
@@ -85,3 +100,8 @@ async def test_content(aresponses, repository_response, contents_file_response):
             content.download_url
             == "https://raw.githubusercontent.com/octokit/octokit.rb/main/README.md"
         )
+
+        with pytest.raises(AIOGitHubAPINotModifiedException):
+            await repository.get_contents(
+                "README.md", "main", etag=github.client.last_response.etag
+            )

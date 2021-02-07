@@ -4,7 +4,7 @@ import json
 
 import pytest
 
-from aiogithubapi import AIOGitHubAPIException, GitHub
+from aiogithubapi import AIOGitHubAPIException, GitHub, AIOGitHubAPINotModifiedException
 from tests.const import NOT_RATELIMITED, RATELIMITED, TOKEN
 from tests.responses.base import base_response
 from tests.responses.branch import branch_response
@@ -68,11 +68,20 @@ async def test_set_last_commit(aresponses, repository_response, branch_response)
             headers=NOT_RATELIMITED,
         ),
     )
+    aresponses.add(
+        "api.github.com",
+        "/repos/octocat/Hello-World/branches/main",
+        "get",
+        aresponses.Response(status=304),
+    )
     async with GitHub(TOKEN) as github:
         repository = await github.get_repo("octocat/Hello-World")
         assert repository.last_commit is None
         await repository.set_last_commit()
         assert repository.last_commit == "7fd1a60"
+
+        with pytest.raises(AIOGitHubAPINotModifiedException):
+            await repository.set_last_commit(github.client.last_response.etag)
 
 
 @pytest.mark.asyncio
@@ -187,10 +196,21 @@ async def test_get_rendered_contents(aresponses, repository_response):
             headers=NOT_RATELIMITED,
         ),
     )
+    aresponses.add(
+        "api.github.com",
+        "/repos/octocat/Hello-World/contents/README.md",
+        "get",
+        aresponses.Response(status=304),
+    )
     async with GitHub(TOKEN) as github:
         repository = await github.get_repo("octocat/Hello-World")
         rendered = await repository.get_rendered_contents("README.md", "main")
         assert rendered == "test"
+
+        with pytest.raises(AIOGitHubAPINotModifiedException):
+            await repository.get_rendered_contents(
+                "README.md", "main", etag=github.client.last_response.etag
+            )
 
 
 @pytest.mark.asyncio
@@ -235,6 +255,12 @@ async def test_get_releases(aresponses, repository_response, releases_response):
             headers=NOT_RATELIMITED,
         ),
     )
+    aresponses.add(
+        "api.github.com",
+        "/repos/octocat/Hello-World/releases",
+        "get",
+        aresponses.Response(status=304),
+    )
     async with GitHub(TOKEN) as github:
         repository = await github.get_repo("octocat/Hello-World")
         releases = await repository.get_releases()
@@ -245,6 +271,9 @@ async def test_get_releases(aresponses, repository_response, releases_response):
         assert not releases[0].prerelease
         releases = await repository.get_releases(prerelease=True, returnlimit=1)
         assert len(releases) == 1
+
+        with pytest.raises(AIOGitHubAPINotModifiedException):
+            await repository.get_releases(etag=github.client.last_response.etag)
 
 
 @pytest.mark.asyncio
@@ -269,10 +298,19 @@ async def test_get_issue(aresponses, repository_response, issue_response):
             headers=NOT_RATELIMITED,
         ),
     )
+    aresponses.add(
+        "api.github.com",
+        "/repos/octocat/Hello-World/issues/1",
+        "get",
+        aresponses.Response(status=304),
+    )
     async with GitHub(TOKEN) as github:
         repository = await github.get_repo("octocat/Hello-World")
         issue = await repository.get_issue(1)
         assert issue.title == "Found a bug"
+
+        with pytest.raises(AIOGitHubAPINotModifiedException):
+            await repository.get_issue(1, etag=github.client.last_response.etag)
 
 
 @pytest.mark.asyncio
@@ -331,8 +369,17 @@ async def test_get_last_commit(aresponses, repository_response, branch_response)
             headers=NOT_RATELIMITED,
         ),
     )
+    aresponses.add(
+        "api.github.com",
+        "/repos/octocat/Hello-World/branches/main",
+        "get",
+        aresponses.Response(status=304),
+    )
     async with GitHub(TOKEN) as github:
         repository = await github.get_repo("octocat/Hello-World")
         assert repository.last_commit is None
         commit = await repository.get_last_commit()
         assert commit.sha == "7fd1a60b01f91b314f59955a4e4d4e80d8edf11d"
+
+        with pytest.raises(AIOGitHubAPINotModifiedException):
+            await repository.get_last_commit(etag=github.client.last_response.etag)

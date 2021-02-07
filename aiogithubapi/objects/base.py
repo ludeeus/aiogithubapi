@@ -2,6 +2,8 @@
 import logging
 from typing import TYPE_CHECKING
 
+from aiohttp.hdrs import ETAG
+
 from aiogithubapi.common.const import HttpStatusCode
 
 if TYPE_CHECKING:
@@ -39,3 +41,8 @@ class AIOGitHubAPIResponse:
     def as_dict(self):
         """Return attributes as a dict."""
         return {"headers": self.headers, "status": self.status, "data": self.data}
+
+    @property
+    def etag(self):
+        """Return the ETag for this response."""
+        return self.headers.get(ETAG)
