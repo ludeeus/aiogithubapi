@@ -17,6 +17,7 @@ from aiogithubapi.common.exceptions import (
     AIOGitHubAPIAuthenticationException,
     AIOGitHubAPIException,
     AIOGitHubAPIRatelimitException,
+    AIOGitHubAPINotModifiedException,
 )
 from aiogithubapi.objects.base import AIOGitHubAPIResponse
 
@@ -83,7 +84,9 @@ async def async_call_api(
             raise AIOGitHubAPIAuthenticationException(HttpStatusCode.UNAUTHORIZED)
 
         if response.status == HttpStatusCode.NOT_MODIFIED:
-            raise AIOGitHubAPIException(f"Response from {url} was not modified.")
+            raise AIOGitHubAPINotModifiedException(
+                f"Response from {url} was not modified."
+            )
 
         if response.status not in HTTP_STATUS_CODE_GOOD_LIST:
             raise AIOGitHubAPIException(

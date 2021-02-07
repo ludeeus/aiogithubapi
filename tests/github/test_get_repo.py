@@ -4,7 +4,7 @@ import json
 import aiohttp
 import pytest
 
-from aiogithubapi import AIOGitHubAPIException, GitHub
+from aiogithubapi import AIOGitHubAPINotModifiedException, GitHub
 from aiogithubapi.common.exceptions import AIOGitHubAPIRatelimitException
 from tests.const import NOT_RATELIMITED, RATELIMITED, TOKEN
 from tests.responses.base import base_response
@@ -23,12 +23,26 @@ async def test_get_repo(aresponses, event_loop, repository_response):
             headers=NOT_RATELIMITED,
         ),
     )
+    aresponses.add(
+        "api.github.com",
+        "/repos/octocat/Hello-World",
+        "get",
+        aresponses.Response(
+            text="",
+            status=304,
+        ),
+    )
 
     async with GitHub(TOKEN) as github:
         repository = await github.get_repo("octocat/Hello-World")
         assert repository.description == "This your first repo!"
         assert github.client.last_response.etag == "xyz..zyx"
         assert github.client.ratelimits.remaining == "1337"
+
+        with pytest.raises(AIOGitHubAPINotModifiedException):
+            await github.get_repo(
+                "octocat/Hello-World", github.client.last_response.etag
+            )
 
 
 @pytest.mark.asyncio

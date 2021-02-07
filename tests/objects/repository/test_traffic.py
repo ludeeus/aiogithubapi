@@ -4,7 +4,7 @@ import json
 
 import pytest
 
-from aiogithubapi import GitHub
+from aiogithubapi import GitHub, AIOGitHubAPINotModifiedException
 from tests.const import NOT_RATELIMITED, TOKEN
 from tests.responses.repos.traffic.clones_fixtrue import clones_fixtrue_response
 from tests.responses.repos.traffic.pageviews_fixtrue import pageviews_fixtrue_response
@@ -33,11 +33,20 @@ async def test_get_clones(aresponses, repository_response, clones_fixtrue_respon
             headers=NOT_RATELIMITED,
         ),
     )
+    aresponses.add(
+        "api.github.com",
+        "/repos/octocat/Hello-World/traffic/clones",
+        "get",
+        aresponses.Response(status=304),
+    )
 
     async with GitHub(TOKEN) as github:
         repository = await github.get_repo("octocat/Hello-World")
         clones = await repository.traffic.get_clones()
         assert clones.count == 173
+
+        with pytest.raises(AIOGitHubAPINotModifiedException):
+            await repository.traffic.get_clones(etag=github.client.last_response.etag)
 
 
 @pytest.mark.asyncio
@@ -62,8 +71,17 @@ async def test_get_views(aresponses, repository_response, pageviews_fixtrue_resp
             headers=NOT_RATELIMITED,
         ),
     )
+    aresponses.add(
+        "api.github.com",
+        "/repos/octocat/Hello-World/traffic/views",
+        "get",
+        aresponses.Response(status=304),
+    )
 
     async with GitHub(TOKEN) as github:
         repository = await github.get_repo("octocat/Hello-World")
         views = await repository.traffic.get_views()
         assert views.count == 14850
+
+        with pytest.raises(AIOGitHubAPINotModifiedException):
+            await repository.traffic.get_views(etag=github.client.last_response.etag)

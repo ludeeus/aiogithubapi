@@ -4,7 +4,7 @@ import json
 
 import pytest
 
-from aiogithubapi import GitHub
+from aiogithubapi import GitHub, AIOGitHubAPINotModifiedException
 from tests.const import NOT_RATELIMITED, TOKEN
 from tests.responses.issue_comments import issue_comments_response
 from tests.responses.issue_fixture import issue_response, issues_response
@@ -331,8 +331,17 @@ async def test_get_issues(aresponses, repository_response, issues_response):
             headers=NOT_RATELIMITED,
         ),
     )
+    aresponses.add(
+        "api.github.com",
+        "/repos/octocat/Hello-World/issues",
+        "get",
+        aresponses.Response(status=304),
+    )
 
     async with GitHub(TOKEN) as github:
         repository = await github.get_repo("octocat/Hello-World")
         issue = await repository.get_issues()
         assert len(issue) == 1
+
+        with pytest.raises(AIOGitHubAPINotModifiedException):
+            await repository.get_issues(etag=github.client.last_response.etag)
