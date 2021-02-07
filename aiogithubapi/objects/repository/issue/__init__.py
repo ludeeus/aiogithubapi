@@ -65,7 +65,7 @@ class AIOGitHubAPIRepositoryIssue(AIOGitHubAPIBaseClient):
 
         return [
             AIOGitHubAPIRepositoryIssueComment(self.client, x, self.repository)
-            for x in response or []
+            for x in response.data or []
         ]
 
     async def comment(self, body: str) -> None:

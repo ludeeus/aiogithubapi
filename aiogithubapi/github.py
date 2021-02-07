@@ -54,7 +54,7 @@ class AIOGitHubAPI(AIOGitHubAPIBase):
 
         response = await self.client.get(endpoint=_endpoint, headers=_headers)
 
-        return AIOGitHubAPIRepository(self.client, response)
+        return AIOGitHubAPIRepository(self.client, response.data)
 
     async def get_org_repos(
         self, org: str, page: int = 1
@@ -75,7 +75,7 @@ class AIOGitHubAPI(AIOGitHubAPIBase):
             endpoint=_enpoint, params=_params, headers=_headers
         )
 
-        return [AIOGitHubAPIRepository(self.client, x) for x in response or []]
+        return [AIOGitHubAPIRepository(self.client, x) for x in response.data or []]
 
     async def graphql(self, query: str, variables: dict = {}) -> dict:
         response = await self.client.post(
@@ -84,7 +84,7 @@ class AIOGitHubAPI(AIOGitHubAPIBase):
             data={"query": query, "variables": variables},
             jsondata=True,
         )
-        return response.get("data")
+        return response.data.get("data")
 
     async def get_rate_limit(self) -> dict:
         """Retrun current rate limits."""
@@ -106,9 +106,11 @@ class AIOGitHubAPI(AIOGitHubAPIBase):
         _endpoint = "/markdown/raw"
         _headers = {"Content-Type": "text/plain"}
 
-        return await self.client.post(
+        response = await self.client.post(
             endpoint=_endpoint, headers=_headers, data=content
         )
+
+        return response.data
 
     async def _close(self) -> None:
         """Close open client session."""
