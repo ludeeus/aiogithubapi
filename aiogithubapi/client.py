@@ -6,6 +6,7 @@ It also keeps track of ratelimits
 """
 # pylint: disable=redefined-builtin, too-many-arguments
 from typing import Optional
+
 import aiohttp
 
 from aiogithubapi.common.const import BASE_API_HEADERS, BASE_API_URL
