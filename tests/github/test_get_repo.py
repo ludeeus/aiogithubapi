@@ -27,6 +27,7 @@ async def test_get_repo(aresponses, event_loop, repository_response):
     async with GitHub(TOKEN) as github:
         repository = await github.get_repo("octocat/Hello-World")
         assert repository.description == "This your first repo!"
+        assert github.client.last_response.etag == "xyz..zyx"
         assert github.client.ratelimits.remaining == "1337"
 
 

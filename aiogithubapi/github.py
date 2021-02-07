@@ -1,6 +1,6 @@
 """AIOGitHubAPI: AIOGitHubAPI"""
 import os
-from typing import List
+from typing import List, Optional
 
 import aiohttp
 
@@ -47,17 +47,21 @@ class AIOGitHubAPI(AIOGitHubAPIBase):
         """Async exit."""
         await self._close()
 
-    async def get_repo(self, repo: str) -> AIOGitHubAPIRepository:
+    async def get_repo(
+        self, repo: str, etag: Optional[str] = None
+    ) -> AIOGitHubAPIRepository:
         """Retrun AIOGitHubAPIRepository object."""
         _endpoint = f"/repos/{repo}"
         _headers = {"Accept": ACCEPT_HEADERS["preview"]}
+        if etag:
+            _headers[aiohttp.hdrs.IF_NONE_MATCH] = etag
 
         response = await self.client.get(endpoint=_endpoint, headers=_headers)
 
         return AIOGitHubAPIRepository(self.client, response.data)
 
     async def get_org_repos(
-        self, org: str, page: int = 1
+        self, org: str, page: int = 1, etag: Optional[str] = None
     ) -> List[AIOGitHubAPIRepository]:
         """
         Retrun a list of AIOGitHubAPIRepository objects.
@@ -70,6 +74,8 @@ class AIOGitHubAPI(AIOGitHubAPIBase):
         _enpoint = f"/orgs/{org}/repos?page={str(page)}"
         _params = {"per_page": 100}
         _headers = {"Accept": ACCEPT_HEADERS["preview"]}
+        if etag:
+            _headers[aiohttp.hdrs.IF_NONE_MATCH] = etag
 
         response = await self.client.get(
             endpoint=_enpoint, params=_params, headers=_headers
@@ -88,12 +94,12 @@ class AIOGitHubAPI(AIOGitHubAPIBase):
 
     async def get_rate_limit(self) -> dict:
         """Retrun current rate limits."""
-        _endpoint = f"/rate_limit"
+        _endpoint = "/rate_limit"
 
         await self.client.get(endpoint=_endpoint)
         return self.client.ratelimits.__dict__
 
-    async def render_markdown(self, content: str) -> str:
+    async def render_markdown(self, content: str, etag: Optional[str] = None) -> str:
         """
         Retrun AIOGitHubAPIRepository object.
 
@@ -105,6 +111,8 @@ class AIOGitHubAPI(AIOGitHubAPIBase):
         """
         _endpoint = "/markdown/raw"
         _headers = {"Content-Type": "text/plain"}
+        if etag:
+            _headers[aiohttp.hdrs.IF_NONE_MATCH] = etag
 
         response = await self.client.post(
             endpoint=_endpoint, headers=_headers, data=content

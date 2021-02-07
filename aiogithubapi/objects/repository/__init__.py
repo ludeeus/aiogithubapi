@@ -5,6 +5,9 @@ https://developer.github.com/v3/repos/#get
 """
 # pylint: disable=redefined-builtin, missing-docstring, invalid-name, unused-import
 from datetime import datetime
+from typing import Optional
+
+from aiohttp.hdrs import IF_NONE_MATCH
 
 from aiogithubapi.common.exceptions import AIOGitHubAPIException
 from aiogithubapi.objects.base import AIOGitHubAPIBaseClient
@@ -13,11 +16,7 @@ from aiogithubapi.objects.repository.content import (
     AIOGitHubAPIRepositoryContent,
     AIOGitHubAPIRepositoryTreeContent,
 )
-from aiogithubapi.objects.repository.issue import (
-    AIOGitHubAPIRepositoryIssue,
-    AIOGitHubAPIRepositoryIssueComment,
-    AIOGitHubAPIRepositoryIssueCommentUser,
-)
+from aiogithubapi.objects.repository.issue import AIOGitHubAPIRepositoryIssue
 from aiogithubapi.objects.repository.release import AIOGitHubAPIRepositoryRelease
 from aiogithubapi.objects.repository.traffic import AIOGitHubAPIRepositoryTraffic
 from aiogithubapi.objects.users.user import AIOGitHubAPIUsersUser
@@ -97,41 +96,55 @@ class AIOGitHubAPIRepository(AIOGitHubAPIBaseClient):
         return AIOGitHubAPIUsersUser(self.attributes.get("owner"))
 
     async def get_contents(
-        self, path: str, ref: str or None = None
+        self, path: str, ref: str or None = None, etag: Optional[str] = None
     ) -> ["AIOGitHubAPIRepositoryContent"] or "AIOGitHubAPIRepositoryContent":
         """Retrun a list of repository content objects."""
         _endpoint = f"/repos/{self.full_name}/contents/{path}"
         _params = {"path": path}
+        _headers = {}
+        if etag:
+            _headers[IF_NONE_MATCH] = etag
 
         if ref is not None:
             _params["ref"] = ref.replace("tags/", "")
 
-        response = await self.client.get(endpoint=_endpoint, params=_params)
+        response = await self.client.get(
+            endpoint=_endpoint, params=_params, headers=_headers
+        )
         if isinstance(response.data, list):
             return [AIOGitHubAPIRepositoryContent(x) for x in response.data]
         return AIOGitHubAPIRepositoryContent(response.data)
 
     async def get_tree(
-        self, ref: str or None = None
+        self, ref: str or None = None, etag: Optional[str] = None
     ) -> ["AIOGitHubAPIRepositoryTreeContent"] or list:
         """Retrun a list of repository tree objects."""
         if ref is None:
             raise AIOGitHubAPIException("Missing ref")
         _endpoint = f"/repos/{self.full_name}/git/trees/{ref}"
         _params = {"recursive": "1"}
+        _headers = {}
+        if etag:
+            _headers[IF_NONE_MATCH] = etag
 
-        response = await self.client.get(endpoint=_endpoint, params=_params)
+        response = await self.client.get(
+            endpoint=_endpoint, params=_params, headers=_headers
+        )
 
         return [
             AIOGitHubAPIRepositoryTreeContent(x, self.full_name, ref)
             for x in response.data.get("tree", [])
         ]
 
-    async def get_rendered_contents(self, path: str, ref: str or None = None) -> str:
+    async def get_rendered_contents(
+        self, path: str, ref: str or None = None, etag: Optional[str] = None
+    ) -> str:
         """Retrun a redered representation of a file."""
         _endpoint = f"/repos/{self.full_name}/contents/{path}"
         _headers = {"Accept": "application/vnd.github.v3.html"}
         _params = {"path": path}
+        if etag:
+            _headers[IF_NONE_MATCH] = etag
 
         if ref is not None:
             _params["ref"] = ref.replace("tags/", "")
@@ -142,12 +155,15 @@ class AIOGitHubAPIRepository(AIOGitHubAPIBaseClient):
         return response.data
 
     async def get_releases(
-        self, prerelease: bool = False, returnlimit: int = 5
+        self, prerelease: bool = False, returnlimit: int = 5, etag: Optional[str] = None
     ) -> ["AIOGitHubAPIRepositoryRelease"] or list:
         """Retrun a list of repository release objects."""
         _endpoint = f"/repos/{self.full_name}/releases"
+        _headers = {}
+        if etag:
+            _headers[IF_NONE_MATCH] = etag
 
-        response = await self.client.get(endpoint=_endpoint)
+        response = await self.client.get(endpoint=_endpoint, headers=_headers)
         contents = []
 
         for content in response.data or []:
@@ -160,30 +176,46 @@ class AIOGitHubAPIRepository(AIOGitHubAPIBaseClient):
 
         return contents
 
-    async def set_last_commit(self) -> None:
+    async def set_last_commit(self, etag: Optional[str] = None) -> None:
         """Retrun a list of repository release objects."""
         _endpoint = f"/repos/{self.full_name}/branches/{self.default_branch}"
-        response = await self.client.get(endpoint=_endpoint)
+        _headers = {}
+        if etag:
+            _headers[IF_NONE_MATCH] = etag
+        response = await self.client.get(endpoint=_endpoint, headers=_headers)
         self._last_commit = response.data["commit"]["sha"][0:7]
 
-    async def get_last_commit(self) -> None:
+    async def get_last_commit(self, etag: Optional[str] = None) -> None:
         """Retrun a list of repository release objects."""
         _endpoint = f"/repos/{self.full_name}/branches/{self.default_branch}"
-        response = await self.client.get(endpoint=_endpoint)
+        _headers = {}
+        if etag:
+            _headers[IF_NONE_MATCH] = etag
+        response = await self.client.get(endpoint=_endpoint, headers=_headers)
         return AIOGitHubAPIReposCommit(response.data.get("commit", {}))
 
-    async def get_issue(self, issue: int) -> "AIOGitHubAPIRepositoryIssue":
+    async def get_issue(
+        self, issue: int, etag: Optional[str] = None
+    ) -> "AIOGitHubAPIRepositoryIssue":
         """Updates an issue comment."""
         _endpoint = f"/repos/{self.full_name}/issues/{issue}"
+        _headers = {}
+        if etag:
+            _headers[IF_NONE_MATCH] = etag
 
-        response = await self.client.get(endpoint=_endpoint)
+        response = await self.client.get(endpoint=_endpoint, headers=_headers)
         return AIOGitHubAPIRepositoryIssue(self.client, response.data)
 
-    async def get_issues(self) -> ["AIOGitHubAPIRepositoryIssue"]:
+    async def get_issues(
+        self, etag: Optional[str] = None
+    ) -> ["AIOGitHubAPIRepositoryIssue"]:
         """Updates an issue comment."""
         _endpoint = f"/repos/{self.full_name}/issues"
+        _headers = {}
+        if etag:
+            _headers[IF_NONE_MATCH] = etag
 
-        response = await self.client.get(endpoint=_endpoint)
+        response = await self.client.get(endpoint=_endpoint, headers=_headers)
         return [
             AIOGitHubAPIRepositoryIssue(self.client, x) for x in response.data or []
         ]
