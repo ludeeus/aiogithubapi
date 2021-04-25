@@ -8,7 +8,6 @@ import backoff
 from aiohttp.client_exceptions import ClientError
 
 from aiogithubapi.common.const import (
-    BASE_API_HEADERS,
     HTTP_STATUS_CODE_GOOD_LIST,
     HttpMethod,
     HttpStatusCode,
@@ -16,8 +15,8 @@ from aiogithubapi.common.const import (
 from aiogithubapi.common.exceptions import (
     AIOGitHubAPIAuthenticationException,
     AIOGitHubAPIException,
-    AIOGitHubAPIRatelimitException,
     AIOGitHubAPINotModifiedException,
+    AIOGitHubAPIRatelimitException,
 )
 from aiogithubapi.objects.base import AIOGitHubAPIResponse
 
@@ -42,35 +41,31 @@ async def async_call_api(
     session: aiohttp.ClientSession,
     method: HttpMethod,
     url: str,
-    headers: Optional[dict] = None,
+    headers: dict,
     params: Optional[dict] = None,
     data: dict or str or None = None,
     jsondata: bool = True,
     returnjson: bool = True,
 ) -> AIOGitHubAPIResponse:
     """Execute the API call."""
-    _headers = BASE_API_HEADERS
-    for header in headers or {}:
-        _headers[header] = headers[header]
-
     response = AIOGitHubAPIResponse()
 
     async with async_timeout.timeout(20, loop=get_event_loop()):
         if method == HttpMethod.GET:
-            result = await session.get(url, params=params or {}, headers=_headers)
+            result = await session.get(url, params=params or {}, headers=headers)
         else:
             if jsondata:
                 result = await session.post(
                     url,
                     params=params or {},
-                    headers=_headers,
+                    headers=headers,
                     json=data or {},
                 )
             else:
                 result = await session.post(
                     url,
                     params=params or {},
-                    headers=_headers,
+                    headers=headers,
                     data=data or "",
                 )
 

@@ -5,8 +5,8 @@ import pytest
 
 from aiogithubapi import GitHub
 from aiogithubapi.common.exceptions import (
-    AIOGitHubAPIRatelimitException,
     AIOGitHubAPINotModifiedException,
+    AIOGitHubAPIRatelimitException,
 )
 from tests.const import NOT_RATELIMITED, RATELIMITED, TOKEN
 from tests.responses.base import base_response

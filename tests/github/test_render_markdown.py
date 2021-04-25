@@ -4,7 +4,7 @@ import json
 import aiohttp
 import pytest
 
-from aiogithubapi import AIOGitHubAPIException, GitHub, AIOGitHubAPINotModifiedException
+from aiogithubapi import AIOGitHubAPIException, AIOGitHubAPINotModifiedException, GitHub
 from aiogithubapi.common.exceptions import AIOGitHubAPIRatelimitException
 from tests.const import NOT_RATELIMITED, RATELIMITED, TOKEN
 from tests.responses.base import base_response

@@ -4,7 +4,7 @@ import json
 
 import pytest
 
-from aiogithubapi import GitHub, AIOGitHubAPINotModifiedException
+from aiogithubapi import AIOGitHubAPINotModifiedException, GitHub
 from tests.const import NOT_RATELIMITED, TOKEN
 from tests.responses.contents import contents_file_response
 from tests.responses.repository_fixture import repository_response
