@@ -19,5 +19,5 @@ async def test_async_call_api(aresponses):
         ),
     )
     async with aiohttp.ClientSession() as session:
-        req = await async_call_api(session, "GET", "http://example.com/path")
+        req = await async_call_api(session, "GET", "http://example.com/path", {})
         assert isinstance(req.as_dict(), dict)

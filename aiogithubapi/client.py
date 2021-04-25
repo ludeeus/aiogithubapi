@@ -18,13 +18,18 @@ from aiogithubapi.objects.ratelimit import AIOGitHubAPIRateLimit
 class AIOGitHubAPIClient(AIOGitHubAPIBase):
     """Client to handle API calls."""
 
-    def __init__(self, session: aiohttp.ClientSession, token: str) -> None:
+    def __init__(
+        self, session: aiohttp.ClientSession, token: str, headers: Optional[dict] = None
+    ) -> None:
         """Initialize the API client."""
         self.session = session
         self.last_response: Optional[AIOGitHubAPIResponse] = None
         self.token = token
         self.ratelimits = AIOGitHubAPIRateLimit()
-        self.headers = BASE_API_HEADERS
+        self.headers = {}
+        self.headers.update(BASE_API_HEADERS)
+        self.headers.update(headers or {})
+
         if token is not None:
             self.headers["Authorization"] = "token {}".format(token)
 
@@ -37,12 +42,16 @@ class AIOGitHubAPIClient(AIOGitHubAPIBase):
     ) -> AIOGitHubAPIResponse:
         """Execute a GET request."""
         url = f"{BASE_API_URL}{endpoint}"
+        _headers = {}
+        _headers.update(self.headers)
+        _headers.update(headers or {})
+
         response = await async_call_api(
             session=self.session,
             method="GET",
             url=url,
             returnjson=returnjson,
-            headers=headers,
+            headers=_headers,
             params=params,
         )
         self.ratelimits.load_from_response_headers(response.headers)
@@ -60,12 +69,16 @@ class AIOGitHubAPIClient(AIOGitHubAPIBase):
     ) -> AIOGitHubAPIResponse:
         """Execute a POST request."""
         url = f"{BASE_API_URL}{endpoint}"
+        _headers = {}
+        _headers.update(self.headers)
+        _headers.update(headers or {})
+
         response = await async_call_api(
             session=self.session,
             method="POST",
             url=url,
             returnjson=returnjson,
-            headers=headers,
+            headers=_headers,
             params=params,
             data=data,
             jsondata=jsondata,

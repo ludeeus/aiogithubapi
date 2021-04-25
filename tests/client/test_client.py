@@ -31,6 +31,38 @@ async def test_get(aresponses, base_response):
 
 
 @pytest.mark.asyncio
+async def test_headers(aresponses, base_response):
+    aresponses.add(
+        "api.github.com",
+        "/",
+        "get",
+        aresponses.Response(
+            text=json.dumps(base_response),
+            status=200,
+            headers=NOT_RATELIMITED,
+        ),
+    )
+    aresponses.add(
+        "api.github.com",
+        "/",
+        "get",
+        aresponses.Response(
+            text=json.dumps(base_response),
+            status=200,
+            headers=NOT_RATELIMITED,
+        ),
+    )
+
+    async with GitHub(TOKEN) as github:
+        await github.client.get("/")
+        assert github.client.headers["User-Agent"] == "python/AIOGitHubAPI"
+
+    async with GitHub(TOKEN, headers={"User-Agent": "test/client"}) as github:
+        await github.client.get("/")
+        assert github.client.headers["User-Agent"] == "test/client"
+
+
+@pytest.mark.asyncio
 async def test_post(aresponses, base_response):
     aresponses.add(
         "api.github.com",

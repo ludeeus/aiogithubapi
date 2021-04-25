@@ -20,7 +20,10 @@ class AIOGitHubAPI(AIOGitHubAPIBase):
     _close_session = False
 
     def __init__(
-        self, token: str = None, session: aiohttp.ClientSession = None
+        self,
+        token: str = None,
+        session: aiohttp.ClientSession = None,
+        headers: Optional[dict] = None,
     ) -> None:
         """
         Initialises a GitHub API client.
@@ -37,7 +40,7 @@ class AIOGitHubAPI(AIOGitHubAPIBase):
         if token is None:
             token = os.getenv("GITHUB_TOKEN")
 
-        self.client = AIOGitHubAPIClient(session, token)
+        self.client = AIOGitHubAPIClient(session, token, headers)
 
     async def __aenter__(self) -> "AIOGitHubAPI":
         """Async enter."""
