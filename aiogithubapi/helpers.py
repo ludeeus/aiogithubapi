@@ -15,8 +15,8 @@ from aiogithubapi.common.const import (
 from aiogithubapi.common.exceptions import (
     AIOGitHubAPIAuthenticationException,
     AIOGitHubAPIException,
-    AIOGitHubAPIRatelimitException,
     AIOGitHubAPINotModifiedException,
+    AIOGitHubAPIRatelimitException,
 )
 from aiogithubapi.objects.base import AIOGitHubAPIResponse
 
