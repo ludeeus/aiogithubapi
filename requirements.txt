@@ -1,4 +1,4 @@
-black==20.8b1
+black==21.5b0
 pdoc3==0.9.2
 aiohttp>=3.6.1,<4.0
 async_timeout==3.0.1
