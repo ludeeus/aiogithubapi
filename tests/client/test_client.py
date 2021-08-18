@@ -219,3 +219,21 @@ async def test_ok_get_error(aresponses, bad_response):
     async with GitHub(TOKEN) as github:
         with pytest.raises(AIOGitHubAPIException):
             await github.client.get("/")
+
+
+@pytest.mark.asyncio
+async def test_custom_base_url(aresponses, base_response):
+    aresponses.add(
+        "example.com",
+        "/",
+        "get",
+        aresponses.Response(
+            text=json.dumps(base_response),
+            status=200,
+            headers=NOT_RATELIMITED,
+        ),
+    )
+
+    async with GitHub(TOKEN, base_url="http://example.com") as github:
+        await github.client.get("/")
+        assert github.client.ratelimits.remaining == "1337"
