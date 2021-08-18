@@ -24,6 +24,7 @@ class AIOGitHubAPI(AIOGitHubAPIBase):
         token: str = None,
         session: aiohttp.ClientSession = None,
         headers: Optional[dict] = None,
+        base_url: Optional[str] = None,
     ) -> None:
         """
         Initialises a GitHub API client.
@@ -32,6 +33,9 @@ class AIOGitHubAPI(AIOGitHubAPIBase):
         -- | -- | --
         `token` | False | [Your GitHub Personal Access Token](https://github.com/settings/tokens).
         `session` | False | `aiohttp.ClientSession` to be used by this package.
+        `headers` | False | Custom headers to be used by this package.
+        `base_url` | False | Base URL of the GitHub API.
+
         """
         if session is None:
             session = aiohttp.ClientSession()
@@ -40,7 +44,7 @@ class AIOGitHubAPI(AIOGitHubAPIBase):
         if token is None:
             token = os.getenv("GITHUB_TOKEN")
 
-        self.client = AIOGitHubAPIClient(session, token, headers)
+        self.client = AIOGitHubAPIClient(session, token, headers, base_url)
 
     async def __aenter__(self) -> "AIOGitHubAPI":
         """Async enter."""

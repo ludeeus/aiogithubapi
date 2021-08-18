@@ -19,10 +19,15 @@ class AIOGitHubAPIClient(AIOGitHubAPIBase):
     """Client to handle API calls."""
 
     def __init__(
-        self, session: aiohttp.ClientSession, token: str, headers: Optional[dict] = None
+        self,
+        session: aiohttp.ClientSession,
+        token: str,
+        headers: Optional[dict] = None,
+        base_url: Optional[str] = None,
     ) -> None:
         """Initialize the API client."""
         self.session = session
+        self.base_url = base_url or BASE_API_URL
         self.last_response: Optional[AIOGitHubAPIResponse] = None
         self.token = token
         self.ratelimits = AIOGitHubAPIRateLimit()
@@ -41,7 +46,7 @@ class AIOGitHubAPIClient(AIOGitHubAPIBase):
         params: dict or None = None,
     ) -> AIOGitHubAPIResponse:
         """Execute a GET request."""
-        url = f"{BASE_API_URL}{endpoint}"
+        url = f"{self.base_url}{endpoint}"
         _headers = {}
         _headers.update(self.headers)
         _headers.update(headers or {})
@@ -68,7 +73,7 @@ class AIOGitHubAPIClient(AIOGitHubAPIBase):
         jsondata: bool = False,
     ) -> AIOGitHubAPIResponse:
         """Execute a POST request."""
-        url = f"{BASE_API_URL}{endpoint}"
+        url = f"{self.base_url}{endpoint}"
         _headers = {}
         _headers.update(self.headers)
         _headers.update(headers or {})
