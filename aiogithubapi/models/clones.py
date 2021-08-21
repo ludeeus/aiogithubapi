@@ -1,7 +1,7 @@
 """GitHub clones data class."""
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, Dict
 
 from .base import GitHubDataModelBase
 
@@ -21,6 +21,6 @@ class GitHubClonesModel(GitHubDataModelBase):
     uniques: int | None = None
     clones: list[_Clone] | None = None
 
-    def _generate_clones(self, data: list[dict[str, Any]]) -> list[_Clone]:
+    def _generate_clones(self, data: list[Dict[str, Any]]) -> list[_Clone]:
         """Generate GitHubClonesModel from list of dicts."""
         return [_Clone(clone) for clone in data or []]

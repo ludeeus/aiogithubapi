@@ -5,7 +5,7 @@ https://docs.github.com/en/rest/reference/users
 """
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, Dict
 
 from ..const import GitHubRequestKwarg
 from ..models import GitHubAuthenticatedUserModel, GitHubResponseModel, GitHubUserModel
@@ -18,7 +18,7 @@ class GitHubUsersNamespace(BaseNamespace):
     async def get(
         self,
         username: str | None = None,
-        **kwargs: dict[GitHubRequestKwarg, Any],
+        **kwargs: Dict[GitHubRequestKwarg, Any],
     ) -> GitHubResponseModel[GitHubAuthenticatedUserModel | GitHubUserModel]:
         """
          Get a user

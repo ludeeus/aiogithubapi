@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import os
-from typing import Any
+from typing import Any, Dict
 
 import aiohttp
 
@@ -30,7 +30,7 @@ class GitHub(GitHubBase):
         self,
         token: str = None,
         session: aiohttp.ClientSession = None,
-        **kwargs: dict[GitHubClientKwarg, Any],
+        **kwargs: Dict[GitHubClientKwarg, Any],
     ) -> None:
         """
         Initialise GitHub API client.
@@ -92,8 +92,8 @@ class GitHub(GitHubBase):
     async def generic(
         self,
         endpoint: str,
-        data: dict[str, Any] | str | None = None,
-        **kwargs: dict[GitHubRequestKwarg, Any],
+        data: Dict[str, Any] | str | None = None,
+        **kwargs: Dict[GitHubRequestKwarg, Any],
     ) -> GitHubResponseModel[Any]:
         """
          Generic REST API call
@@ -115,8 +115,8 @@ class GitHub(GitHubBase):
 
     async def emojis(
         self,
-        **kwargs: dict[GitHubRequestKwarg, Any],
-    ) -> GitHubResponseModel[dict[str, str]]:
+        **kwargs: Dict[GitHubRequestKwarg, Any],
+    ) -> GitHubResponseModel[Dict[str, str]]:
         """
         Get emojis
         Lists all the emojis available to use on GitHub.
@@ -130,7 +130,7 @@ class GitHub(GitHubBase):
         text: str,
         mode: str | None = None,
         context: RepositoryType | None = None,
-        **kwargs: dict[GitHubRequestKwarg, Any],
+        **kwargs: Dict[GitHubRequestKwarg, Any],
     ) -> GitHubResponseModel[str]:
         """
          Render a Markdown document
@@ -160,7 +160,7 @@ class GitHub(GitHubBase):
 
     async def zen(
         self,
-        **kwargs: dict[GitHubRequestKwarg, Any],
+        **kwargs: Dict[GitHubRequestKwarg, Any],
     ) -> GitHubResponseModel[str]:
         """
         ZEN
@@ -171,7 +171,7 @@ class GitHub(GitHubBase):
 
     async def rate_limit(
         self,
-        **kwargs: dict[GitHubRequestKwarg, Any],
+        **kwargs: Dict[GitHubRequestKwarg, Any],
     ) -> GitHubResponseModel[GitHubRateLimitModel]:
         """
         Get rate limit status for the authenticated user
@@ -185,8 +185,8 @@ class GitHub(GitHubBase):
     async def graphql(
         self,
         query: str,
-        variables: dict[str, Any] | None = None,
-        **kwargs: dict[GitHubRequestKwarg, Any],
+        variables: Dict[str, Any] | None = None,
+        **kwargs: Dict[GitHubRequestKwarg, Any],
     ) -> GitHubResponseModel[dict]:
         """
         Use the GitHub GraphQL API

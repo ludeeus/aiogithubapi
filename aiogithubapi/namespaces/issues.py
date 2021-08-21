@@ -5,7 +5,7 @@ https://docs.github.com/en/rest/reference/issues
 """
 from __future__ import annotations
 
-from typing import Any, List
+from typing import Any, Dict, List
 
 from ..const import (
     GitHubIssueLockReason,
@@ -32,7 +32,7 @@ class GitHubIssuesNamespace(BaseNamespace):
         self,
         repository: RepositoryType,
         issue_number: int | str,
-        **kwargs: dict[GitHubRequestKwarg, Any],
+        **kwargs: Dict[GitHubRequestKwarg, Any],
     ) -> GitHubResponseModel[GitHubIssueModel]:
         """
          Get an issue
@@ -59,8 +59,8 @@ class GitHubIssuesNamespace(BaseNamespace):
     async def create(
         self,
         repository: RepositoryType,
-        data: dict[str, Any],
-        **kwargs: dict[GitHubRequestKwarg, Any],
+        data: Dict[str, Any],
+        **kwargs: Dict[GitHubRequestKwarg, Any],
     ) -> GitHubResponseModel[GitHubIssueModel]:
         """
          Create an issue
@@ -89,8 +89,8 @@ class GitHubIssuesNamespace(BaseNamespace):
         self,
         repository: RepositoryType,
         issue_number: int | str,
-        data: dict[str, Any],
-        **kwargs: dict[GitHubRequestKwarg, Any],
+        data: Dict[str, Any],
+        **kwargs: Dict[GitHubRequestKwarg, Any],
     ) -> GitHubResponseModel[GitHubIssueModel]:
         """
          Update an issue
@@ -124,7 +124,7 @@ class GitHubIssuesNamespace(BaseNamespace):
         repository: RepositoryType,
         issue_number: int | str,
         lock_reason: GitHubIssueLockReason,
-        **kwargs: dict[GitHubRequestKwarg, Any],
+        **kwargs: Dict[GitHubRequestKwarg, Any],
     ) -> GitHubResponseModel[None]:
         """
          Lock an issue
@@ -162,7 +162,7 @@ class GitHubIssuesNamespace(BaseNamespace):
         self,
         repository: RepositoryType,
         issue_number: int | str,
-        **kwargs: dict[GitHubRequestKwarg, Any],
+        **kwargs: Dict[GitHubRequestKwarg, Any],
     ) -> GitHubResponseModel[None]:
         """
          Unlock an issue
@@ -190,7 +190,7 @@ class GitHubIssuesNamespace(BaseNamespace):
     async def list(
         self,
         repository: RepositoryType,
-        **kwargs: dict[GitHubRequestKwarg, Any],
+        **kwargs: Dict[GitHubRequestKwarg, Any],
     ) -> GitHubResponseModel[List[GitHubIssueModel]]:
         """
          List repository issues
@@ -214,7 +214,7 @@ class GitHubIssuesNamespace(BaseNamespace):
         self,
         repository: RepositoryType,
         comment_id: int | str,
-        **kwargs: dict[GitHubRequestKwarg, Any],
+        **kwargs: Dict[GitHubRequestKwarg, Any],
     ) -> GitHubResponseModel[List[GitHubIssueCommentModel]]:
         """
          Get an issue comment
@@ -245,8 +245,8 @@ class GitHubIssuesNamespace(BaseNamespace):
         self,
         repository: RepositoryType,
         issue_number: int | str,
-        data: dict[str, Any],
-        **kwargs: dict[GitHubRequestKwarg, Any],
+        data: Dict[str, Any],
+        **kwargs: Dict[GitHubRequestKwarg, Any],
     ) -> GitHubResponseModel[GitHubIssueCommentModel]:
         """
          Create an issue comment
@@ -279,8 +279,8 @@ class GitHubIssuesNamespace(BaseNamespace):
         self,
         repository: RepositoryType,
         comment_id: int | str,
-        data: dict[str, Any],
-        **kwargs: dict[GitHubRequestKwarg, Any],
+        data: Dict[str, Any],
+        **kwargs: Dict[GitHubRequestKwarg, Any],
     ) -> GitHubResponseModel[GitHubIssueCommentModel]:
         """
          Update an issue comment
@@ -316,7 +316,7 @@ class GitHubIssuesNamespace(BaseNamespace):
         self,
         repository: RepositoryType,
         comment_id: int | str,
-        **kwargs: dict[GitHubRequestKwarg, Any],
+        **kwargs: Dict[GitHubRequestKwarg, Any],
     ) -> GitHubResponseModel[None]:
         """
          Delete an issue comment
@@ -346,7 +346,7 @@ class GitHubIssuesNamespace(BaseNamespace):
         self,
         repository: RepositoryType,
         issue_number: int | str,
-        **kwargs: dict[GitHubRequestKwarg, Any],
+        **kwargs: Dict[GitHubRequestKwarg, Any],
     ) -> GitHubResponseModel[List[GitHubIssueCommentModel]]:
         """
          List issue comments

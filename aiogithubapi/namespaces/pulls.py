@@ -3,7 +3,7 @@ Methods for the issues namespace
 
 https://docs.github.com/en/rest/reference/pulls
 """
-from typing import Any, List
+from typing import Any, Dict, List
 
 from ..const import GitHubRequestKwarg, RepositoryType
 from ..helpers import repository_full_name
@@ -23,7 +23,7 @@ class GitHubPullsNamespace(BaseNamespace):
     async def list(
         self,
         repository: RepositoryType,
-        **kwargs: dict[GitHubRequestKwarg, Any],
+        **kwargs: Dict[GitHubRequestKwarg, Any],
     ) -> GitHubResponseModel[List[GitHubPullRequestModel]]:
         """
          List pull requests

@@ -1,7 +1,7 @@
 """GitHub response data class."""
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, Dict
 
 from .base import GitHubDataModelBase
 from .license import GitHubLicenseModel
@@ -98,22 +98,22 @@ class GitHubRepositoryModel(GitHubDataModelBase):
     watchers_count: int | None = None
     watchers: int | None = None
 
-    def _generate_license(self, data: dict[str, Any] | None) -> GitHubLicenseModel:
+    def _generate_license(self, data: Dict[str, Any] | None) -> GitHubLicenseModel:
         """Generate a license model from a dictionary."""
         return GitHubLicenseModel(data) if data else None
 
-    def _generate_owner(self, data: dict[str, Any] | None) -> GitHubOwnerModel:
+    def _generate_owner(self, data: Dict[str, Any] | None) -> GitHubOwnerModel:
         """Generate an owner model from a dictionary."""
         return GitHubOwnerModel(data) if data else None
 
     def _generate_permissions(
-        self, data: dict[str, Any] | None
+        self, data: Dict[str, Any] | None
     ) -> GitHubPermissionsModel:
         """Generate a permissions model from a dictionary."""
         return GitHubPermissionsModel(data)
 
     def _generate_organization(
-        self, data: dict[str, Any] | None
+        self, data: Dict[str, Any] | None
     ) -> GitHubOrganizationModel:
         """Generate an organization model from a dictionary."""
         return GitHubOrganizationModel(data)

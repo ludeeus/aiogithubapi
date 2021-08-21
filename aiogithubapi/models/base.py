@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from logging import Logger
-from typing import Any
+from typing import Any, Dict
 
 from ..const import LOGGER
 
@@ -28,7 +28,7 @@ class GitHubDataModelBase(GitHubBase):
     _process_data: bool = True
     _slugify_keys: bool = True
 
-    def __init__(self, data: dict[str, Any]) -> None:
+    def __init__(self, data: Dict[str, Any]) -> None:
         """Init."""
         self._raw_data = data
         if self._process_data:
@@ -52,7 +52,7 @@ class GitHubDataModelBase(GitHubBase):
         """Post init."""
 
     @property
-    def as_dict(self) -> dict[str, Any]:
+    def as_dict(self) -> Dict[str, Any]:
         """Return attributes as a dict."""
 
         def expand_value_if_needed(value: Any) -> Any:

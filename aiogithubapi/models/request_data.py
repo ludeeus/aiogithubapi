@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, Dict
 
 from aiohttp.hdrs import AUTHORIZATION
 
@@ -13,7 +13,7 @@ from ..const import BASE_API_HEADERS, BASE_API_URL, GitHubClientKwarg
 class GitHubBaseRequestDataModel:
     """Dataclass to hold base request details."""
 
-    kwargs: dict[GitHubClientKwarg, Any]
+    kwargs: Dict[GitHubClientKwarg, Any]
     token: str | None = None
 
     def request_url(self, endpoint: str) -> str:
@@ -31,7 +31,7 @@ class GitHubBaseRequestDataModel:
         return self.kwargs.get(GitHubClientKwarg.BASE_URL) or BASE_API_URL
 
     @property
-    def headers(self) -> dict[str, str]:
+    def headers(self) -> Dict[str, str]:
         """Return base request headers."""
         headers = BASE_API_HEADERS.copy()
         if self.token:

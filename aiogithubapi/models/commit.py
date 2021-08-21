@@ -1,7 +1,7 @@
 """GitHub commit data class."""
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, Dict
 
 from .base import GitHubDataModelBase
 from .user import GitHubUserModel
@@ -54,19 +54,19 @@ class _Commit(GitHubDataModelBase):
     comment_count: int | None = None
     verification: _Verification | None = None
 
-    def _generate_author(self, data: dict[str, Any] | None) -> _Author:
+    def _generate_author(self, data: Dict[str, Any] | None) -> _Author:
         """Generate author data."""
         return _Author(data) if data else None
 
-    def _generate_committer(self, data: dict[str, Any] | None) -> _Committer:
+    def _generate_committer(self, data: Dict[str, Any] | None) -> _Committer:
         """Generate committer data."""
         return _Committer(data) if data else None
 
-    def _generate_tree(self, data: dict[str, Any] | None) -> _Tree:
+    def _generate_tree(self, data: Dict[str, Any] | None) -> _Tree:
         """Generate tree data."""
         return _Tree(data) if data else None
 
-    def _generate_verification(self, data: dict[str, Any] | None) -> _Verification:
+    def _generate_verification(self, data: Dict[str, Any] | None) -> _Verification:
         """Generate verification data."""
         return _Verification(data) if data else None
 
@@ -83,14 +83,14 @@ class GitHubCommitModel(GitHubDataModelBase):
     committer: GitHubUserModel | None = None
     parents: list[_Parents] | None = None
 
-    def _generate_commit(self, data: dict[str, Any] | None) -> _Commit:
+    def _generate_commit(self, data: Dict[str, Any] | None) -> _Commit:
         """Generate commit data."""
         return _Commit(data) if data else None
 
-    def _generate_author(self, data: dict[str, Any] | None) -> GitHubUserModel:
+    def _generate_author(self, data: Dict[str, Any] | None) -> GitHubUserModel:
         """Generate author data."""
         return GitHubUserModel(data) if data else None
 
-    def _generate_committer(self, data: dict[str, Any] | None) -> GitHubUserModel:
+    def _generate_committer(self, data: Dict[str, Any] | None) -> GitHubUserModel:
         """Generate committer data."""
         return GitHubUserModel(data) if data else None

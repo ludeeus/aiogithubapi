@@ -1,7 +1,7 @@
 """GitHub issue data class."""
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, Dict
 
 from .base import GitHubDataModelBase
 from .label import GitHubLabelModel
@@ -52,28 +52,28 @@ class GitHubIssueModel(GitHubDataModelBase):
         """Return True if issue is a pull request."""
         return self.pull_request is not None
 
-    def _generate_labels(self, data: list[dict[str, Any]]) -> list[GitHubLabelModel]:
+    def _generate_labels(self, data: list[Dict[str, Any]]) -> list[GitHubLabelModel]:
         """Generate GitHubLabelModel list from data."""
         return [GitHubLabelModel(label) for label in data or []]
 
-    def _generate_assignees(self, data: list[dict[str, Any]]) -> list[GitHubUserModel]:
+    def _generate_assignees(self, data: list[Dict[str, Any]]) -> list[GitHubUserModel]:
         """Generate GitHubUserModel list from data."""
         return [GitHubUserModel(user) for user in data or []]
 
-    def _generate_assignee(self, data: dict[str, Any] | None) -> GitHubUserModel:
+    def _generate_assignee(self, data: Dict[str, Any] | None) -> GitHubUserModel:
         """Generate GitHubUserModel from data."""
         return GitHubUserModel(data) if data else None
 
     def _generate_milestone(
-        self, data: dict[str, Any] | None
+        self, data: Dict[str, Any] | None
     ) -> "GitHubMilestoneModel":
         """Generate GitHubMilestoneModel from data."""
         return GitHubMilestoneModel(data) if data else None
 
-    def _generate_closed_by(self, data: dict[str, Any] | None) -> GitHubUserModel:
+    def _generate_closed_by(self, data: Dict[str, Any] | None) -> GitHubUserModel:
         """Generate GitHubUserModel from data."""
         return GitHubUserModel(data) if data else None
 
-    def _generate_pull_request(self, data: dict[str, Any] | None) -> _PullRequest:
+    def _generate_pull_request(self, data: Dict[str, Any] | None) -> _PullRequest:
         """Generate GitHubPullRequestModel from data."""
         return _PullRequest(data) if data else None

@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import asyncio
 from datetime import datetime
-from typing import Any
+from typing import Any, Dict
 
 import aiohttp
 
@@ -44,7 +44,7 @@ class GitHubDeviceAPI(GitHubBase):
         self,
         client_id: str,
         session: aiohttp.ClientSession | None = None,
-        **kwargs: dict[GitHubClientKwarg, Any],
+        **kwargs: Dict[GitHubClientKwarg, Any],
     ):
         """
         Initialises a GitHub API OAuth device flow.
@@ -98,7 +98,7 @@ class GitHubDeviceAPI(GitHubBase):
 
     async def register(
         self,
-        **kwargs: dict[GitHubRequestKwarg, Any],
+        **kwargs: Dict[GitHubRequestKwarg, Any],
     ) -> GitHubResponseModel[GitHubLoginDeviceModel]:
         """Register the device and return a object that contains the user code for authorization."""
         response = await self._client.async_call_api(
@@ -120,7 +120,7 @@ class GitHubDeviceAPI(GitHubBase):
     async def activation(
         self,
         device_code: str,
-        **kwargs: dict[GitHubRequestKwarg, Any],
+        **kwargs: Dict[GitHubRequestKwarg, Any],
     ) -> GitHubResponseModel[GitHubLoginOauthModel]:
         """
         Wait for the user to enter the code and activate the device.

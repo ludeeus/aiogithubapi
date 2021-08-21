@@ -1,7 +1,7 @@
 """GitHub user models data class."""
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, Dict
 
 from .base import GitHubDataModelBase
 
@@ -58,7 +58,7 @@ class GitHubAuthenticatedUserModel(GitHubUserModel):
     total_private_repos: int | None = None
     two_factor_authentication: bool | None = None
 
-    def _generate_plan(self, data: dict[str, Any] | None) -> GitHubUserPlanModel:
+    def _generate_plan(self, data: Dict[str, Any] | None) -> GitHubUserPlanModel:
         """Generate GitHub user plan model."""
         return GitHubUserPlanModel(data) if data else None
 

@@ -1,7 +1,7 @@
 """GitHub issue_comment data class."""
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, Dict
 
 from .base import GitHubDataModelBase
 from .user import GitHubUserModel
@@ -20,6 +20,6 @@ class GitHubIssueCommentModel(GitHubDataModelBase):
     url: str | None = None
     user: GitHubUserModel | None = None
 
-    def _generate_user(self, data: dict[str, Any] | None) -> GitHubUserModel:
+    def _generate_user(self, data: Dict[str, Any] | None) -> GitHubUserModel:
         """Generate GitHubUserModel."""
         return GitHubUserModel(data) if data else None

@@ -2,7 +2,7 @@
 # pylint: disable=protected-access
 from __future__ import annotations
 
-from typing import Any, Generic
+from typing import Any, Dict, Generic
 
 from aiohttp.client import ClientResponse
 from yarl import URL
@@ -71,9 +71,9 @@ class GitHubResponseModel(GitHubDataModelBase, Generic[GenericType]):
         return self.headers.etag
 
     @property
-    def pages(self) -> dict[str, int]:
+    def pages(self) -> Dict[str, int]:
         """Return the pages for this response."""
-        pages: dict[str, str] = {}
+        pages: Dict[str, str] = {}
         if not self.headers.link:
             return pages
         for pageentry in self.headers.link.split(", "):

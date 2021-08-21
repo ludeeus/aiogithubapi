@@ -5,7 +5,7 @@ https://docs.github.com/en/rest/reference/repos#contents
 """
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, Dict
 
 from aiohttp.hdrs import ACCEPT
 
@@ -22,7 +22,7 @@ class GitHubContentsNamespace(BaseNamespace):
         self,
         repository: RepositoryType,
         path: str | None = None,
-        **kwargs: dict[GitHubRequestKwarg, Any],
+        **kwargs: Dict[GitHubRequestKwarg, Any],
     ) -> GitHubResponseModel[GitHubContentsModel | list[GitHubContentsModel]]:
         """
          Get repository content

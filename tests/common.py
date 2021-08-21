@@ -5,7 +5,7 @@ import json
 import os
 from dataclasses import dataclass
 from logging import Logger
-from typing import Any
+from typing import Any, Dict
 
 from aiogithubapi.const import BASE_API_HEADERS, LOGGER, HttpContentType
 
@@ -62,7 +62,7 @@ class MockResponse:
     mock_data: Any | None = None
     mock_data_list: list[Any] | None = None
     mock_endpoint: str = ""
-    mock_headers: dict[str, str] | None = None
+    mock_headers: Dict[str, str] | None = None
     mock_raises: BaseException | None = None
     mock_status: int = 200
 

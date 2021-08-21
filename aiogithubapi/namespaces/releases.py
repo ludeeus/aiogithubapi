@@ -5,7 +5,7 @@ https://docs.github.com/en/rest/reference/repos#releases
 """
 from __future__ import annotations
 
-from typing import Any, List
+from typing import Any, Dict, List
 
 from ..const import GitHubRequestKwarg, RepositoryType
 from ..models import GitHubReleaseModel, GitHubResponseModel
@@ -18,7 +18,7 @@ class GitHubReleasesNamespace(BaseNamespace):
     async def list(
         self,
         repository: RepositoryType,
-        **kwargs: dict[GitHubRequestKwarg, Any],
+        **kwargs: Dict[GitHubRequestKwarg, Any],
     ) -> GitHubResponseModel[List[GitHubReleaseModel]]:
         """
         List releases

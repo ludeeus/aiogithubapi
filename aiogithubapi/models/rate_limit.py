@@ -1,6 +1,6 @@
 """GitHub rate limit data class."""
 from __future__ import annotations
-from typing import Any
+from typing import Any, Dict
 
 from .base import GitHubDataModelBase
 
@@ -49,12 +49,12 @@ class GitHubRateLimitModel(GitHubDataModelBase):
     rate: GitHubRateLimitResourceModel | None = None
     resources: GitHubRateLimitResourcesModel | None = None
 
-    def _generate_rate(self, data: dict[str, Any]) -> GitHubRateLimitResourceModel:
+    def _generate_rate(self, data: Dict[str, Any]) -> GitHubRateLimitResourceModel:
         """Generate rate limit resource model."""
         return GitHubRateLimitResourceModel(data) if data else None
 
     def _generate_resources(
-        self, data: dict[str, Any]
+        self, data: Dict[str, Any]
     ) -> GitHubRateLimitResourcesModel:
         """Generate rate limit resources model."""
         return GitHubRateLimitResourcesModel(data) if data else None

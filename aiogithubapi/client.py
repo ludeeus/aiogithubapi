@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import asyncio
-from typing import Any
+from typing import Any, Dict
 
 import aiohttp
 
@@ -23,7 +23,7 @@ from .exceptions import (
 from .legacy.client import AIOGitHubAPIClient as LegacyAIOGitHubAPIClient
 from .models import GitHubBase, GitHubBaseRequestDataModel, GitHubResponseModel
 
-STATUS_EXCEPTIONS: dict[HttpStatusCode, GitHubException] = {
+STATUS_EXCEPTIONS: Dict[HttpStatusCode, GitHubException] = {
     HttpStatusCode.RATELIMIT: GitHubRatelimitException,
     HttpStatusCode.UNAUTHORIZED: GitHubAuthenticationException,
     HttpStatusCode.NOT_MODIFIED: GitHubNotModifiedException,
@@ -45,7 +45,7 @@ class GitHubClient(GitHubBase):
         self,
         session: aiohttp.ClientSession,
         token: str | None = None,
-        **kwargs: dict[GitHubClientKwarg, Any],
+        **kwargs: Dict[GitHubClientKwarg, Any],
     ) -> None:
         """Initialise the GitHub API client."""
         self._base_request_data = GitHubBaseRequestDataModel(
@@ -58,11 +58,11 @@ class GitHubClient(GitHubBase):
         self,
         endpoint: str,
         *,
-        data: dict[str, Any] | str | None = None,
-        **kwargs: dict[GitHubRequestKwarg, Any],
+        data: Dict[str, Any] | str | None = None,
+        **kwargs: Dict[GitHubRequestKwarg, Any],
     ) -> GitHubResponseModel:
         """Execute the API call."""
-        request_arguments: dict[str, Any] = {
+        request_arguments: Dict[str, Any] = {
             "url": self._base_request_data.request_url(endpoint),
             "method": kwargs.get(GitHubRequestKwarg.METHOD, HttpMethod.GET).lower(),
             "params": kwargs.get(GitHubRequestKwarg.PARAMS)

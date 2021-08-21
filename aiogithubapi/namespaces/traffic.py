@@ -5,7 +5,7 @@ https://docs.github.com/en/rest/reference/repos#traffic
 """
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, Dict
 
 from ..const import GitHubRequestKwarg, RepositoryType
 from ..models import GitHubClonesModel, GitHubResponseModel, GitHubViewsModel
@@ -18,7 +18,7 @@ class GitHubTrafficNamespace(BaseNamespace):
     async def clones(
         self,
         repository: RepositoryType,
-        **kwargs: dict[GitHubRequestKwarg, Any],
+        **kwargs: Dict[GitHubRequestKwarg, Any],
     ) -> GitHubResponseModel[GitHubClonesModel]:
         """
         Get repository clones
@@ -45,7 +45,7 @@ class GitHubTrafficNamespace(BaseNamespace):
     async def views(
         self,
         repository: RepositoryType,
-        **kwargs: dict[GitHubRequestKwarg, Any],
+        **kwargs: Dict[GitHubRequestKwarg, Any],
     ) -> GitHubResponseModel[GitHubViewsModel]:
         """
         Get page views

@@ -1,7 +1,7 @@
 """GitHub release data class."""
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, Dict
 
 from .base import GitHubDataModelBase
 from .reaction import GitHubReactionModel
@@ -24,7 +24,7 @@ class GitHubReleaseAssetModel(GitHubDataModelBase):
     updated_at: str = None
     browser_download_url: str = None
 
-    def _generate_uploader(self, data: dict[str, Any] | None) -> GitHubBaseUserModel:
+    def _generate_uploader(self, data: Dict[str, Any] | None) -> GitHubBaseUserModel:
         """Generate uploader data."""
         return GitHubBaseUserModel(data) if data else None
 
@@ -56,7 +56,7 @@ class GitHubReleaseModel(GitHubDataModelBase):
         """Generate author data."""
         return GitHubBaseUserModel(data)
 
-    def _generate_assets(self, data: list[dict[str, Any]]) -> dict:
+    def _generate_assets(self, data: list[Dict[str, Any]]) -> dict:
         """Generate assets data."""
         return [GitHubReleaseAssetModel(asset) for asset in data or []]
 

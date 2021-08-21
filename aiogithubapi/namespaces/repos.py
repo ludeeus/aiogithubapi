@@ -5,7 +5,7 @@ https://docs.github.com/en/rest/reference/repos
 """
 from __future__ import annotations
 
-from typing import Any, List
+from typing import Any, Dict, List
 
 from ..const import GitHubRequestKwarg, RepositoryType
 from ..helpers import repository_full_name
@@ -63,7 +63,7 @@ class GitHubReposNamespace(BaseNamespace):
     async def get(
         self,
         repository: RepositoryType,
-        **kwargs: dict[GitHubRequestKwarg, Any],
+        **kwargs: Dict[GitHubRequestKwarg, Any],
     ) -> GitHubResponseModel[GitHubRepositoryModel]:
         """
          Get a repository
@@ -86,7 +86,7 @@ class GitHubReposNamespace(BaseNamespace):
     async def list_commits(
         self,
         repository: RepositoryType,
-        **kwargs: dict[GitHubRequestKwarg, Any],
+        **kwargs: Dict[GitHubRequestKwarg, Any],
     ) -> GitHubResponseModel[List[GitHubCommitModel]]:
         """
          List commits

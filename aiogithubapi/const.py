@@ -15,7 +15,7 @@ PROJECT_NAME = "aiogithubapi"
 PROJECT_URL = "https://github.com/ludeeus/aiogithubapi"
 
 # Deprecated, use `GitHubRequestAcceptHeader` instead
-ACCEPT_HEADERS: dict[str, str] = {
+ACCEPT_HEADERS: Dict[str, str] = {
     "base": "application/vnd.github.v3.raw+json",
     "preview": "application/vnd.github.mercy-preview+json",
 }
@@ -185,7 +185,7 @@ HTTP_STATUS_CODE_GOOD_LIST: list[HttpStatusCode] = [
 ]
 
 
-BASE_API_HEADERS: dict[str, str] = {
+BASE_API_HEADERS: Dict[str, str] = {
     ACCEPT: GitHubRequestAcceptHeader.BASE.value,
     CONTENT_TYPE: HttpContentType.JSON.value,
     USER_AGENT: DEFAULT_USER_AGENT,

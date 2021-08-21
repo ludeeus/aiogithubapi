@@ -5,7 +5,7 @@ https://docs.github.com/en/rest/reference/git
 """
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, Dict
 
 from ..const import GitHubRequestKwarg, RepositoryType
 from ..models import GitHubGitTreeModel, GitHubResponseModel
@@ -19,7 +19,7 @@ class GitHubGitNamespace(BaseNamespace):
         self,
         repository: RepositoryType,
         tree_sha: str,
-        **kwargs: dict[GitHubRequestKwarg, Any],
+        **kwargs: Dict[GitHubRequestKwarg, Any],
     ) -> GitHubResponseModel[GitHubGitTreeModel]:
         """
         Get a tree
