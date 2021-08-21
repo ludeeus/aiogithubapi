@@ -1,31 +1,32 @@
-"""
-AIOGitHubAPI: Repository
+"""Deprecated"""
 
-https://developer.github.com/v3/repos/#get
-"""
-# pylint: disable=redefined-builtin, missing-docstring, invalid-name, unused-import
+from __future__ import annotations
+
 from datetime import datetime
 from typing import Optional
 
 from aiohttp.hdrs import IF_NONE_MATCH
 
-from aiogithubapi.common.exceptions import AIOGitHubAPIException
-from aiogithubapi.objects.base import AIOGitHubAPIBaseClient
-from aiogithubapi.objects.repos.commit import AIOGitHubAPIReposCommit
-from aiogithubapi.objects.repository.content import (
+# pylint: disable=redefined-builtin, missing-docstring, invalid-name, unused-import
+from ...client import AIOGitHubAPIClient
+from ...common.exceptions import AIOGitHubAPIException
+from ...const import LOGGER
+from ...objects.base import AIOGitHubAPIBaseClient
+from ...objects.repos.commit import AIOGitHubAPIReposCommit
+from ...objects.repository.content import (
     AIOGitHubAPIRepositoryContent,
     AIOGitHubAPIRepositoryTreeContent,
 )
-from aiogithubapi.objects.repository.issue import AIOGitHubAPIRepositoryIssue
-from aiogithubapi.objects.repository.release import AIOGitHubAPIRepositoryRelease
-from aiogithubapi.objects.repository.traffic import AIOGitHubAPIRepositoryTraffic
-from aiogithubapi.objects.users.user import AIOGitHubAPIUsersUser
+from ...objects.repository.issue import AIOGitHubAPIRepositoryIssue
+from ...objects.repository.release import AIOGitHubAPIRepositoryRelease
+from ...objects.repository.traffic import AIOGitHubAPIRepositoryTraffic
+from ...objects.users.user import AIOGitHubAPIUsersUser
 
 
 class AIOGitHubAPIRepository(AIOGitHubAPIBaseClient):
     """Repository GitHub API implementation."""
 
-    def __init__(self, client: "AIOGitHubAPIClient", attributes: dict) -> None:
+    def __init__(self, client: AIOGitHubAPIClient, attributes: dict) -> None:
         """Initialise."""
         super().__init__(client, attributes)
         self._last_commit = None
@@ -86,9 +87,7 @@ class AIOGitHubAPIRepository(AIOGitHubAPIBaseClient):
     @property
     def last_commit(self) -> None:
         if self._last_commit is None:
-            self.logger.warning(
-                "You need to call .set_last_commit to set this property"
-            )
+            LOGGER.warning("You need to call .set_last_commit to set this property")
         return self._last_commit
 
     @property
@@ -97,7 +96,7 @@ class AIOGitHubAPIRepository(AIOGitHubAPIBaseClient):
 
     async def get_contents(
         self, path: str, ref: str or None = None, etag: Optional[str] = None
-    ) -> ["AIOGitHubAPIRepositoryContent"] or "AIOGitHubAPIRepositoryContent":
+    ) -> list["AIOGitHubAPIRepositoryContent"] or "AIOGitHubAPIRepositoryContent":
         """Retrun a list of repository content objects."""
         _endpoint = f"/repos/{self.full_name}/contents/{path}"
         _params = {"path": path}
@@ -117,7 +116,7 @@ class AIOGitHubAPIRepository(AIOGitHubAPIBaseClient):
 
     async def get_tree(
         self, ref: str or None = None, etag: Optional[str] = None
-    ) -> ["AIOGitHubAPIRepositoryTreeContent"] or list:
+    ) -> list["AIOGitHubAPIRepositoryTreeContent"] or list:
         """Retrun a list of repository tree objects."""
         if ref is None:
             raise AIOGitHubAPIException("Missing ref")
@@ -156,7 +155,7 @@ class AIOGitHubAPIRepository(AIOGitHubAPIBaseClient):
 
     async def get_releases(
         self, prerelease: bool = False, returnlimit: int = 5, etag: Optional[str] = None
-    ) -> ["AIOGitHubAPIRepositoryRelease"] or list:
+    ) -> list["AIOGitHubAPIRepositoryRelease"] or list:
         """Retrun a list of repository release objects."""
         _endpoint = f"/repos/{self.full_name}/releases"
         _headers = {}
@@ -208,7 +207,7 @@ class AIOGitHubAPIRepository(AIOGitHubAPIBaseClient):
 
     async def get_issues(
         self, etag: Optional[str] = None
-    ) -> ["AIOGitHubAPIRepositoryIssue"]:
+    ) -> list["AIOGitHubAPIRepositoryIssue"]:
         """Updates an issue comment."""
         _endpoint = f"/repos/{self.full_name}/issues"
         _headers = {}
@@ -226,8 +225,8 @@ class AIOGitHubAPIRepository(AIOGitHubAPIBaseClient):
         body: str or None = None,
         state: str or None = None,
         milestone: int or None = None,
-        labels: [str] or None = None,
-        assignees: [str] or None = None,
+        labels: list[str] or None = None,
+        assignees: list[str] or None = None,
     ):
         """Updates an issue comment."""
         _endpoint = f"/repos/{self.full_name}/issues"

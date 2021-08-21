@@ -7,11 +7,9 @@ from typing import Optional
 
 from aiohttp.hdrs import IF_NONE_MATCH
 
-from aiogithubapi.objects.base import AIOGitHubAPIBaseClient
-from aiogithubapi.objects.repos.traffic.clones import AIOGitHubAPIReposTrafficClones
-from aiogithubapi.objects.repos.traffic.pageviews import (
-    AIOGitHubAPIReposTrafficPageviews,
-)
+from ..base import AIOGitHubAPIBaseClient
+from ..repos.traffic.clones import AIOGitHubAPIReposTrafficClones
+from ..repos.traffic.pageviews import AIOGitHubAPIReposTrafficPageviews
 
 
 class AIOGitHubAPIRepositoryTraffic(AIOGitHubAPIBaseClient):

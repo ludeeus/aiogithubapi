@@ -1,93 +1,127 @@
-"""
-AIOGitHubAPI: AioGitHubClient
+"""This is the class that do the requests against the API."""
+from __future__ import annotations
 
-This is the class that do the requests against the API
-It also keeps track of ratelimits
-"""
-# pylint: disable=redefined-builtin, too-many-arguments
-from typing import Optional
+import asyncio
+from typing import Any
 
 import aiohttp
 
-from aiogithubapi.common.const import BASE_API_HEADERS, BASE_API_URL
-from aiogithubapi.helpers import async_call_api
-from aiogithubapi.objects.base import AIOGitHubAPIBase, AIOGitHubAPIResponse
-from aiogithubapi.objects.ratelimit import AIOGitHubAPIRateLimit
+from .const import (
+    GitHubClientKwarg,
+    GitHubRequestKwarg,
+    HttpContentType,
+    HttpMethod,
+    HttpStatusCode,
+)
+from .exceptions import (
+    GitHubAuthenticationException,
+    GitHubConnectionException,
+    GitHubException,
+    GitHubNotModifiedException,
+    GitHubRatelimitException,
+)
+from .legacy.client import AIOGitHubAPIClient as LegacyAIOGitHubAPIClient
+from .models import GitHubBase, GitHubBaseRequestDataModel, GitHubResponseModel
+
+STATUS_EXCEPTIONS: dict[HttpStatusCode, GitHubException] = {
+    HttpStatusCode.RATELIMIT: GitHubRatelimitException,
+    HttpStatusCode.UNAUTHORIZED: GitHubAuthenticationException,
+    HttpStatusCode.NOT_MODIFIED: GitHubNotModifiedException,
+}
 
 
-class AIOGitHubAPIClient(AIOGitHubAPIBase):
-    """Client to handle API calls."""
+class AIOGitHubAPIClient(LegacyAIOGitHubAPIClient):
+    """Dummy class to not break existing code."""
+
+
+class GitHubClient(GitHubBase):
+    """
+    Client to handle API calls.
+
+    Don't use this directly, use `aiogithubapi.github.GitHubApi` to get the client.
+    """
 
     def __init__(
         self,
         session: aiohttp.ClientSession,
-        token: str,
-        headers: Optional[dict] = None,
-        base_url: Optional[str] = None,
+        token: str | None = None,
+        **kwargs: dict[GitHubClientKwarg, Any],
     ) -> None:
-        """Initialize the API client."""
-        self.session = session
-        self.base_url = base_url or BASE_API_URL
-        self.last_response: Optional[AIOGitHubAPIResponse] = None
-        self.token = token
-        self.ratelimits = AIOGitHubAPIRateLimit()
-        self.headers = {}
-        self.headers.update(BASE_API_HEADERS)
-        self.headers.update(headers or {})
+        """Initialise the GitHub API client."""
+        self._base_request_data = GitHubBaseRequestDataModel(
+            token=token,
+            kwargs=kwargs,
+        )
+        self._session = session
 
-        if token is not None:
-            self.headers["Authorization"] = "token {}".format(token)
-
-    async def get(
+    async def async_call_api(
         self,
         endpoint: str,
-        returnjson: bool = True,
-        headers: dict or None = None,
-        params: dict or None = None,
-    ) -> AIOGitHubAPIResponse:
-        """Execute a GET request."""
-        url = f"{self.base_url}{endpoint}"
-        _headers = {}
-        _headers.update(self.headers)
-        _headers.update(headers or {})
+        *,
+        data: dict[str, Any] | str | None = None,
+        **kwargs: dict[GitHubRequestKwarg, Any],
+    ) -> GitHubResponseModel:
+        """Execute the API call."""
+        request_arguments: dict[str, Any] = {
+            "url": self._base_request_data.request_url(endpoint),
+            "method": kwargs.get(GitHubRequestKwarg.METHOD, HttpMethod.GET).lower(),
+            "params": kwargs.get(GitHubRequestKwarg.PARAMS)
+            or kwargs.get(GitHubRequestKwarg.QUERY, {}),
+            "timeout": self._base_request_data.timeout,
+            "headers": {
+                **self._base_request_data.headers,
+                **kwargs.get("headers", {}),
+            },
+        }
 
-        response = await async_call_api(
-            session=self.session,
-            method="GET",
-            url=url,
-            returnjson=returnjson,
-            headers=_headers,
-            params=params,
-        )
-        self.ratelimits.load_from_response_headers(response.headers)
-        self.last_response = response
-        return response
+        if etag := kwargs.get(GitHubRequestKwarg.ETAG):
+            request_arguments["headers"][aiohttp.hdrs.IF_NONE_MATCH] = etag
 
-    async def post(
-        self,
-        endpoint: str,
-        returnjson: bool = False,
-        headers: dict or None = None,
-        params: dict or None = None,
-        data: dict or str or None = None,
-        jsondata: bool = False,
-    ) -> AIOGitHubAPIResponse:
-        """Execute a POST request."""
-        url = f"{self.base_url}{endpoint}"
-        _headers = {}
-        _headers.update(self.headers)
-        _headers.update(headers or {})
+        if isinstance(data, dict):
+            request_arguments["json"] = data
+        else:
+            request_arguments["data"] = data
 
-        response = await async_call_api(
-            session=self.session,
-            method="POST",
-            url=url,
-            returnjson=returnjson,
-            headers=_headers,
-            params=params,
-            data=data,
-            jsondata=jsondata,
-        )
-        self.ratelimits.load_from_response_headers(response.headers)
-        self.last_response = response
+        try:
+            result = await self._session.request(**request_arguments)
+        except (aiohttp.ClientError, asyncio.CancelledError) as exception:
+            raise GitHubConnectionException(
+                "Request exception for "
+                f"'{self._base_request_data.request_url(endpoint)}' with - {exception}"
+            ) from exception
+
+        except asyncio.TimeoutError:
+            raise GitHubConnectionException(
+                f"Timeout of {self._base_request_data.timeout} reached while "
+                f"waiting for {self._base_request_data.request_url(endpoint)}"
+            ) from None
+
+        except BaseException as exception:
+            raise GitHubException(
+                "Unexpected exception for "
+                f"'{self._base_request_data.request_url(endpoint)}' with - {exception}"
+            ) from exception
+
+        response = GitHubResponseModel(result)
+
+        if response.status != HttpStatusCode.NO_CONTENT:
+            if response.headers.content_type != HttpContentType.TEXT_PLAIN:
+                response.data = await result.json()
+                if (
+                    response.status == HttpStatusCode.RATELIMIT
+                    and "rate limit" not in str(response.data).lower()
+                ):
+                    response.status = HttpStatusCode.UNAUTHORIZED
+            else:
+                response.data = await result.text()
+
+            if exception := STATUS_EXCEPTIONS.get(response.status):
+                raise exception(response.data)
+
+        if isinstance(response.data, dict):
+            if message := response.data.get("message"):
+                if message == "Bad credentials":
+                    raise GitHubAuthenticationException("Access token is not valid!")
+                raise GitHubException(response.data)
+
         return response

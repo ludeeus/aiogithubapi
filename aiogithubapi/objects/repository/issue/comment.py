@@ -3,9 +3,11 @@ AIOGitHubAPI: Issue Comment
 
 https://developer.github.com/v3/issues/comments/
 """
+from ...base import AIOGitHubAPIBaseClient
+
 # pylint: disable=missing-docstring
-from aiogithubapi.objects.base import AIOGitHubAPIBase, AIOGitHubAPIBaseClient
-from aiogithubapi.objects.users.user import AIOGitHubAPIUsersUser
+from ...content import AIOGitHubAPIContentBase
+from ...users.user import AIOGitHubAPIUsersUser
 
 
 class AIOGitHubAPIRepositoryIssueCommentUser(AIOGitHubAPIUsersUser):
@@ -39,7 +41,9 @@ class AIOGitHubAPIRepositoryIssueCommentUser(AIOGitHubAPIUsersUser):
 class AIOGitHubAPIRepositoryIssueComment(AIOGitHubAPIBaseClient):
     """Issue comment GitHub API implementation."""
 
-    def __init__(self, client: "AIOGitHubAPIClient", attributes: dict, repository: str):
+    def __init__(
+        self, client: AIOGitHubAPIContentBase, attributes: dict, repository: str
+    ):
         """Initialize."""
         super().__init__(client, attributes)
         self.repository = repository

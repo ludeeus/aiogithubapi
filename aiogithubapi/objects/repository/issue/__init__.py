@@ -4,8 +4,8 @@ AIOGitHubAPI: Issue
 https://developer.github.com/v3/issues/
 """
 # pylint: disable=missing-docstring, unused-import
-from aiogithubapi.objects.base import AIOGitHubAPIBaseClient
-from aiogithubapi.objects.repository.issue.comment import (
+from ...base import AIOGitHubAPIBaseClient
+from ...repository.issue.comment import (
     AIOGitHubAPIRepositoryIssueComment,
     AIOGitHubAPIRepositoryIssueCommentUser,
 )

@@ -6,8 +6,8 @@ https://developer.github.com/v3/repos/releases/
 # pylint: disable=missing-docstring
 from datetime import datetime
 
-from aiogithubapi.objects.base import AIOGitHubAPIBase
-from aiogithubapi.objects.repository.content import AIOGitHubAPIRepositoryContent
+from ...objects.base import AIOGitHubAPIBase
+from ...objects.repository.content import AIOGitHubAPIRepositoryContent
 
 
 class AIOGitHubAPIRepositoryRelease(AIOGitHubAPIBase):

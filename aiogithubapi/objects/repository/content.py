@@ -6,7 +6,7 @@ https://developer.github.com/v3/repos/contents/
 # pylint: disable=missing-docstring
 import base64
 
-from aiogithubapi.objects.content import AIOGitHubAPIContentBase
+from ..content import AIOGitHubAPIContentBase
 
 
 class AIOGitHubAPIRepositoryContent(AIOGitHubAPIContentBase):

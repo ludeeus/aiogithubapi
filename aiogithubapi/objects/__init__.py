@@ -1,1 +1,1 @@
-"""AIOGitHubAPI: objects"""
+"""Deprecated"""

@@ -3,121 +3,165 @@ Class for OAuth device flow authentication.
 
 https://docs.github.com/en/developers/apps/authorizing-oauth-apps#device-flow
 """
+from __future__ import annotations
+
 import asyncio
-import logging
 from datetime import datetime
+from typing import Any
 
 import aiohttp
 
-from aiogithubapi.common.const import (
-    OAUTH_ACCESS_TOKEN,
-    OAUTH_DEVICE_LOGIN,
+from .client import GitHubClient
+from .const import (
+    BASE_GITHUB_URL,
+    OAUTH_ACCESS_TOKEN_PATH,
+    OAUTH_DEVICE_LOGIN_PATH,
     DeviceFlowError,
+    GitHubClientKwarg,
+    GitHubRequestKwarg,
     HttpMethod,
 )
-from aiogithubapi.common.exceptions import AIOGitHubAPIException
-from aiogithubapi.helpers import async_call_api
-from aiogithubapi.objects.login.device import AIOGitHubAPILoginDevice
-from aiogithubapi.objects.login.oauth import AIOGitHubAPILoginOauth
+from .exceptions import GitHubException
+from .legacy.device import AIOGitHubAPIDeviceLogin as LegacyAIOGitHubAPIDeviceLogin
+from .models import (
+    GitHubBase,
+    GitHubLoginDeviceModel,
+    GitHubLoginOauthModel,
+    GitHubResponseModel,
+)
 
-_LOGGER: logging.Logger = logging.getLogger("aiogithubapi")
 
-HEADERS = {"Accept": "application/json"}
+class AIOGitHubAPIDeviceLogin(LegacyAIOGitHubAPIDeviceLogin):
+    """Dummy class to not break existing code."""
 
 
-class AIOGitHubAPIDeviceLogin:
+class GitHubDeviceAPI(GitHubBase):
+    """GitHub API OAuth device flow"""
+
     _close_session = False
 
     def __init__(
-        self, client_id: str, scope: str = "", session: aiohttp.ClientSession = None
+        self,
+        client_id: str,
+        session: aiohttp.ClientSession | None = None,
+        **kwargs: dict[GitHubClientKwarg, Any],
     ):
         """
         Initialises a GitHub API OAuth device flow.
 
-        param | required | description
-        -- | -- | --
-        `client_id` | True | The client ID of your OAuth app.
-        `scope` | False | [Scope(s)](https://docs.github.com/en/developers/apps/scopes-for-oauth-apps) that will be requested.
-        `session` | False | `aiohttp.ClientSession` to be used by this package.
+        **Arguments**:
+
+        `client_id` (Optional)
+
+        The client ID of your OAuth app.
+
+
+        `session` (Optional)
+
+        `aiohttp.ClientSession` to be used by this package.
+        If you do not pass one, one will be created for you.
+
+        `**kwargs` (Optional)
+
+        Pass additional arguments.
+        See the `aiogithubapi.const.GitHubClientKwarg` enum for valid options.
+
+        https://docs.github.com/en/developers/apps/authorizing-oauth-apps#device-flow
         """
         self.client_id = client_id
-        self.scope = scope
         self._interval = 5
-        self._expires_in = None
         self._expires = None
-        self._device_code = None
 
         if session is None:
-            self.session = aiohttp.ClientSession()
+            session = aiohttp.ClientSession()
             self._close_session = True
-        else:
-            self.session = session
 
-    async def __aenter__(self) -> "AIOGitHubAPIDeviceLogin":
+        self._session = session
+
+        if GitHubClientKwarg.BASE_URL not in kwargs:
+            kwargs[GitHubClientKwarg.BASE_URL] = BASE_GITHUB_URL
+
+        self._client = GitHubClient(session=session, **kwargs)
+
+    async def __aenter__(self) -> GitHubDeviceAPI:
         """Async enter."""
         return self
 
     async def __aexit__(self, *exc_info) -> None:
         """Async exit."""
-        await self._close()
+        await self.close_session()
 
-    async def async_register_device(self) -> AIOGitHubAPILoginDevice:
+    async def close_session(self) -> None:
+        """Close open client session."""
+        if self._session and self._close_session:
+            await self._session.close()
+
+    async def register(
+        self,
+        **kwargs: dict[GitHubRequestKwarg, Any],
+    ) -> GitHubResponseModel[GitHubLoginDeviceModel]:
         """Register the device and return a object that contains the user code for authorization."""
-        params = {"client_id": self.client_id, "scope": self.scope}
-        response = await async_call_api(
-            session=self.session,
-            method=HttpMethod.POST,
-            url=OAUTH_DEVICE_LOGIN,
-            params=params,
-            headers=HEADERS,
+        response = await self._client.async_call_api(
+            endpoint=OAUTH_DEVICE_LOGIN_PATH,
+            **{
+                **kwargs,
+                GitHubRequestKwarg.METHOD: HttpMethod.POST,
+                GitHubRequestKwarg.PARAMS: {
+                    "client_id": self.client_id,
+                    "scope": kwargs.get(GitHubRequestKwarg.SCOPE, ""),
+                },
+            },
         )
-        device = AIOGitHubAPILoginDevice(response.data)
-        self._device_code = device.device_code
-        self._interval = device.interval
-        self._expires = datetime.timestamp(datetime.now()) + device.expires_in
+        response.data = GitHubLoginDeviceModel(response.data)
+        self._interval = response.data.interval
+        self._expires = datetime.timestamp(datetime.now()) + response.data.expires_in
+        return response
 
-        return device
+    async def activation(
+        self,
+        device_code: str,
+        **kwargs: dict[GitHubRequestKwarg, Any],
+    ) -> GitHubResponseModel[GitHubLoginOauthModel]:
+        """
+        Wait for the user to enter the code and activate the device.
 
-    async def async_device_activation(self) -> AIOGitHubAPILoginOauth:
-        """Wait for the user to enter the code and activate the device."""
-        _activation = None
-        while _activation is None:
-            if self._expires is None or self._device_code is None:
-                await asyncio.sleep(self._interval)
+        **Arguments**:
 
-            params = {
-                "client_id": self.client_id,
-                "device_code": self._device_code,
-                "grant_type": "urn:ietf:params:oauth:grant-type:device_code",
-            }
+        `device_code`
+
+        The device_code that was returned when registering the device.
+
+        """
+        if self._expires is None:
+            raise GitHubException("Expiration has passed, re-run the registration")
+
+        _user_confirmed = None
+        while _user_confirmed is None:
 
             if self._expires < datetime.timestamp(datetime.now()):
-                raise AIOGitHubAPIException("User took too long to enter key")
+                raise GitHubException("User took too long to enter key")
 
-            try:
-                response = await async_call_api(
-                    session=self.session,
-                    method=HttpMethod.POST,
-                    url=OAUTH_ACCESS_TOKEN,
-                    params=params,
-                    headers=HEADERS,
-                )
-                if response.data.get("error"):
-                    if response.data["error"] == DeviceFlowError.AUTHORIZATION_PENDING:
-                        _LOGGER.debug(response.data["error_description"])
-                        await asyncio.sleep(self._interval)
-                    else:
-                        raise AIOGitHubAPIException(response.data["error_description"])
+            response = await self._client.async_call_api(
+                endpoint=OAUTH_ACCESS_TOKEN_PATH,
+                **{
+                    **kwargs,
+                    GitHubRequestKwarg.METHOD: HttpMethod.POST,
+                    GitHubRequestKwarg.PARAMS: {
+                        "client_id": self.client_id,
+                        "device_code": device_code,
+                        "grant_type": "urn:ietf:params:oauth:grant-type:device_code",
+                    },
+                },
+            )
+
+            if error := response.data.get("error"):
+                if error == DeviceFlowError.AUTHORIZATION_PENDING:
+                    self.logger.debug(response.data.get("error_description"))
+                    await asyncio.sleep(self._interval)
                 else:
-                    _activation = AIOGitHubAPILoginOauth(response.data)
-                    break
+                    raise GitHubException(response.data.get("error_description"))
+            else:
+                response.data = GitHubLoginOauthModel(response.data)
+                break
 
-            except AIOGitHubAPIException as exception:
-                raise AIOGitHubAPIException(exception) from exception
-
-        return _activation
-
-    async def _close(self) -> None:
-        """Close open client session."""
-        if self.session and self._close_session:
-            await self.session.close()
+        return response

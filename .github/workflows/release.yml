@@ -26,6 +26,7 @@ jobs:
         run: |
           export version=${{ github.ref }}
           sed -i "s|main|${version##*/}|" ./setup.py
+          sed -i "s|main|${version##*/}|" ./aiogithubapi/const.py
           cat ./setup.py
       - name: 🚀 Publish to PyPi
         env:

@@ -11,10 +11,10 @@ requirements: ## Install requirements
 test: ## Run all tests
 	@python3 -m pytest tests -rxf -x -v -l --cov=./ --cov-report=xml
 
-black: ## Lint all files black
+lint: ## Lint all files black
 	@python3 -m isort .
 	@python3 -m black --fast aiogithubapi tests
 
 coverage: ## Check the coverage of the package
 	@python3 -m pytest tests -rxf -x -v -l --cov=./ --cov-report=xml > /dev/null
-	@coverage report
+	@coverage report --skip-covered
