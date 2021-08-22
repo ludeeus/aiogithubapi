@@ -1,1 +1,1 @@
-"""AIOGitHubAPI"""
+"""Deprecated"""

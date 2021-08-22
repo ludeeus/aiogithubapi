@@ -1,42 +1,28 @@
 """Helpers for AIOGitHubAPI."""
-from asyncio import CancelledError, TimeoutError, get_event_loop
+from __future__ import annotations
+
 from typing import Optional
 
 import aiohttp
-import async_timeout
-import backoff
-from aiohttp.client_exceptions import ClientError
 
-from aiogithubapi.common.const import (
-    HTTP_STATUS_CODE_GOOD_LIST,
-    HttpMethod,
-    HttpStatusCode,
+from .const import HttpMethod, Repository, RepositoryType
+from .legacy.helpers import (
+    async_call_api as legacy_async_call_api,
+    short_message,
+    short_sha,
 )
-from aiogithubapi.common.exceptions import (
-    AIOGitHubAPIAuthenticationException,
-    AIOGitHubAPIException,
-    AIOGitHubAPINotModifiedException,
-    AIOGitHubAPIRatelimitException,
-)
-from aiogithubapi.objects.base import AIOGitHubAPIResponse
+from .objects.base import AIOGitHubAPIResponse
 
 
-def short_sha(sha: str) -> str:
-    """Return the first 7 characters of the sha."""
-    return sha[0:7]
+def repository_full_name(repository: RepositoryType) -> str:
+    """Return the repository name."""
+    if isinstance(repository, str):
+        return repository
+    if isinstance(repository, Repository):
+        return repository.full_name
+    return f"{repository['owner']}/{repository['repo']}"
 
 
-def short_message(message: str) -> str:
-    """Return the first line of a message"""
-    return message.split("\n")[0]
-
-
-@backoff.on_exception(
-    backoff.expo,
-    (ClientError, CancelledError, TimeoutError, KeyError),
-    max_tries=5,
-    logger=None,
-)
 async def async_call_api(
     session: aiohttp.ClientSession,
     method: HttpMethod,
@@ -47,58 +33,7 @@ async def async_call_api(
     jsondata: bool = True,
     returnjson: bool = True,
 ) -> AIOGitHubAPIResponse:
-    """Execute the API call."""
-    response = AIOGitHubAPIResponse()
-
-    async with async_timeout.timeout(20, loop=get_event_loop()):
-        if method == HttpMethod.GET:
-            result = await session.get(url, params=params or {}, headers=headers)
-        else:
-            if jsondata:
-                result = await session.post(
-                    url,
-                    params=params or {},
-                    headers=headers,
-                    json=data or {},
-                )
-            else:
-                result = await session.post(
-                    url,
-                    params=params or {},
-                    headers=headers,
-                    data=data or "",
-                )
-
-        response.status = result.status
-        response.headers = result.headers
-
-        if response.status == HttpStatusCode.RATELIMIT:
-            raise AIOGitHubAPIRatelimitException("GitHub Ratelimit error")
-
-        if response.status == HttpStatusCode.UNAUTHORIZED:
-            raise AIOGitHubAPIAuthenticationException(HttpStatusCode.UNAUTHORIZED)
-
-        if response.status == HttpStatusCode.NOT_MODIFIED:
-            raise AIOGitHubAPINotModifiedException(
-                f"Response from {url} was not modified."
-            )
-
-        if response.status not in HTTP_STATUS_CODE_GOOD_LIST:
-            raise AIOGitHubAPIException(
-                f"GitHub returned {HttpStatusCode(response.status)} for {url}"
-            )
-
-        if returnjson:
-            response.data = await result.json()
-        else:
-            response.data = await result.text()
-
-        if isinstance(response.data, dict):
-            if response.data.get("message"):
-                if response.data["message"] == "Bad credentials":
-                    raise AIOGitHubAPIAuthenticationException(
-                        "Access token is not valid!"
-                    )
-                raise AIOGitHubAPIException(response.data)
-
-    return response
+    """Deprecated: Execute the API call."""
+    return await legacy_async_call_api(
+        session, method, url, headers, params, data, jsondata, returnjson
+    )

@@ -6,7 +6,7 @@ https://developer.github.com/v3/repos/contents/
 # pylint: disable=missing-docstring
 import base64
 
-from aiogithubapi.objects.content import AIOGitHubAPIContentBase
+from ..content import AIOGitHubAPIContentBase
 
 
 class AIOGitHubAPIRepositoryContent(AIOGitHubAPIContentBase):
@@ -30,15 +30,11 @@ class AIOGitHubAPIRepositoryContent(AIOGitHubAPIContentBase):
 
     @property
     def content(self):
-        return base64.b64decode(
-            bytearray(self.attributes.get("content"), "utf-8")
-        ).decode()
+        return base64.b64decode(bytearray(self.attributes.get("content"), "utf-8")).decode()
 
     @property
     def download_url(self):
-        return self.attributes.get("download_url") or self.attributes.get(
-            "browser_download_url"
-        )
+        return self.attributes.get("download_url") or self.attributes.get("browser_download_url")
 
 
 class AIOGitHubAPIRepositoryTreeContent(AIOGitHubAPIContentBase):

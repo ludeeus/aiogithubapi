@@ -1,0 +1,34 @@
+[
+    {
+        "url": "https://api.github.com/repos/ludeeus/aiogithubapi/issues/comments/567236951",
+        "html_url": "https://github.com/ludeeus/aiogithubapi/issues/1#issuecomment-567236951",
+        "issue_url": "https://api.github.com/repos/ludeeus/aiogithubapi/issues/1",
+        "id": 567236951,
+        "node_id": "MDEyOklzc3VlQ29tbWVudDU2NzIzNjk1MQ==",
+        "user": {
+            "login": "ludeeus",
+            "id": 15093472,
+            "node_id": "MDQ6VXNlcjE1MDkzNDcy",
+            "avatar_url": "https://avatars.githubusercontent.com/u/15093472?v=4",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/ludeeus",
+            "html_url": "https://github.com/ludeeus",
+            "followers_url": "https://api.github.com/users/ludeeus/followers",
+            "following_url": "https://api.github.com/users/ludeeus/following{/other_user}",
+            "gists_url": "https://api.github.com/users/ludeeus/gists{/gist_id}",
+            "starred_url": "https://api.github.com/users/ludeeus/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/ludeeus/subscriptions",
+            "organizations_url": "https://api.github.com/users/ludeeus/orgs",
+            "repos_url": "https://api.github.com/users/ludeeus/repos",
+            "events_url": "https://api.github.com/users/ludeeus/events{/privacy}",
+            "received_events_url": "https://api.github.com/users/ludeeus/received_events",
+            "type": "User",
+            "site_admin": false
+        },
+        "created_at": "2019-12-18T22:15:37Z",
+        "updated_at": "2019-12-18T22:15:37Z",
+        "author_association": "OWNER",
+        "body": "No logs, no issue!",
+        "performed_via_github_app": null
+    }
+]

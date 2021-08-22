@@ -1,0 +1,5 @@
+{
+    "access_token": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    "token_type": "bearer",
+    "scope": "user"
+}

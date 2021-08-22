@@ -1,10 +1,11 @@
 """AIOGitHubAPI: objects.base"""
-import logging
+from __future__ import annotations
+
 from typing import TYPE_CHECKING
 
 from aiohttp.hdrs import ETAG
 
-from aiogithubapi.common.const import HttpStatusCode
+from ..common.const import HttpStatusCode
 
 if TYPE_CHECKING:
     from ..client import AIOGitHubAPIClient
@@ -12,8 +13,6 @@ if TYPE_CHECKING:
 
 class AIOGitHubAPIBase:
     """Base class for AIOGitHubAPI."""
-
-    logger: logging.Logger = logging.getLogger("aiogithubapi")
 
     def __init__(self, attributes) -> None:
         """Initialize."""
@@ -23,7 +22,7 @@ class AIOGitHubAPIBase:
 class AIOGitHubAPIBaseClient(AIOGitHubAPIBase):
     """Base class for AIOGitHubAPI."""
 
-    def __init__(self, client: "AIOGitHubAPIClient", attributes: dict) -> None:
+    def __init__(self, client: AIOGitHubAPIClient, attributes: dict) -> None:
         """Initialise."""
         super().__init__(attributes)
         self.client = client
@@ -35,12 +34,17 @@ class AIOGitHubAPIResponse:
     def __init__(self) -> None:
         """initialise."""
         self.headers: dict = {}
+        self.data = {}
         self.status: HttpStatusCode = HttpStatusCode.OK
-        self.data: dict or str or list = {}
 
     def as_dict(self):
         """Return attributes as a dict."""
-        return {"headers": self.headers, "status": self.status, "data": self.data}
+        return {
+            "headers": self.headers,
+            "status": self.status,
+            "data": self.data,
+            "etag": self.etag,
+        }
 
     @property
     def etag(self):

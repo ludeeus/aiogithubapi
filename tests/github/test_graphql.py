@@ -1,47 +1,16 @@
-# pylint: disable=missing-docstring, redefined-outer-name, unused-import
+"""Test graphql."""
+# pylint: disable=missing-docstring
 import pytest
 
-from aiogithubapi import GitHub
-from tests.common import load_fixture
-from tests.const import NOT_RATELIMITED, TOKEN
+from aiogithubapi import GitHubAPI
+
+from tests.common import MockedRequests
 
 
 @pytest.mark.asyncio
-async def test_graphql(aresponses):
-    aresponses.add(
-        "api.github.com",
-        "/graphql",
-        "post",
-        aresponses.Response(
-            text=load_fixture("gql_simple.json"),
-            status=200,
-            headers=NOT_RATELIMITED,
-        ),
-    )
-
-    async with GitHub(TOKEN) as github:
-        repository = await github.graphql(
-            query='query{repository(owner: "awesome", name: "repo"){description}}'
-        )
-        assert repository["repository"]["description"] == "This your first repo!"
-
-
-@pytest.mark.asyncio
-async def test_graphql_variable(aresponses):
-    aresponses.add(
-        "api.github.com",
-        "/graphql",
-        "post",
-        aresponses.Response(
-            text=load_fixture("gql_simple.json"),
-            status=200,
-            headers=NOT_RATELIMITED,
-        ),
-    )
-
-    async with GitHub(TOKEN) as github:
-        repository = await github.graphql(
-            query="query($owner: String!, $repo: String!){repository(owner: $owner, name: $repo){description}}",
-            variables={"repo": "awesome", "name": "repo"},
-        )
-        assert repository["repository"]["description"] == "This your first repo!"
+async def test_graphql(github_api: GitHubAPI, mock_requests: MockedRequests):
+    response = await github_api.graphql("test")
+    assert response.status == 200
+    assert isinstance(response.data, dict)
+    assert mock_requests.called == 1
+    assert mock_requests.last_request["url"] == "https://api.github.com/graphql"

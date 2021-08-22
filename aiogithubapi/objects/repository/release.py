@@ -6,8 +6,8 @@ https://developer.github.com/v3/repos/releases/
 # pylint: disable=missing-docstring
 from datetime import datetime
 
-from aiogithubapi.objects.base import AIOGitHubAPIBase
-from aiogithubapi.objects.repository.content import AIOGitHubAPIRepositoryContent
+from ...objects.base import AIOGitHubAPIBase
+from ...objects.repository.content import AIOGitHubAPIRepositoryContent
 
 
 class AIOGitHubAPIRepositoryRelease(AIOGitHubAPIBase):
@@ -23,9 +23,7 @@ class AIOGitHubAPIRepositoryRelease(AIOGitHubAPIBase):
 
     @property
     def published_at(self):
-        return datetime.strptime(
-            self.attributes.get("published_at"), "%Y-%m-%dT%H:%M:%SZ"
-        )
+        return datetime.strptime(self.attributes.get("published_at"), "%Y-%m-%dT%H:%M:%SZ")
 
     @property
     def draft(self):
@@ -37,6 +35,4 @@ class AIOGitHubAPIRepositoryRelease(AIOGitHubAPIBase):
 
     @property
     def assets(self):
-        return [
-            AIOGitHubAPIRepositoryContent(x) for x in self.attributes.get("assets", [])
-        ]
+        return [AIOGitHubAPIRepositoryContent(x) for x in self.attributes.get("assets", [])]

@@ -1,0 +1,1 @@
+"""Initialise aiogithubapi models."""

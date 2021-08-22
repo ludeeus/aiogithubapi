@@ -1,0 +1,15 @@
+{
+    "sha": "7fd1a60b01f91b314f59955a4e4d4e80d8edf11d",
+    "url": "https://api.github.com/repos/octocat/Hello-World/git/trees/7fd1a60b01f91b314f59955a4e4d4e80d8edf11d",
+    "tree": [
+        {
+            "path": "README",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "980a0d5f19a64b4b30a87d4206aade58726b60e3",
+            "size": 13,
+            "url": "https://api.github.com/repos/octocat/Hello-World/git/blobs/980a0d5f19a64b4b30a87d4206aade58726b60e3"
+        }
+    ],
+    "truncated": false
+}
