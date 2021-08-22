@@ -1,7 +1,7 @@
 """Test fixtures and configuration."""
 # pylint: disable=redefined-outer-name,protected-access
-import logging
 from datetime import datetime
+import logging
 from unittest.mock import AsyncMock, patch
 
 import aiohttp
@@ -10,9 +10,10 @@ import pytest
 from aiogithubapi import GitHub, GitHubAPI, GitHubDevice, GitHubDeviceAPI
 from aiogithubapi.client import AIOGitHubAPIClient
 from aiogithubapi.const import PROJECT_NAME
-from tests.common import MockedRequests, MockResponse
 
 from .common import CLIENT_ID, TOKEN
+
+from tests.common import MockedRequests, MockResponse
 
 logging.basicConfig(level=logging.ERROR)
 logging.getLogger(PROJECT_NAME).setLevel(logging.DEBUG)

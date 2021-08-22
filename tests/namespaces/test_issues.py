@@ -1,12 +1,12 @@
 """Test issues namespace."""
-# pylint: disable=missing-docstring
 import pytest
 
-from aiogithubapi import GitHubAPI, GitHubIssueModel, GitHubIssueCommentModel
+from aiogithubapi import GitHubAPI, GitHubIssueCommentModel, GitHubIssueModel
+
 from tests.common import (
     TEST_REPOSITORY_NAME,
-    MockResponse,
     MockedRequests,
+    MockResponse,
     load_fixture,
 )
 
@@ -86,9 +86,7 @@ async def test_create(
         asjson=True,
         legacy=False,
     )[0]
-    response = await github_api.repos.issues.create(
-        TEST_REPOSITORY_NAME, {"title": "test"}
-    )
+    response = await github_api.repos.issues.create(TEST_REPOSITORY_NAME, {"title": "test"})
     assert response.status == 200
     assert isinstance(response.data, GitHubIssueModel)
     assert response.data.title == "Test issue"
@@ -112,9 +110,7 @@ async def test_update(
         asjson=True,
         legacy=False,
     )[0]
-    response = await github_api.repos.issues.update(
-        TEST_REPOSITORY_NAME, 1, {"title": "test"}
-    )
+    response = await github_api.repos.issues.update(TEST_REPOSITORY_NAME, 1, {"title": "test"})
     assert response.status == 200
     assert isinstance(response.data, GitHubIssueModel)
     assert response.data.title == "Test issue"

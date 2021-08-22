@@ -1732,10 +1732,7 @@ class AIOGitHubAPIRepositoryPullrequest(AIOGitHubAPIBase):
 
     @property
     def requested_reviewers(self):
-        return [
-            RequestedReviewers(x)
-            for x in self.attributes.get("requested_reviewers", [])
-        ]
+        return [RequestedReviewers(x) for x in self.attributes.get("requested_reviewers", [])]
 
     @property
     def requested_teams(self):

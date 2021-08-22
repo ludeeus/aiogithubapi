@@ -124,10 +124,12 @@ class HttpStatusCode(int, Enum):
     FOUND = 302
     SEE_OTHER = 303
     NOT_MODIFIED = 304
+    BAD_REQUEST = 400
     UNAUTHORIZED = 401
     RATELIMIT = 403
     NOT_FOUND = 404
     TEAPOT = 418
+    UNPROCESSABLE_ENTITY = 422
     INTERNAL_SERVER_ERROR = 500
     BAD_GATEWAY = 502
     SERVICE_UNAVAILABLE = 503
@@ -156,9 +158,9 @@ class HttpMethod(str, Enum):
 class HttpContentType(str, Enum):
     """HTTP Content Types."""
 
-    JSON = "application/json; charset=utf-8"
-    TEXT_PLAIN = "text/plain; charset=utf-8"
-    TEXT_HTML = "text/html; charset=utf-8"
+    JSON = "application/json;charset=utf-8"
+    TEXT_PLAIN = "text/plain;charset=utf-8"
+    TEXT_HTML = "text/html;charset=utf-8"
 
 
 class DeviceFlowError(str, Enum):

@@ -107,9 +107,7 @@ class AIOGitHubAPIRepository(AIOGitHubAPIBaseClient):
         if ref is not None:
             _params["ref"] = ref.replace("tags/", "")
 
-        response = await self.client.get(
-            endpoint=_endpoint, params=_params, headers=_headers
-        )
+        response = await self.client.get(endpoint=_endpoint, params=_params, headers=_headers)
         if isinstance(response.data, list):
             return [AIOGitHubAPIRepositoryContent(x) for x in response.data]
         return AIOGitHubAPIRepositoryContent(response.data)
@@ -126,9 +124,7 @@ class AIOGitHubAPIRepository(AIOGitHubAPIBaseClient):
         if etag:
             _headers[IF_NONE_MATCH] = etag
 
-        response = await self.client.get(
-            endpoint=_endpoint, params=_params, headers=_headers
-        )
+        response = await self.client.get(endpoint=_endpoint, params=_params, headers=_headers)
 
         return [
             AIOGitHubAPIRepositoryTreeContent(x, self.full_name, ref)
@@ -205,9 +201,7 @@ class AIOGitHubAPIRepository(AIOGitHubAPIBaseClient):
         response = await self.client.get(endpoint=_endpoint, headers=_headers)
         return AIOGitHubAPIRepositoryIssue(self.client, response.data)
 
-    async def get_issues(
-        self, etag: Optional[str] = None
-    ) -> list["AIOGitHubAPIRepositoryIssue"]:
+    async def get_issues(self, etag: Optional[str] = None) -> list["AIOGitHubAPIRepositoryIssue"]:
         """Updates an issue comment."""
         _endpoint = f"/repos/{self.full_name}/issues"
         _headers = {}
@@ -215,9 +209,7 @@ class AIOGitHubAPIRepository(AIOGitHubAPIBaseClient):
             _headers[IF_NONE_MATCH] = etag
 
         response = await self.client.get(endpoint=_endpoint, headers=_headers)
-        return [
-            AIOGitHubAPIRepositoryIssue(self.client, x) for x in response.data or []
-        ]
+        return [AIOGitHubAPIRepositoryIssue(self.client, x) for x in response.data or []]
 
     async def create_issue(
         self,

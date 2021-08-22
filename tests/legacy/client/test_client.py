@@ -10,6 +10,7 @@ from aiogithubapi import (
     GitHub,
 )
 from aiogithubapi.const import DEFAULT_USER_AGENT
+
 from tests.common import HEADERS, HEADERS_RATELIMITED, TOKEN
 from tests.legacy.responses.base import bad_auth_response, bad_response, base_response
 
@@ -122,9 +123,7 @@ async def test_ok_get_error(mock_response, bad_response, client_session):
 async def test_custom_base_url(mock_response, mock_requests, client_session):
     mock_response.mock_headers = HEADERS
 
-    async with GitHub(
-        TOKEN, base_url="http://example.com", session=client_session
-    ) as github:
+    async with GitHub(TOKEN, base_url="http://example.com", session=client_session) as github:
         await github.client.get("/")
         assert github.client.ratelimits.remaining == "4999"
 

@@ -1,10 +1,11 @@
 """Test client construction"""
 # pylint: disable=missing-docstring,protected-access
-import pytest
 from aiohttp import ClientSession
+import pytest
 
 from aiogithubapi.client import GitHubClient
 from aiogithubapi.const import BASE_API_HEADERS, DEFAULT_USER_AGENT, GitHubClientKwarg
+
 from tests.common import TOKEN
 
 
@@ -53,8 +54,7 @@ async def test_client_constrution_with_kwargs_base_url(client_session: ClientSes
 @pytest.mark.asyncio
 async def test_client_constrution_with_kwargs_headers(client_session: ClientSession):
     client = GitHubClient(
-        session=client_session,
-        **{GitHubClientKwarg.HEADERS: {"User-Agent": "test/client"}}
+        session=client_session, **{GitHubClientKwarg.HEADERS: {"User-Agent": "test/client"}}
     )
     base_request_data = client._base_request_data
     assert base_request_data.headers["User-Agent"] == "test/client"

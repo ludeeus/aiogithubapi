@@ -7,7 +7,8 @@ from typing import Any, Dict, List
 
 from ..const import GitHubRequestKwarg, RepositoryType
 from ..helpers import repository_full_name
-from ..models import GitHubPullRequestModel, GitHubResponseModel
+from ..models.pull_request import GitHubPullRequestModel
+from ..models.response import GitHubResponseModel
 from .base import BaseNamespace
 
 

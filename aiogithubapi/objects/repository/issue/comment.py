@@ -41,9 +41,7 @@ class AIOGitHubAPIRepositoryIssueCommentUser(AIOGitHubAPIUsersUser):
 class AIOGitHubAPIRepositoryIssueComment(AIOGitHubAPIBaseClient):
     """Issue comment GitHub API implementation."""
 
-    def __init__(
-        self, client: AIOGitHubAPIContentBase, attributes: dict, repository: str
-    ):
+    def __init__(self, client: AIOGitHubAPIContentBase, attributes: dict, repository: str):
         """Initialize."""
         super().__init__(client, attributes)
         self.repository = repository

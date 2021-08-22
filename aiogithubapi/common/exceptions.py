@@ -23,9 +23,7 @@ class AIOGitHubAPIRatelimitException(GitHubRatelimitException, AIOGitHubAPIExcep
     """
 
 
-class AIOGitHubAPINotModifiedException(
-    GitHubNotModifiedException, AIOGitHubAPIException
-):
+class AIOGitHubAPINotModifiedException(GitHubNotModifiedException, AIOGitHubAPIException):
     """
     Raise this when we the content was not modified.
 
@@ -33,9 +31,7 @@ class AIOGitHubAPINotModifiedException(
     """
 
 
-class AIOGitHubAPIAuthenticationException(
-    GitHubAuthenticationException, AIOGitHubAPIException
-):
+class AIOGitHubAPIAuthenticationException(GitHubAuthenticationException, AIOGitHubAPIException):
     """
     Raise this when there is an authentication issue.
 

@@ -8,6 +8,7 @@ from aiogithubapi.common.exceptions import (
     AIOGitHubAPINotModifiedException,
     AIOGitHubAPIRatelimitException,
 )
+
 from tests.common import TOKEN
 from tests.legacy.responses.base import base_response
 from tests.legacy.responses.org_repositories import org_repositories_response

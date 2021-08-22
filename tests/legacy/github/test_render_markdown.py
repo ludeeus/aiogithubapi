@@ -6,6 +6,7 @@ import pytest
 
 from aiogithubapi import AIOGitHubAPIException, AIOGitHubAPINotModifiedException, GitHub
 from aiogithubapi.common.exceptions import AIOGitHubAPIRatelimitException
+
 from tests.common import TOKEN
 from tests.legacy.responses.base import base_response
 

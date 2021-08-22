@@ -64,9 +64,7 @@ class GitHubIssueModel(GitHubDataModelBase):
         """Generate GitHubUserModel from data."""
         return GitHubUserModel(data) if data else None
 
-    def _generate_milestone(
-        self, data: Dict[str, Any] | None
-    ) -> "GitHubMilestoneModel":
+    def _generate_milestone(self, data: Dict[str, Any] | None) -> "GitHubMilestoneModel":
         """Generate GitHubMilestoneModel from data."""
         return GitHubMilestoneModel(data) if data else None
 

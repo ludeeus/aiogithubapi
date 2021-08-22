@@ -6,8 +6,11 @@ from typing import Optional
 import aiohttp
 
 from .const import HttpMethod, Repository, RepositoryType
-from .legacy.helpers import async_call_api as legacy_async_call_api
-from .legacy.helpers import short_message, short_sha
+from .legacy.helpers import (
+    async_call_api as legacy_async_call_api,
+    short_message,
+    short_sha,
+)
 from .objects.base import AIOGitHubAPIResponse
 
 

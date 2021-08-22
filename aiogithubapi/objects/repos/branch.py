@@ -190,9 +190,7 @@ class Protection(AIOGitHubAPIBase):
 
     @property
     def required_status_checks(self):
-        return ProtectionRequiredStatusChecks(
-            self.attributes.get("required_status_checks", {})
-        )
+        return ProtectionRequiredStatusChecks(self.attributes.get("required_status_checks", {}))
 
 
 class AIOGitHubAPIReposBranch(AIOGitHubAPIBase):

@@ -3,9 +3,9 @@ from asyncio import CancelledError, TimeoutError, get_event_loop
 from typing import Optional
 
 import aiohttp
+from aiohttp.client_exceptions import ClientError
 import async_timeout
 import backoff
-from aiohttp.client_exceptions import ClientError
 
 from ..common.const import HTTP_STATUS_CODE_GOOD_LIST, HttpMethod, HttpStatusCode
 from ..common.exceptions import (
@@ -75,9 +75,7 @@ async def async_call_api(
             raise AIOGitHubAPIAuthenticationException(HttpStatusCode.UNAUTHORIZED)
 
         if response.status == HttpStatusCode.NOT_MODIFIED:
-            raise AIOGitHubAPINotModifiedException(
-                f"Response from {url} was not modified."
-            )
+            raise AIOGitHubAPINotModifiedException(f"Response from {url} was not modified.")
 
         if response.status not in HTTP_STATUS_CODE_GOOD_LIST:
             raise AIOGitHubAPIException(
@@ -92,9 +90,7 @@ async def async_call_api(
         if isinstance(response.data, dict):
             if response.data.get("message"):
                 if response.data["message"] == "Bad credentials":
-                    raise AIOGitHubAPIAuthenticationException(
-                        "Access token is not valid!"
-                    )
+                    raise AIOGitHubAPIAuthenticationException("Access token is not valid!")
                 raise AIOGitHubAPIException(response.data)
 
     return response

@@ -5,6 +5,7 @@ import aiohttp
 import pytest
 
 from aiogithubapi import AIOGitHubAPIException, GitHubDevice, GitHubDeviceAPI
+
 from tests.common import CLIENT_ID, load_fixture
 from tests.conftest import client_session
 
@@ -20,9 +21,7 @@ async def test_session():
 
 
 @pytest.mark.asyncio
-async def test_device(
-    mock_response, github_device: GitHubDevice, asyncio_sleep: AsyncMock
-):
+async def test_device(mock_response, github_device: GitHubDevice, asyncio_sleep: AsyncMock):
     device = await github_device.async_register_device()
     assert device.user_code == "WDJB-MJHT"
 

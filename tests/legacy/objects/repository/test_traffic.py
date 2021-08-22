@@ -5,6 +5,7 @@ import json
 import pytest
 
 from aiogithubapi import AIOGitHubAPINotModifiedException, GitHub
+
 from tests.common import TOKEN
 from tests.legacy.responses.repos.traffic.clones_fixtrue import clones_fixtrue_response
 from tests.legacy.responses.repos.traffic.pageviews_fixtrue import (

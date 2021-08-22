@@ -3,6 +3,7 @@
 import pytest
 
 from aiogithubapi import GitHubAPI
+
 from tests.common import TEST_USER_NAME, MockedRequests
 
 
@@ -16,9 +17,7 @@ async def test_get_username(github_api: GitHubAPI, mock_requests: MockedRequests
 
 
 @pytest.mark.asyncio
-async def test_get_authenticated_user(
-    github_api: GitHubAPI, mock_requests: MockedRequests
-):
+async def test_get_authenticated_user(github_api: GitHubAPI, mock_requests: MockedRequests):
     response = await github_api.users.get()
     assert response.status == 200
     assert response.data.name == "The Octocat"

@@ -11,6 +11,7 @@ from aiogithubapi import (
     GitHubException,
     GitHubRequestKwarg,
 )
+
 from tests.common import CLIENT_ID, DEVICE_CODE, TOKEN, MockedRequests, MockResponse
 
 
@@ -50,18 +51,13 @@ async def test_device_activation(
     assert response.status == 200
     assert response.data.access_token == TOKEN
     assert mock_requests.called == 1
-    assert (
-        mock_requests.last_request["url"]
-        == "https://github.com/login/oauth/access_token"
-    )
+    assert mock_requests.last_request["url"] == "https://github.com/login/oauth/access_token"
 
 
 @pytest.mark.asyncio
 async def test_missing_expiration(github_device_api: GitHubDeviceAPI):
     github_device_api._expires = None
-    with pytest.raises(
-        GitHubException, match="Expiration has passed, re-run the registration"
-    ):
+    with pytest.raises(GitHubException, match="Expiration has passed, re-run the registration"):
         await github_device_api.activation(device_code=DEVICE_CODE)
 
 
@@ -104,10 +100,7 @@ async def test_wait_for_confirmation(
     assert mock_requests.called == 4
     assert asyncio_sleep.call_count == 3
     assert asyncio_sleep.call_args_list[-1][0][0] == 1
-    assert (
-        mock_requests.last_request["url"]
-        == "https://github.com/login/oauth/access_token"
-    )
+    assert mock_requests.last_request["url"] == "https://github.com/login/oauth/access_token"
     assert "Pending user authorization" in caplog.text
 
 

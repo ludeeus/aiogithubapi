@@ -3,6 +3,7 @@
 import pytest
 
 from aiogithubapi import GitHubAPI, GitHubContentsModel
+
 from tests.common import TEST_REPOSITORY_NAME, MockedRequests
 
 

@@ -5,6 +5,7 @@ import json
 import pytest
 
 from aiogithubapi import AIOGitHubAPINotModifiedException, GitHub
+
 from tests.common import TOKEN
 from tests.legacy.responses.issue_comments import issue_comments_response
 from tests.legacy.responses.issue_fixture import issue_response, issues_response
@@ -302,10 +303,7 @@ async def test_issue_comments(
         issue = await repository.get_issue(1)
         comments = await issue.get_comments()
         first = comments[0]
-        assert (
-            first.html_url
-            == "https://github.com/octocat/Hello-World/issues/1347#issuecomment-1"
-        )
+        assert first.html_url == "https://github.com/octocat/Hello-World/issues/1347#issuecomment-1"
         assert first.body == "Me too"
         assert first.created_at == "2011-04-14T16:00:49Z"
         assert first.updated_at == "2011-04-14T16:00:49Z"

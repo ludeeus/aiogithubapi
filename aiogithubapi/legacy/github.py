@@ -59,7 +59,9 @@ class AIOGitHubAPI(AIOGitHubAPIBase):
         await self._close()
 
     async def get_repo(
-        self, repo: str, etag: Optional[str] = None
+        self,
+        repo: str,
+        etag: Optional[str] = None,
     ) -> AIOGitHubAPIRepository:
         """Retrun AIOGitHubAPIRepository object."""
         _endpoint = f"/repos/{repo}"
@@ -88,9 +90,7 @@ class AIOGitHubAPI(AIOGitHubAPIBase):
         if etag:
             _headers[aiohttp.hdrs.IF_NONE_MATCH] = etag
 
-        response = await self.client.get(
-            endpoint=_enpoint, params=_params, headers=_headers
-        )
+        response = await self.client.get(endpoint=_enpoint, params=_params, headers=_headers)
 
         return [AIOGitHubAPIRepository(self.client, x) for x in response.data or []]
 
@@ -125,9 +125,7 @@ class AIOGitHubAPI(AIOGitHubAPIBase):
         if etag:
             _headers[aiohttp.hdrs.IF_NONE_MATCH] = etag
 
-        response = await self.client.post(
-            endpoint=_endpoint, headers=_headers, data=content
-        )
+        response = await self.client.post(endpoint=_endpoint, headers=_headers, data=content)
 
         return response.data
 

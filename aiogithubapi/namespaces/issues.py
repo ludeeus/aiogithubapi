@@ -14,7 +14,9 @@ from ..const import (
     RepositoryType,
 )
 from ..helpers import repository_full_name
-from ..models import GitHubIssueCommentModel, GitHubIssueModel, GitHubResponseModel
+from ..models.issue import GitHubIssueModel
+from ..models.issue_comment import GitHubIssueCommentModel
+from ..models.response import GitHubResponseModel
 from .base import BaseNamespace
 
 
@@ -150,9 +152,7 @@ class GitHubIssuesNamespace(BaseNamespace):
         https://docs.github.com/en/rest/reference/issues#lock-an-issue
         """
         response = await self._client.async_call_api(
-            endpoint=(
-                f"/repos/{repository_full_name(repository)}/issues/{issue_number}/lock"
-            ),
+            endpoint=(f"/repos/{repository_full_name(repository)}/issues/{issue_number}/lock"),
             data={"lock_reason": lock_reason},
             **{**kwargs, GitHubRequestKwarg.METHOD: HttpMethod.PUT},
         )
@@ -180,9 +180,7 @@ class GitHubIssuesNamespace(BaseNamespace):
         https://docs.github.com/en/rest/reference/issues#unlock-an-issue
         """
         response = await self._client.async_call_api(
-            endpoint=(
-                f"/repos/{repository_full_name(repository)}/issues/{issue_number}/lock"
-            ),
+            endpoint=(f"/repos/{repository_full_name(repository)}/issues/{issue_number}/lock"),
             **{**kwargs, GitHubRequestKwarg.METHOD: HttpMethod.DELETE},
         )
         return response
@@ -233,8 +231,7 @@ class GitHubIssuesNamespace(BaseNamespace):
         """
         response = await self._client.async_call_api(
             endpoint=(
-                f"/repos/{repository_full_name(repository)}"
-                f"/issues/comments/{comment_id}"
+                f"/repos/{repository_full_name(repository)}" f"/issues/comments/{comment_id}"
             ),
             **kwargs,
         )
@@ -303,8 +300,7 @@ class GitHubIssuesNamespace(BaseNamespace):
         """
         response = await self._client.async_call_api(
             endpoint=(
-                f"/repos/{repository_full_name(repository)}"
-                f"/issues/comments/{comment_id}"
+                f"/repos/{repository_full_name(repository)}" f"/issues/comments/{comment_id}"
             ),
             data=data,
             **{**kwargs, GitHubRequestKwarg.METHOD: HttpMethod.PATCH},
@@ -335,8 +331,7 @@ class GitHubIssuesNamespace(BaseNamespace):
         """
         response = await self._client.async_call_api(
             endpoint=(
-                f"/repos/{repository_full_name(repository)}"
-                f"/issues/comments/{comment_id}"
+                f"/repos/{repository_full_name(repository)}" f"/issues/comments/{comment_id}"
             ),
             **{**kwargs, GitHubRequestKwarg.METHOD: HttpMethod.DELETE},
         )

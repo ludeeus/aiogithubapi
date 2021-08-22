@@ -2,6 +2,7 @@
 import pytest
 
 from aiogithubapi import GitHub
+
 from tests.legacy.responses.base import base_response
 
 

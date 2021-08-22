@@ -11,6 +11,5 @@ def test_repository():
     )
     assert repository_full_name("octocat/Hello-World") == "octocat/Hello-World"
     assert (
-        repository_full_name({"owner": "octocat", "repo": "Hello-World"})
-        == "octocat/Hello-World"
+        repository_full_name({"owner": "octocat", "repo": "Hello-World"}) == "octocat/Hello-World"
     )

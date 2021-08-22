@@ -106,14 +106,10 @@ class GitHubRepositoryModel(GitHubDataModelBase):
         """Generate an owner model from a dictionary."""
         return GitHubOwnerModel(data) if data else None
 
-    def _generate_permissions(
-        self, data: Dict[str, Any] | None
-    ) -> GitHubPermissionsModel:
+    def _generate_permissions(self, data: Dict[str, Any] | None) -> GitHubPermissionsModel:
         """Generate a permissions model from a dictionary."""
         return GitHubPermissionsModel(data)
 
-    def _generate_organization(
-        self, data: Dict[str, Any] | None
-    ) -> GitHubOrganizationModel:
+    def _generate_organization(self, data: Dict[str, Any] | None) -> GitHubOrganizationModel:
         """Generate an organization model from a dictionary."""
         return GitHubOrganizationModel(data)

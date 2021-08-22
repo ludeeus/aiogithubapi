@@ -19,6 +19,18 @@ class GitHubRatelimitException(GitHubException):
     """This is raised when the ratelimit is reached."""
 
 
+class GitHubNotFoundException(GitHubException):
+    """This is raised when the requested resource is not found."""
+
+
+class GitHubPayloadException(GitHubException):
+    """This is raised when the payload is invalid."""
+
+
+class GitHubPermissionException(GitHubException):
+    """This is raised when the user has no permission to do the requested resource."""
+
+
 class GitHubNotModifiedException(GitHubException):
     """This is raised when the providede ETag matches and the content has not been modified."""
 

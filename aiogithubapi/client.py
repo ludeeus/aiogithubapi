@@ -17,16 +17,30 @@ from .exceptions import (
     GitHubAuthenticationException,
     GitHubConnectionException,
     GitHubException,
+    GitHubNotFoundException,
     GitHubNotModifiedException,
+    GitHubPayloadException,
+    GitHubPermissionException,
     GitHubRatelimitException,
 )
 from .legacy.client import AIOGitHubAPIClient as LegacyAIOGitHubAPIClient
-from .models import GitHubBase, GitHubBaseRequestDataModel, GitHubResponseModel
+from .models.base import GitHubBase
+from .models.request_data import GitHubBaseRequestDataModel
+from .models.response import GitHubResponseModel
 
 STATUS_EXCEPTIONS: Dict[HttpStatusCode, GitHubException] = {
     HttpStatusCode.RATELIMIT: GitHubRatelimitException,
     HttpStatusCode.UNAUTHORIZED: GitHubAuthenticationException,
     HttpStatusCode.NOT_MODIFIED: GitHubNotModifiedException,
+    HttpStatusCode.NOT_FOUND: GitHubNotFoundException,
+    HttpStatusCode.BAD_REQUEST: GitHubPayloadException,
+    HttpStatusCode.UNPROCESSABLE_ENTITY: GitHubException,
+}
+
+MESSAGE_EXCEPTIONS: Dict[str, GitHubException] = {
+    "Bad credentials": GitHubAuthenticationException,
+    "You have exceeded a secondary rate limit and have been temporarily blocked from content creation. Please retry your request again later.": GitHubRatelimitException,
+    "Must have push access to repository": GitHubPermissionException,
 }
 
 
@@ -103,25 +117,28 @@ class GitHubClient(GitHubBase):
             ) from exception
 
         response = GitHubResponseModel(result)
+        if response.status == HttpStatusCode.NO_CONTENT:
+            return response
 
-        if response.status != HttpStatusCode.NO_CONTENT:
-            if response.headers.content_type != HttpContentType.TEXT_PLAIN:
-                response.data = await result.json()
-                if (
-                    response.status == HttpStatusCode.RATELIMIT
-                    and "rate limit" not in str(response.data).lower()
-                ):
-                    response.status = HttpStatusCode.UNAUTHORIZED
-            else:
-                response.data = await result.text()
+        print(response.headers.as_dict)
 
-            if exception := STATUS_EXCEPTIONS.get(response.status):
-                raise exception(response.data)
+        if response.headers.content_type != HttpContentType.TEXT_PLAIN:
+            response.data = await result.json()
+        else:
+            response.data = await result.text()
+
+        message = response.data.get("message") if isinstance(response.data, dict) else None
+
+        if message is not None and "rate limit" in message:
+            raise GitHubRatelimitException(message)
+
+        if exception := STATUS_EXCEPTIONS.get(response.status):
+            raise exception(message or response.data)
 
         if isinstance(response.data, dict):
-            if message := response.data.get("message"):
-                if message == "Bad credentials":
-                    raise GitHubAuthenticationException("Access token is not valid!")
-                raise GitHubException(response.data)
+            if message is not None:
+                if exception := MESSAGE_EXCEPTIONS.get(message):
+                    raise exception(message)
+                raise GitHubException(message)
 
         return response

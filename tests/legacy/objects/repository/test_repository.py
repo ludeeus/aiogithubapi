@@ -5,6 +5,7 @@ import json
 import pytest
 
 from aiogithubapi import AIOGitHubAPIException, AIOGitHubAPINotModifiedException, GitHub
+
 from tests.common import TOKEN
 from tests.legacy.responses.base import base_response
 from tests.legacy.responses.branch import branch_response
@@ -100,9 +101,7 @@ async def test_set_last_commit(aresponses, repository_response, branch_response)
 
 
 @pytest.mark.asyncio
-async def test_get_contents_file(
-    aresponses, repository_response, contents_file_response
-):
+async def test_get_contents_file(aresponses, repository_response, contents_file_response):
     aresponses.add(
         "api.github.com",
         "/repos/octocat/Hello-World",
@@ -138,9 +137,7 @@ async def test_get_contents_file(
 
 
 @pytest.mark.asyncio
-async def test_get_contents_list(
-    aresponses, repository_response, contents_list_response
-):
+async def test_get_contents_list(aresponses, repository_response, contents_list_response):
     aresponses.add(
         "api.github.com",
         "/repos/octocat/Hello-World",
@@ -336,9 +333,7 @@ async def test_get_releases(aresponses, repository_response, releases_response):
         assert len(releases) == 1
 
         with pytest.raises(AIOGitHubAPINotModifiedException):
-            await repository.get_releases(
-                etag=github.client.last_response.as_dict()["etag"]
-            )
+            await repository.get_releases(etag=github.client.last_response.as_dict()["etag"])
 
 
 @pytest.mark.asyncio

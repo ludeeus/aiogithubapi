@@ -5,6 +5,7 @@ import json
 import pytest
 
 from aiogithubapi import GitHub
+
 from tests.common import TOKEN
 from tests.legacy.responses.releases import releases_response
 from tests.legacy.responses.repository_fixture import repository_response

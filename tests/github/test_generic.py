@@ -3,6 +3,7 @@
 import pytest
 
 from aiogithubapi import GitHubAPI, GitHubRequestKwarg
+
 from tests.common import MockedRequests
 
 
@@ -18,9 +19,7 @@ async def test_generic_get(github_api: GitHubAPI, mock_requests: MockedRequests)
 
 @pytest.mark.asyncio
 async def test_generic_post(github_api: GitHubAPI, mock_requests: MockedRequests):
-    response = await github_api.generic(
-        "/generic", **{GitHubRequestKwarg.METHOD: "POST"}
-    )
+    response = await github_api.generic("/generic", **{GitHubRequestKwarg.METHOD: "POST"})
     assert response.status == 200
     assert response.data == {}
     assert mock_requests.called == 1
@@ -31,9 +30,7 @@ async def test_generic_post(github_api: GitHubAPI, mock_requests: MockedRequests
 
 
 @pytest.mark.asyncio
-async def test_generic_post_with_data(
-    github_api: GitHubAPI, mock_requests: MockedRequests
-):
+async def test_generic_post_with_data(github_api: GitHubAPI, mock_requests: MockedRequests):
     response = await github_api.generic(
         "/generic", {"test": "data"}, **{GitHubRequestKwarg.METHOD: "POST"}
     )

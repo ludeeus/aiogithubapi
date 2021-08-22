@@ -3,3 +3,6 @@
 disable=unsubscriptable-object
 [MASTER]
 init-hook='import sys; sys.path.append(".")'
+ignore = [
+    "tests",
+]

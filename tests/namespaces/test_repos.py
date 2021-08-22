@@ -3,6 +3,7 @@
 import pytest
 
 from aiogithubapi import GitHubAPI, GitHubRepositoryModel
+
 from tests.common import TEST_REPOSITORY_NAME, MockedRequests
 
 
@@ -13,10 +14,7 @@ async def test_get_repository(github_api: GitHubAPI, mock_requests: MockedReques
     assert isinstance(response.data, GitHubRepositoryModel)
     assert response.data.name == "Hello-World"
     assert mock_requests.called == 1
-    assert (
-        mock_requests.last_request["url"]
-        == "https://api.github.com/repos/octocat/hello-world"
-    )
+    assert mock_requests.last_request["url"] == "https://api.github.com/repos/octocat/hello-world"
 
 
 @pytest.mark.asyncio

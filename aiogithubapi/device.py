@@ -23,12 +23,10 @@ from .const import (
 )
 from .exceptions import GitHubException
 from .legacy.device import AIOGitHubAPIDeviceLogin as LegacyAIOGitHubAPIDeviceLogin
-from .models import (
-    GitHubBase,
-    GitHubLoginDeviceModel,
-    GitHubLoginOauthModel,
-    GitHubResponseModel,
-)
+from .models.base import GitHubBase
+from .models.device_login import GitHubLoginDeviceModel
+from .models.login_oauth import GitHubLoginOauthModel
+from .models.response import GitHubResponseModel
 
 
 class AIOGitHubAPIDeviceLogin(LegacyAIOGitHubAPIDeviceLogin):

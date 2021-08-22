@@ -8,6 +8,7 @@ import aiohttp
 import pytest
 
 from aiogithubapi import GitHubAPI
+
 from tests.common import TOKEN
 
 

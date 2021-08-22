@@ -1,5 +1,7 @@
 """Test client construction"""
 # pylint: disable=missing-docstring,protected-access
+from __future__ import annotations
+
 import asyncio
 from unittest.mock import patch
 
@@ -11,9 +13,12 @@ from aiogithubapi import (
     GitHubAuthenticationException,
     GitHubConnectionException,
     GitHubException,
+    GitHubNotFoundException,
     GitHubRatelimitException,
 )
-from aiogithubapi.const import GitHubRequestKwarg
+from aiogithubapi.client import MESSAGE_EXCEPTIONS, STATUS_EXCEPTIONS
+from aiogithubapi.const import GitHubRequestKwarg, HttpStatusCode
+
 from tests.common import (
     EXPECTED_ETAG,
     TEST_REQUEST_HEADERS,
@@ -67,16 +72,12 @@ async def test_passing_params_to_request(
     assert mock_requests.last_request["params"] == {}
     mock_requests.clear()
 
-    response = await github_api.generic(
-        "/generic", **{GitHubRequestKwarg.PARAMS: {"test": "test"}}
-    )
+    response = await github_api.generic("/generic", **{GitHubRequestKwarg.PARAMS: {"test": "test"}})
     assert response.status == 200
     assert mock_requests.last_request["params"] == {"test": "test"}
     mock_requests.clear()
 
-    response = await github_api.generic(
-        "/generic", **{GitHubRequestKwarg.QUERY: {"test": "test"}}
-    )
+    response = await github_api.generic("/generic", **{GitHubRequestKwarg.QUERY: {"test": "test"}})
     assert response.status == 200
     assert mock_requests.last_request["params"] == {"test": "test"}
 
@@ -91,18 +92,14 @@ async def test_passing_method_to_request(
     assert mock_requests.last_request["method"] == "get"
     mock_requests.clear()
 
-    response = await github_api.generic(
-        "/generic", **{GitHubRequestKwarg.METHOD: "POST"}
-    )
+    response = await github_api.generic("/generic", **{GitHubRequestKwarg.METHOD: "POST"})
     assert response.status == 200
     assert mock_requests.last_request["method"] == "post"
 
 
 @pytest.mark.asyncio
 async def test_client_exceptions(github_api: GitHubAPI):
-    with patch(
-        "aiohttp.ClientSession.request", side_effect=aiohttp.ClientError("client_error")
-    ):
+    with patch("aiohttp.ClientSession.request", side_effect=aiohttp.ClientError("client_error")):
         with pytest.raises(
             GitHubConnectionException,
             match="Request exception for 'https://api.github.com/generic' with - client_error",
@@ -126,9 +123,7 @@ async def test_client_exceptions(github_api: GitHubAPI):
         ):
             await github_api.generic("/generic")
 
-    with patch(
-        "aiohttp.ClientSession.request", side_effect=BaseException("Eeeeeh... okey?")
-    ):
+    with patch("aiohttp.ClientSession.request", side_effect=BaseException("Eeeeeh... okey?")):
         with pytest.raises(
             GitHubException,
             match="Unexpected exception for "
@@ -137,34 +132,54 @@ async def test_client_exceptions(github_api: GitHubAPI):
             await github_api.generic("/generic")
 
 
+@pytest.mark.parametrize(
+    "status,exception", ((status, STATUS_EXCEPTIONS[status]) for status in STATUS_EXCEPTIONS)
+)
 @pytest.mark.asyncio
-async def test_status_code_handling(github_api: GitHubAPI, mock_response: MockResponse):
-    mock_response.mock_data = {"message": "Not Found"}
-    with pytest.raises(GitHubException, match="{'message': 'Not Found'}"):
-        await github_api.generic("/generic")
-    mock_response.clear()
+async def test_status_code_handling(
+    github_api: GitHubAPI,
+    mock_response: MockResponse,
+    status: HttpStatusCode,
+    exception: GitHubException,
+):
 
-    mock_response.mock_data = {"message": "Bad credentials"}
-    with pytest.raises(
-        GitHubAuthenticationException, match="Access token is not valid!"
-    ):
-        await github_api.generic("/generic")
-    mock_response.clear()
+    mock_response.mock_status = status
+    mock_response.mock_data = {
+        "message": "Error",
+        "documentation_url": "https://example.com",
+    }
 
-    mock_response.mock_status = 403
-    mock_response.mock_data = {"message": "rate limited"}
-    with pytest.raises(GitHubRatelimitException, match="{'message': 'rate limited'}"):
+    with pytest.raises(exception):
         await github_api.generic("/generic")
-    mock_response.clear()
 
-    mock_response.mock_status = 403
-    mock_response.mock_data = {"message": "Bad credentials"}
-    with pytest.raises(
-        GitHubAuthenticationException, match="{'message': 'Bad credentials'}"
-    ):
+
+@pytest.mark.parametrize(
+    "message,exception",
+    (
+        *((message, MESSAGE_EXCEPTIONS[message]) for message in MESSAGE_EXCEPTIONS),
+        ("API rate limit exceeded for xxx.xxx.xxx.xxx.", GitHubRatelimitException),
+        ("Random error", GitHubException),
+    ),
+)
+@pytest.mark.asyncio
+async def test_error_message_handling(
+    github_api: GitHubAPI,
+    mock_response: MockResponse,
+    message: str,
+    exception: GitHubException,
+):
+
+    mock_response.mock_data = {
+        "message": message,
+        "documentation_url": "https://example.com",
+    }
+
+    with pytest.raises(exception):
         await github_api.generic("/generic")
-    mock_response.clear()
 
+
+@pytest.mark.asyncio
+async def test_no_content_handling(github_api: GitHubAPI, mock_response: MockResponse):
     mock_response.mock_status = 204
     response = await github_api.generic("/generic")
     assert response.data is None

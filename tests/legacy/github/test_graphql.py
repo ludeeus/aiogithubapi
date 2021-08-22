@@ -2,6 +2,7 @@
 import pytest
 
 from aiogithubapi import GitHub
+
 from tests.common import TOKEN, load_fixture
 
 

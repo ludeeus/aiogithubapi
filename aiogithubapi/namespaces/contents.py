@@ -11,7 +11,8 @@ from aiohttp.hdrs import ACCEPT
 
 from ..const import GitHubRequestAcceptHeader, GitHubRequestKwarg, RepositoryType
 from ..helpers import repository_full_name
-from ..models import GitHubContentsModel, GitHubResponseModel
+from ..models.contents import GitHubContentsModel
+from ..models.response import GitHubResponseModel
 from .base import BaseNamespace
 
 
@@ -50,9 +51,7 @@ class GitHubContentsNamespace(BaseNamespace):
             endpoint=f"/repos/{repository_full_name(repository)}"
             f"/contents{f'/{path}' if path else ''}",
             **{
-                GitHubRequestKwarg.HEADERS: {
-                    ACCEPT: GitHubRequestAcceptHeader.BASE_JSON
-                },
+                GitHubRequestKwarg.HEADERS: {ACCEPT: GitHubRequestAcceptHeader.BASE_JSON},
                 **kwargs,
             },
         )

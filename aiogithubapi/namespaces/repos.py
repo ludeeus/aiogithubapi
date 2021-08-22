@@ -9,7 +9,9 @@ from typing import Any, Dict, List
 
 from ..const import GitHubRequestKwarg, RepositoryType
 from ..helpers import repository_full_name
-from ..models import GitHubCommitModel, GitHubRepositoryModel, GitHubResponseModel
+from ..models.commit import GitHubCommitModel
+from ..models.repository import GitHubRepositoryModel
+from ..models.response import GitHubResponseModel
 from .base import BaseNamespace
 from .contents import GitHubContentsNamespace
 from .git import GitHubGitNamespace

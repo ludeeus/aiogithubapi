@@ -453,13 +453,9 @@ def pullrequest_fixtrue_response():
             },
         },
         "_links": {
-            "self": {
-                "href": "https://api.github.com/repos/octocat/Hello-World/pulls/1347"
-            },
+            "self": {"href": "https://api.github.com/repos/octocat/Hello-World/pulls/1347"},
             "html": {"href": "https://github.com/octocat/Hello-World/pull/1347"},
-            "issue": {
-                "href": "https://api.github.com/repos/octocat/Hello-World/issues/1347"
-            },
+            "issue": {"href": "https://api.github.com/repos/octocat/Hello-World/issues/1347"},
             "comments": {
                 "href": "https://api.github.com/repos/octocat/Hello-World/issues/1347/comments"
             },

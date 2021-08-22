@@ -11,6 +11,7 @@ from aiogithubapi import (
     GitHubNotModifiedException,
 )
 from aiogithubapi.const import GitHubRequestKwarg
+
 from tests.common import EXPECTED_ETAG, TOKEN
 from tests.legacy.responses.base import base_response
 from tests.legacy.responses.repository_fixture import repository_response
@@ -30,9 +31,7 @@ async def test_get_repo(mock_response, event_loop, repository_response, client_s
         mock_response.mock_status = 304
 
         with pytest.raises(AIOGitHubAPINotModifiedException):
-            await github.get_repo(
-                "octocat/Hello-World", github.client.last_response.etag
-            )
+            await github.get_repo("octocat/Hello-World", github.client.last_response.etag)
 
 
 @pytest.mark.asyncio

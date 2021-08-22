@@ -1,10 +1,10 @@
 """Common tests helpers."""
 from __future__ import annotations
 
-import json
-import os
 from dataclasses import dataclass
+import json
 from logging import Logger
+import os
 from typing import Any, Dict
 
 from aiogithubapi.const import BASE_API_HEADERS, LOGGER, HttpContentType

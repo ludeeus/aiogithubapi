@@ -8,7 +8,9 @@ from __future__ import annotations
 from typing import Any, Dict
 
 from ..const import GitHubRequestKwarg, RepositoryType
-from ..models import GitHubClonesModel, GitHubResponseModel, GitHubViewsModel
+from ..models.clones import GitHubClonesModel
+from ..models.response import GitHubResponseModel
+from ..models.views import GitHubViewsModel
 from .base import BaseNamespace
 
 

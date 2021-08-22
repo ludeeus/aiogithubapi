@@ -6,6 +6,7 @@ import aiohttp
 import pytest
 
 from aiogithubapi import GitHubClientKwarg, GitHubDeviceAPI
+
 from tests.common import CLIENT_ID
 
 

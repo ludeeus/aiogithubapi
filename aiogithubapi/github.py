@@ -9,8 +9,11 @@ import aiohttp
 from .client import GitHubClient
 from .const import GitHubClientKwarg, GitHubRequestKwarg, HttpMethod, RepositoryType
 from .legacy.github import AIOGitHubAPI as LegacyAIOGitHubAPI
-from .models import GitHubBase, GitHubResponseModel, GitHubRateLimitModel
-from .namespaces import GitHubReposNamespace, GitHubUsersNamespace
+from .models.base import GitHubBase
+from .models.rate_limit import GitHubRateLimitModel
+from .models.response import GitHubResponseModel
+from .namespaces.repos import GitHubReposNamespace
+from .namespaces.users import GitHubUsersNamespace
 
 
 class AIOGitHubAPI(LegacyAIOGitHubAPI):

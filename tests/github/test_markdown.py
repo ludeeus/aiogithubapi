@@ -3,6 +3,7 @@
 import pytest
 
 from aiogithubapi import GitHubAPI
+
 from tests.common import (
     HEADERS_TEXT,
     TEST_REPOSITORY_NAME,
