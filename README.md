@@ -22,6 +22,25 @@ For examples on how to use it see [the documentation](https://aiogithubapi.netli
 python3 -m pip install aiogithubapi
 ```
 
+## Project transition
+
+**Note: This project is currently in a transition phase.**
+
+In august 2021 a new API interface was introduced (in #42). With that addition, all parts of the old interface is now considered deprecated.
+Which includes:
+
+- The [`aiogithubapi.common`](./aiogithubapi/common) module
+- [`aiogithubapi.legacy`](./aiogithubapi/legacy) module
+- [`aiogithubapi.objects`](./aiogithubapi/objects) module
+- All classes starting with `AIOGitHub`
+- The `async_call_api` function in the [`aiogithubapi.helpers.py`](./aiogithubapi/helpers.py) file
+- The `GitHubDevice` class in `aiogithubapi`, replaced with `GitHubDeviceAPI`
+- The `GitHub` class in `aiogithubapi`, replaced with `GitHubAPI`
+
+Later this year, warning logs will start to be emitted for deprecated code.
+
+Early next year, the old code will be removed.
+
 ## Contribute
 
 **All** contributions are welcome!
