@@ -26,7 +26,7 @@ python3 -m pip install aiogithubapi
 
 **Note: This project is currently in a transition phase.**
 
-In august 2021 a new API interface was introduced (in #42). With that addition, all parts of the old interface is now considered deprecated.
+In august 2021 a new API interface was introduced (in [#42](https://github.com/ludeeus/aiogithubapi/pull/42)). With that addition, all parts of the old interface is now considered deprecated.
 Which includes:
 
 - The [`aiogithubapi.common`](./aiogithubapi/common) module
