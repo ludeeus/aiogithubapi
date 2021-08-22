@@ -4,17 +4,30 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any, Dict
 
-from aiohttp.hdrs import AUTHORIZATION
+from aiohttp.hdrs import AUTHORIZATION, USER_AGENT
 
-from ..const import BASE_API_HEADERS, BASE_API_URL, GitHubClientKwarg
+from ..const import (
+    BASE_API_HEADERS,
+    BASE_API_URL,
+    DEFAULT_USER_AGENT,
+    GitHubClientKwarg,
+)
+from .base import GitHubBase
 
 
 @dataclass
-class GitHubBaseRequestDataModel:
+class GitHubBaseRequestDataModel(GitHubBase):
     """Dataclass to hold base request details."""
 
     kwargs: Dict[GitHubClientKwarg, Any]
     token: str | None = None
+
+    def __post_init__(self):
+        """Check user agent."""
+        if self.headers[USER_AGENT] == DEFAULT_USER_AGENT:
+            self.logger.debug(
+                "User-Agent not set. Set this with passing a user-agent header or the client_name argument."
+            )
 
     def request_url(self, endpoint: str) -> str:
         """Generate full request url."""
@@ -38,4 +51,6 @@ class GitHubBaseRequestDataModel:
             headers[AUTHORIZATION] = f"token {self.token}"
         if kwarg_headers := self.kwargs.get(GitHubClientKwarg.HEADERS):
             headers.update(kwarg_headers)
+        if client_name := self.kwargs.get(GitHubClientKwarg.CLIENT_NAME):
+            headers[USER_AGENT] = client_name
         return headers

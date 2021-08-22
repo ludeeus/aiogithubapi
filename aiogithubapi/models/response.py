@@ -73,14 +73,10 @@ class GitHubResponseModel(GitHubDataModelBase, Generic[GenericType]):
     @property
     def pages(self) -> Dict[str, int]:
         """Return the pages for this response."""
-        pages: Dict[str, str] = {}
-        if not self.headers.link:
-            return pages
-        for pageentry in self.headers.link.split(", "):
-            link = URL(pageentry.split(";")[0].replace("<", "").replace(">", ""))
-            rel_type = pageentry.split(";")[1].split("=")[1].replace('"', "")
-            pages[rel_type] = int(link.query.get("page"))
-        return pages
+        return {
+            key: int(self._raw_data.links[key]["url"].query.get("page"))
+            for key in self._raw_data.links
+        }
 
     @property
     def is_last_page(self) -> bool:

@@ -22,7 +22,7 @@ async def with_device_flow():
         )
         activation = await device_login.activation(device_code=registration.data.device_code)
 
-    async with GitHubAPI(token=activation.data.access_token) as github:
+    async with GitHubAPI(token=activation.data.access_token, **{"client_name": "MyClient/1.2.3"}) as github:
         repository = await github.async_get_repository("ludeeus/aiogithubapi")
         print("Repository name:", repository.data.name)
         print("Repository description:", repository.data.description)
@@ -30,7 +30,7 @@ async def with_device_flow():
 
 async def with_token():
     """Example usage of aiogithubapi with PAT."""
-    async with GitHubAPI(token=TOKEN) as github:
+    async with GitHubAPI(token=TOKEN, **{"client_name": "MyClient/1.2.3"}) as github:
         repository = await github.async_get_repository("ludeeus/aiogithubapi")
         print("Repository name:", repository.data.name)
         print("Repository description:", repository.data.description)
@@ -38,3 +38,9 @@ async def with_token():
 
 asyncio.get_event_loop().run_until_complete(with_token())
 ```
+
+## Usage notes
+
+- When constructing the client, you should pass a `client_name` parameter, or a user agent string.
+- Each response object has a `etag` attribute, which can be used to make subsequent requests.
+    - If you pass a `etag` parameter, and the API returns a 304 Not Modified, the client will raise `GitHubNotModifiedException`

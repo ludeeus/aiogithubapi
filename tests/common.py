@@ -7,6 +7,8 @@ from logging import Logger
 import os
 from typing import Any, Dict
 
+from yarl import URL
+
 from aiogithubapi.const import BASE_API_HEADERS, LOGGER, HttpContentType
 
 TEST_LOGGER: Logger = LOGGER
@@ -75,6 +77,18 @@ class MockResponse:
     def headers(self):
         """headers."""
         return self.mock_headers or HEADERS
+
+    @property
+    def links(self):
+        """headers."""
+        pages: Dict[str, dict] = {}
+        if not self.headers.get("Link"):
+            return pages
+        for pageentry in self.headers["Link"].split(", "):
+            link = URL(pageentry.split(";")[0].replace("<", "").replace(">", ""))
+            rel_type = pageentry.split(";")[1].split("=")[1].replace('"', "")
+            pages[rel_type] = {"rel": rel_type, "url": link}
+        return pages
 
     async def json(self):
         """json."""
