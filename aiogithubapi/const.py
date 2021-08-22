@@ -77,11 +77,14 @@ class GitHubClientKwarg(str, Enum):
         Used to ovveride the base url for all requests. Defaults to https://api.github.com .
     TIMEOUT:
         Used to set the timeout for all requests. Defaults to 20
+    CLIENT_NAME:
+        This name will be used as the user agent header.
     """
 
     HEADERS = "headers"
     BASE_URL = "base_url"
     TIMEOUT = "timeout"
+    CLIENT_NAME = "client_name"
 
 
 class GitHubRequestKwarg(str, Enum):

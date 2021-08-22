@@ -10,7 +10,9 @@ from tests.common import TOKEN
 
 
 @pytest.mark.asyncio
-async def test_client_constrution_defaults(client_session: ClientSession):
+async def test_client_constrution_defaults(
+    client_session: ClientSession, caplog: pytest.CaptureFixture
+):
     client = GitHubClient(session=client_session)
     base_request_data = client._base_request_data
 
@@ -22,6 +24,10 @@ async def test_client_constrution_defaults(client_session: ClientSession):
     assert base_request_data.headers == BASE_API_HEADERS
     assert "Authorization" not in base_request_data.headers
     assert base_request_data.headers["User-Agent"] == DEFAULT_USER_AGENT
+    assert (
+        "User-Agent not set. Set this with passing a user-agent header or the client_name argument."
+        in caplog.text
+    )
 
 
 @pytest.mark.asyncio
@@ -58,3 +64,12 @@ async def test_client_constrution_with_kwargs_headers(client_session: ClientSess
     )
     base_request_data = client._base_request_data
     assert base_request_data.headers["User-Agent"] == "test/client"
+
+
+@pytest.mark.asyncio
+async def test_client_constrution_with_kwargs_client_name(client_session: ClientSession):
+    client = GitHubClient(
+        session=client_session, **{GitHubClientKwarg.CLIENT_NAME: "test_client/1.2.3"}
+    )
+    base_request_data = client._base_request_data
+    assert base_request_data.headers["User-Agent"] == "test_client/1.2.3"
