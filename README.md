@@ -30,8 +30,8 @@ In august 2021 a new API interface was introduced (in #42). With that addition, 
 Which includes:
 
 - The [`aiogithubapi.common`](./aiogithubapi/common) module
-- [`aiogithubapi.legacy`](./aiogithubapi/legacy) module
-- [`aiogithubapi.objects`](./aiogithubapi/objects) module
+- The [`aiogithubapi.legacy`](./aiogithubapi/legacy) module
+- The [`aiogithubapi.objects`](./aiogithubapi/objects) module
 - All classes starting with `AIOGitHub`
 - The `async_call_api` function in the [`aiogithubapi.helpers.py`](./aiogithubapi/helpers.py) file
 - The `GitHubDevice` class in `aiogithubapi`, replaced with `GitHubDeviceAPI`
