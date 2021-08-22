@@ -120,8 +120,6 @@ class GitHubClient(GitHubBase):
         if response.status == HttpStatusCode.NO_CONTENT:
             return response
 
-        print(response.headers.as_dict)
-
         if response.headers.content_type != HttpContentType.TEXT_PLAIN:
             response.data = await result.json()
         else:
