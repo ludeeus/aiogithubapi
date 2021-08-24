@@ -130,6 +130,7 @@ class HttpStatusCode(int, Enum):
     BAD_REQUEST = 400
     UNAUTHORIZED = 401
     RATELIMIT = 403
+    FORBIDDEN = 403
     NOT_FOUND = 404
     TEAPOT = 418
     UNPROCESSABLE_ENTITY = 422
