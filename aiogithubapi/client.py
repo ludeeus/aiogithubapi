@@ -29,7 +29,7 @@ from .models.request_data import GitHubBaseRequestDataModel
 from .models.response import GitHubResponseModel
 
 STATUS_EXCEPTIONS: Dict[HttpStatusCode, GitHubException] = {
-    HttpStatusCode.RATELIMIT: GitHubRatelimitException,
+    HttpStatusCode.FORBIDDEN: GitHubAuthenticationException,
     HttpStatusCode.UNAUTHORIZED: GitHubAuthenticationException,
     HttpStatusCode.NOT_MODIFIED: GitHubNotModifiedException,
     HttpStatusCode.NOT_FOUND: GitHubNotFoundException,

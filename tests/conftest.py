@@ -82,7 +82,10 @@ async def github(client, client_session):
 async def github_api(client_session, mock_response):
     """Fixture to provide a GitHub object."""
     mock_response.throw_on_file_error = True
-    async with GitHubAPI(token=TOKEN, session=client_session) as github_obj:
+    async with GitHubAPI(
+        token=TOKEN,
+        session=client_session,
+    ) as github_obj:
         yield github_obj
 
 
@@ -96,7 +99,10 @@ async def github_device(client_session):
 @pytest.fixture
 async def github_device_api(client_session):
     """Fixture to provide a GitHub Devlice object."""
-    async with GitHubDeviceAPI(CLIENT_ID, session=client_session) as github_device_obj:
+    async with GitHubDeviceAPI(
+        CLIENT_ID,
+        session=client_session,
+    ) as github_device_obj:
         github_device_obj._interval = 1
         github_device_obj._expires = datetime.timestamp(datetime.now()) + 900
         yield github_device_obj

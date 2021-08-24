@@ -10,10 +10,8 @@ import pytest
 
 from aiogithubapi import (
     GitHubAPI,
-    GitHubAuthenticationException,
     GitHubConnectionException,
     GitHubException,
-    GitHubNotFoundException,
     GitHubRatelimitException,
 )
 from aiogithubapi.client import MESSAGE_EXCEPTIONS, STATUS_EXCEPTIONS
@@ -133,7 +131,8 @@ async def test_client_exceptions(github_api: GitHubAPI):
 
 
 @pytest.mark.parametrize(
-    "status,exception", ((status, STATUS_EXCEPTIONS[status]) for status in STATUS_EXCEPTIONS)
+    "status,exception",
+    (*((status, STATUS_EXCEPTIONS[status]) for status in STATUS_EXCEPTIONS),),
 )
 @pytest.mark.asyncio
 async def test_status_code_handling(
