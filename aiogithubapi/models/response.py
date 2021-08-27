@@ -33,6 +33,7 @@ class GitHubResponseHeadersModel(GitHubDataModelBase):
     vary: str | None = None
     retry_after: str | None = None
     expect_ct: str | None = None
+    permissions_policy: str | None = None
     x_accepted_oauth_scopes: str | None = None
     x_commonmarker_version: str | None = None
     x_content_type_options: str | None = None

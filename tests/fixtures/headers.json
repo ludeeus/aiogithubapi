@@ -25,5 +25,6 @@
 	"Referrer-Policy": "origin-when-cross-origin, strict-origin-when-cross-origin",
 	"Content-Security-Policy": "default-src 'none'",
 	"Content-Encoding": "gzip",
+	"Permissions-Policy": "",
 	"X-GitHub-Request-Id": "12A3:45BC:6D7890:12EF34:5678G901"
 }
