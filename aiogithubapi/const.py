@@ -162,6 +162,8 @@ class HttpMethod(str, Enum):
 class HttpContentType(str, Enum):
     """HTTP Content Types."""
 
+    BASE_JSON = "application/json"
+
     JSON = "application/json;charset=utf-8"
     TEXT_PLAIN = "text/plain;charset=utf-8"
     TEXT_HTML = "text/html;charset=utf-8"
