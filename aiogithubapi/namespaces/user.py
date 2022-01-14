@@ -1,7 +1,7 @@
 """
-Methods for the users namespace
+Methods for the authenticated user namespace
 
-https://docs.github.com/en/rest/reference/users
+https://docs.github.com/en/rest/reference/users#get-the-authenticated-user
 """
 from __future__ import annotations
 
@@ -10,56 +10,43 @@ from typing import Any, Dict
 from ..const import GitHubRequestKwarg
 from ..models.repository import GitHubRepositoryModel
 from ..models.response import GitHubResponseModel
-from ..models.user import GitHubUserModel
+from ..models.user import GitHubAuthenticatedUserModel
 from .base import BaseNamespace
 
 
-class GitHubUsersNamespace(BaseNamespace):
-    """Methods for the users namespace"""
+class GitHubUserNamespace(BaseNamespace):
+    """Methods for the user namespace"""
 
     async def get(
         self,
-        username: str,
         **kwargs: Dict[GitHubRequestKwarg, Any],
-    ) -> GitHubResponseModel[GitHubUserModel]:
+    ) -> GitHubResponseModel[GitHubAuthenticatedUserModel]:
         """
-         Get a user
+         Get the authenticated user
 
-         **Arguments**:
-
-         `username`
-
-         The username to return, example "octocat"
 
         https://docs.github.com/en/rest/reference/users#get-a-user
         """
         response = await self._client.async_call_api(
-            endpoint=f"/users/{username}",
+            endpoint="/user",
             **kwargs,
         )
-        response.data = GitHubUserModel(response.data)
+        response.data = GitHubAuthenticatedUserModel(response.data)
 
         return response
 
     async def starred(
         self,
-        username: str,
         **kwargs: Dict[GitHubRequestKwarg, Any],
     ) -> GitHubResponseModel[list[GitHubRepositoryModel]]:
         """
-         Get the starred repositories of a user
-
-         **Arguments**:
-
-         `username`
-
-         The username to return, example "octocat"
+         Get the authenticated user starred repositories
 
 
         https://docs.github.com/en/rest/reference/users#get-a-user
         """
         response = await self._client.async_call_api(
-            endpoint=f"/users/{username}/starred",
+            endpoint="/user/starred",
             **kwargs,
         )
 
