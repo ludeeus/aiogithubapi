@@ -24,6 +24,8 @@ class GitHubRateLimitResourcesModel(GitHubDataModelBase):
     integration_manifest: GitHubRateLimitResourceModel | None = None
     source_import: GitHubRateLimitResourceModel | None = None
     code_scanning_upload: GitHubRateLimitResourceModel | None = None
+    actions_runner_registration: GitHubRateLimitResourceModel | None = None
+    scim: GitHubRateLimitResourceModel | None = None
 
     def _generate_core(self, data: Any) -> GitHubRateLimitResourceModel:
         return GitHubRateLimitResourceModel(data) if data else None
