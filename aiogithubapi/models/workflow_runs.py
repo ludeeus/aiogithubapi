@@ -45,6 +45,6 @@ class GitHubWorkflowRunsModel(GitHubDataModelBase):
     total_count: int | None = None
     workflow_runs: list[_WorkflowRun] | None = None
 
-    def _generate_workflows(self, data: list[Dict[str, Any]]) -> list[_WorkflowRun]:
+    def _generate_workflow_runs(self, data: list[Dict[str, Any]]) -> list[_WorkflowRun]:
         """Generate GitHubWorkflowRunsModel from list of dicts."""
         return [_WorkflowRun(workflow_run) for workflow_run in data or []]
