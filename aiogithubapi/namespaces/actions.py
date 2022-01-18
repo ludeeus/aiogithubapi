@@ -50,7 +50,7 @@ class GitHubActionsNamespace(BaseNamespace):
         """
         Get repository action workflow runs
 
-        Get a list of worflow runs
+        Get a list of worflow runs for a repository
 
          **Arguments**:
 
@@ -62,6 +62,37 @@ class GitHubActionsNamespace(BaseNamespace):
         """
         response = await self._client.async_call_api(
             endpoint=f"/repos/{repository}/actions/runs",
+            **kwargs,
+        )
+        response.data = GitHubWorkflowRunsModel(response.data)
+        return response
+
+
+    async def workflow_runs_for_id(
+        self,
+        repository: RepositoryType,
+        workflow_id: int,
+        **kwargs: Dict[GitHubRequestKwarg, Any],
+    ) -> GitHubResponseModel[GitHubWorkflowRunsModel]:
+        """
+        Get repository action workflow runs
+
+        Get a list of worflow runs for a specific workflow
+
+         **Arguments**:
+
+         `repository`
+
+         The repository to return workflows for, example "octocat/hello-world"
+
+         `workflow_id`
+
+         The workflow id to return runs for
+
+        https://docs.github.com/en/rest/reference/actions#list-workflow-runs
+        """
+        response = await self._client.async_call_api(
+            endpoint=f"/repos/{repository}/actions/workflows/{workflow_id}/runs",
             **kwargs,
         )
         response.data = GitHubWorkflowRunsModel(response.data)
