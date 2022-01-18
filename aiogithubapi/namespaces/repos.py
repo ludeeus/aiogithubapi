@@ -12,6 +12,7 @@ from ..helpers import repository_full_name
 from ..models.commit import GitHubCommitModel
 from ..models.repository import GitHubRepositoryModel
 from ..models.response import GitHubResponseModel
+from .actions import GitHubActionsNamespace
 from .base import BaseNamespace
 from .contents import GitHubContentsNamespace
 from .git import GitHubGitNamespace
@@ -25,12 +26,18 @@ class GitHubReposNamespace(BaseNamespace):
     """Methods for the repos namespace"""
 
     def __post_init__(self) -> None:
+        self._actions = GitHubActionsNamespace(self._client)
         self._contents = GitHubContentsNamespace(self._client)
         self._git = GitHubGitNamespace(self._client)
         self._issues = GitHubIssuesNamespace(self._client)
         self._pulls = GitHubPullsNamespace(self._client)
         self._releases = GitHubReleasesNamespace(self._client)
         self._traffic = GitHubTrafficNamespace(self._client)
+
+    @property
+    def actions(self) -> GitHubActionsNamespace:
+        """Property to access the actions namespace"""
+        return self._actions
 
     @property
     def contents(self) -> GitHubContentsNamespace:
