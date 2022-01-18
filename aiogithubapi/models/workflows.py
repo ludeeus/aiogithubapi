@@ -13,7 +13,6 @@ class _Workflow(GitHubDataModelBase):
     node_id: str | None = None
     name: str | None = None
     path: str | None = None
-    path: str | None = None
     state: str | None = None
     created_at: str | None = None
     updated_at: str | None = None
