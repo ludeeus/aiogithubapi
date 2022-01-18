@@ -64,3 +64,4 @@ from .models.user import (
     GitHubUserPlanModel,
 )
 from .models.views import GitHubViewsModel
+from .models.workflows import GitHubWorkflowsModel
