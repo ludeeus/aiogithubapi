@@ -30,4 +30,4 @@ class GitHubWorkflowsModel(GitHubDataModelBase):
 
     def _generate_workflows(self, data: list[Dict[str, Any]]) -> list[_Workflow]:
         """Generate GitHubWorkflowsModel from list of dicts."""
-        return [_Workflow(clone) for clone in data or []]
+        return [_Workflow(workflow) for workflow in data or []]
