@@ -28,6 +28,6 @@ class GitHubWorkflowsModel(GitHubDataModelBase):
     total_count: int | None = None
     workflows: list[_Workflow] | None = None
 
-    def _generate_workflows(self, data: list[Dict[str, Any]]) -> list[_Clone]:
+    def _generate_workflows(self, data: list[Dict[str, Any]]) -> list[_Workflow]:
         """Generate GitHubWorkflowsModel from list of dicts."""
         return [_Workflow(clone) for clone in data or []]
