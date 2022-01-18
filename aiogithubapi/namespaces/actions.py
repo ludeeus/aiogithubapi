@@ -67,7 +67,6 @@ class GitHubActionsNamespace(BaseNamespace):
         response.data = GitHubWorkflowRunsModel(response.data)
         return response
 
-
     async def workflow_runs_for_id(
         self,
         repository: RepositoryType,
