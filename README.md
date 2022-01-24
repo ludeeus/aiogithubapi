@@ -10,7 +10,7 @@ _Asynchronous Python client for the GitHub API_
 This is not a full client for the API (Have you seen it, it's huge), and will probably never be.
 Things are added when needed or requested.
 
-If something you need is missing please raise [a fearure request to have it added](https://github.com/ludeeus/aiogithubapi/issues/new?assignees=&labels=enhancement&template=feature_request.md) or [create a PR 🎉](#contribute).
+If something you need is missing please raise [a feature request to have it added](https://github.com/ludeeus/aiogithubapi/issues/new?assignees=&labels=enhancement&template=feature_request.md) or [create a PR 🎉](#contribute).
 You can also use [`GitHubAPI.generic`](https://aiogithubapi.netlify.app/github.html#aiogithubapi.github.GitHub.generic)
 while you wait for your request or contribution to be implemented.
 
