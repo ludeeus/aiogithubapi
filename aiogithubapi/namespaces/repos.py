@@ -12,6 +12,7 @@ from ..helpers import repository_full_name
 from ..models.commit import GitHubCommitModel
 from ..models.repository import GitHubRepositoryModel
 from ..models.response import GitHubResponseModel
+from ..models.tag import GitHubTagModel
 from .base import BaseNamespace
 from .contents import GitHubContentsNamespace
 from .git import GitHubGitNamespace
@@ -106,4 +107,27 @@ class GitHubReposNamespace(BaseNamespace):
             **kwargs,
         )
         response.data = [GitHubCommitModel(data) for data in response.data]
+        return response
+
+    async def list_tags(
+        self,
+        repository: RepositoryType,
+        **kwargs: Dict[GitHubRequestKwarg, Any],
+    ) -> GitHubResponseModel[List[GitHubTagModel]]:
+        """
+         List tags
+
+         **Arguments**:
+
+         `repository`
+
+         The repository to return tags from, example "octocat/hello-world"
+
+        https://docs.github.com/en/rest/reference/repos#list-repository-tags
+        """
+        response = await self._client.async_call_api(
+            endpoint=f"/repos/{repository_full_name(repository)}/tags",
+            **kwargs,
+        )
+        response.data = [GitHubTagModel(data) for data in response.data]
         return response
