@@ -57,6 +57,7 @@ from .models.release import GitHubReleaseAssetModel, GitHubReleaseModel
 from .models.repository import GitHubRepositoryModel
 from .models.request_data import GitHubBaseRequestDataModel
 from .models.response import GitHubResponseHeadersModel, GitHubResponseModel
+from .models.tag import GitHubTagModel
 from .models.user import (
     GitHubAuthenticatedUserModel,
     GitHubBaseUserModel,
