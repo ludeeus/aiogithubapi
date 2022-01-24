@@ -12,7 +12,7 @@ class _Commit(GitHubDataModelBase):
 
 
 class GitHubTagModel(GitHubDataModelBase):
-    """GitHub release data class."""
+    """GitHub tag data class."""
 
     name: str | None = None
     commit: _Commit | None = None
