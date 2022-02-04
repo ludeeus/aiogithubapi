@@ -53,3 +53,22 @@ class GitHubUserNamespace(BaseNamespace):
         response.data = [GitHubRepositoryModel(data) for data in response.data]
 
         return response
+
+    async def repos(
+        self,
+        **kwargs: Dict[GitHubRequestKwarg, Any],
+    ) -> GitHubResponseModel[list[GitHubRepositoryModel]]:
+        """
+         Get the repositories for the authenticated user
+
+
+        https://docs.github.com/en/rest/reference/repos#list-repositories-for-a-user
+        """
+        response = await self._client.async_call_api(
+            endpoint="/user/repos",
+            **kwargs,
+        )
+
+        response.data = [GitHubRepositoryModel(data) for data in response.data]
+
+        return response
