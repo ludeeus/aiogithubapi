@@ -24,3 +24,13 @@ async def test_get_user_starred(github_api: GitHubAPI, mock_requests: MockedRequ
     assert first_repo.name == "Hello-World"
     assert mock_requests.called == 1
     assert mock_requests.last_request["url"] == "https://api.github.com/users/octocat/starred"
+
+
+@pytest.mark.asyncio
+async def test_get_user_repos(github_api: GitHubAPI, mock_requests: MockedRequests):
+    response = await github_api.users.repos(TEST_USER_NAME)
+    assert response.status == 200
+    first_repo = response.data[0]
+    assert first_repo.name == "Hello-World"
+    assert mock_requests.called == 1
+    assert mock_requests.last_request["url"] == "https://api.github.com/users/octocat/repos"
