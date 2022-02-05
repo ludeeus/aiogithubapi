@@ -129,6 +129,13 @@ async def test_client_exceptions(github_api: GitHubAPI):
         ):
             await github_api.generic("/generic")
 
+    with patch("json.loads", side_effect=KeyError("err")):
+        with pytest.raises(
+            GitHubException,
+            match="Could not handle response data from 'https://api.github.com/generic' with - 'err'",
+        ):
+            await github_api.generic("/generic")
+
 
 @pytest.mark.parametrize(
     "status,exception",
