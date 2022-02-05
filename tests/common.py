@@ -53,6 +53,9 @@ HEADERS_RATELIMITED = {
 HEADERS_TEXT = {**HEADERS, "Content-Type": HttpContentType.TEXT_PLAIN}
 
 
+TEXT_ENDPOINTS = ("markdown", "zen")
+
+
 @dataclass
 class MockResponse:
     """Mock response class."""
@@ -107,18 +110,23 @@ class MockResponse:
                 raise OSError(f"Missing fixture for {self.mock_endpoint}") from None
             return {}
 
-    async def text(self):
+    async def text(self, **_):
         """text."""
         if self.mock_raises is not None:
             raise self.mock_raises  # pylint: disable=raising-bad-type
         if self.mock_data_list:
             data = self.mock_data_list[self._count]
             self._count += 1
-            return data
+            return json.dumps(data)
         if self.mock_data is not None:
-            return self.mock_data
+            return json.dumps(self.mock_data)
         try:
-            return load_fixture(f"{self.mock_endpoint}.txt", legacy=False)
+            file = (
+                self.mock_endpoint
+                if self.mock_endpoint not in TEXT_ENDPOINTS
+                else f"{self.mock_endpoint}.txt"
+            )
+            return load_fixture(file, legacy=False)
         except OSError:
             if self.throw_on_file_error:
                 raise OSError(f"Missing fixture for {self.mock_endpoint}") from None

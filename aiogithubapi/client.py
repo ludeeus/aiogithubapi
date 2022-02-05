@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import asyncio
+import json
 from typing import Any, Dict
 
 import aiohttp
@@ -120,10 +121,14 @@ class GitHubClient(GitHubBase):
         if response.status == HttpStatusCode.NO_CONTENT:
             return response
 
-        if HttpContentType.BASE_JSON in str(response.headers.content_type):
-            response.data = await result.json()
-        else:
-            response.data = await result.text()
+        try:
+            response.data = await result.text(encoding="utf-8")
+            if HttpContentType.BASE_JSON in str(response.headers.content_type):
+                response.data = json.loads(response.data)
+        except BaseException as exception:
+            raise GitHubException(
+                f"Could not handle response data from '{self._base_request_data.request_url(endpoint)}' with - {exception}"
+            )
 
         message = response.data.get("message") if isinstance(response.data, dict) else None
 
