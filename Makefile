@@ -5,16 +5,36 @@ help: ## Shows this help message
 	@awk 'BEGIN {FS = ":.*##";} /^[a-zA-Z_-]+:.*?##/ { printf " \033[36m make %-25s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST);
 	@echo
 
-requirements: ## Install requirements
-	@python3 -m pip --disable-pip-version-check install -r requirements.txt
+requirements: install-poetry ## Install requirements
+	@poetry install
+	@poetry check
+
+install: ## Install aiogithubapi
+	@poetry install
+
+install-poetry:
+	@curl -sSL https://install.python-poetry.org | python3 -
 
 test: ## Run all tests
-	@python3 -m pytest tests -rxf -x -v -l --cov=./ --cov-report=xml
+	@poetry run pytest tests -rxf -x -vv -l -s --cov=./ --cov-report=xml
 
-lint: ## Lint all files black
-	@python3 -m isort .
-	@python3 -m black --fast aiogithubapi tests
+build: ## Build the package
+	@poetry build
+
+lint: isort black ## Lint all files
 
 coverage: ## Check the coverage of the package
-	@python3 -m pytest tests -rxf -x -v -l --cov=./ --cov-report=xml > /dev/null
-	@coverage report --skip-covered
+	@poetry run pytest tests -rxf -x -v -l --cov=./ --cov-report=xml > /dev/null
+	@poetry run coverage report
+
+isort:
+	@poetry run isort aiogithubapi tests
+
+isort-check:
+	@poetry run isort aiogithubapi tests --check-only
+
+black:
+	@poetry run black --fast aiogithubapi tests
+
+black-check:
+	@poetry run black --check --fast aiogithubapi tests

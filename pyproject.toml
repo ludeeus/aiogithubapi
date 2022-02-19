@@ -1,3 +1,40 @@
+[build-system]
+build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core>=1.0.0"]
+
+[tool.poetry]
+authors = ["Ludeeus <ludeeus@ludeeus.dev>"]
+classifiers = [
+  "Intended Audience :: Developers",
+  "Natural Language :: English",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+]
+description = "Asynchronous Python client for the GitHub API"
+include = ["aiogithubapi", "aiogithubapi.*", "LICENCE.md"]
+keywords = ["calver", "semver", "0ver", "version", "pep440", "buildver"]
+license = "MIT"
+maintainers = ["Ludeeus <ludeeus@ludeeus.dev>"]
+name = "aiogithubapi"
+readme = "README.md"
+repository = "https://github.com/ludeeus/aiogithubapi"
+version = "0"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+aiohttp = "^3.6.1"
+backoff = "^1.11.1"
+
+[tool.poetry.dev-dependencies]
+black = "^22.1"
+isort = "^5.10.1"
+mypy = "^0.931"
+pylint = "^2.12.2"
+pytest = "^7.0.1"
+pytest-cov = "^3.0.0"
+pytest-asyncio = "^0.15.1"
+pdoc3 = "^0.10.0"
+aresponses = "^2.1.5"
+
 [tool.black]
 line-length = 100
 target-version = ['py38']
@@ -19,10 +56,21 @@ combine_as_imports = true
 
 
 [tool.pytest.ini_options]
-asyncio_mode = "auto"
 testpaths = [
     "tests",
 ]
 norecursedirs = [
     ".git",
 ]
+
+[tool.coverage.run]
+source = ["aiogithubapi"]
+omit = ["tests/*", "example.py", "generate/*"]
+
+[tool.coverage.report]
+exclude_lines = ["if TYPE_CHECKING:"]
+
+[tool.pylint.'MESSAGES CONTROL']
+disable = "unsubscriptable-object,duplicate-code"
+
+
