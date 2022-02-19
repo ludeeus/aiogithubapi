@@ -1,1 +1,1 @@
-"""Example GrapQL queries"""
+"""Example GraphQL queries"""
