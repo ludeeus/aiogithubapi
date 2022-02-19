@@ -3,13 +3,14 @@
 import pytest
 
 from aiogithubapi import GitHubAPI, GitHubGraphQLException
+from aiogithubapi.graphql_examples.repository_tags import EXAMPLE_QUERY
 
 from tests.common import MockedRequests, MockResponse
 
 
 @pytest.mark.asyncio
 async def test_graphql(github_api: GitHubAPI, mock_requests: MockedRequests):
-    response = await github_api.graphql("test")
+    response = await github_api.graphql(EXAMPLE_QUERY)
     assert response.status == 200
     assert isinstance(response.data, dict)
     assert mock_requests.called == 1
@@ -24,7 +25,7 @@ async def test_graphql_error(
 ):
     mock_response.mock_data = {"errors": [{"message": "test"}]}
     with pytest.raises(GitHubGraphQLException, match="test"):
-        await github_api.graphql("test")
+        await github_api.graphql(EXAMPLE_QUERY)
 
     assert mock_requests.called == 1
     assert mock_requests.last_request["url"] == "https://api.github.com/graphql"
