@@ -10,6 +10,7 @@ from .client import GitHubClient
 from .const import GitHubClientKwarg, GitHubRequestKwarg, HttpMethod, RepositoryType
 from .legacy.github import AIOGitHubAPI as LegacyAIOGitHubAPI
 from .models.base import GitHubBase
+from .models.meta import GitHubMetaModel
 from .models.rate_limit import GitHubRateLimitModel
 from .models.response import GitHubResponseModel
 from .namespaces.repos import GitHubReposNamespace
@@ -168,16 +169,34 @@ class GitHub(GitHubBase):
             **{**kwargs, GitHubRequestKwarg.METHOD: HttpMethod.POST},
         )
 
-    async def zen(
+    async def meta(
         self,
         **kwargs: Dict[GitHubRequestKwarg, Any],
-    ) -> GitHubResponseModel[str]:
+    ) -> GitHubResponseModel[GitHubMetaModel]:
+        """
+        Returns meta information about GitHub, including a list of GitHub's IP addresses.
+
+        https://docs.github.com/en/rest/reference/meta#get-github-meta-information
+        """
+        response = await self._client.async_call_api(endpoint="/meta", **kwargs)
+        response.data = GitHubMetaModel(response.data)
+        return response
+
+    async def zen(self, **kwargs: Dict[GitHubRequestKwarg, Any]) -> GitHubResponseModel[str]:
         """
         ZEN
 
         https://docs.github.com/en/rest/guides/getting-started-with-the-rest-api#hello-world
         """
         return await self._client.async_call_api(endpoint="/zen", **kwargs)
+
+    async def octocat(self, **kwargs: Dict[GitHubRequestKwarg, Any]) -> GitHubResponseModel[str]:
+        """
+        Get the octocat as ASCII art
+
+        https://docs.github.com/en/rest/reference/meta#get-octocat
+        """
+        return await self._client.async_call_api(endpoint="/octocat", **kwargs)
 
     async def rate_limit(
         self,
