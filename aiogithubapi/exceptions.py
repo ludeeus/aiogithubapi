@@ -27,6 +27,10 @@ class GitHubPayloadException(GitHubException):
     """This is raised when the payload is invalid."""
 
 
+class GitHubGraphQLException(GitHubException):
+    """This is raised when the response from GraphQL calls have erros."""
+
+
 class GitHubPermissionException(GitHubException):
     """This is raised when the user has no permission to do the requested resource."""
 

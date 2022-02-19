@@ -18,6 +18,7 @@ from .exceptions import (
     GitHubAuthenticationException,
     GitHubConnectionException,
     GitHubException,
+    GitHubGraphQLException,
     GitHubNotFoundException,
     GitHubNotModifiedException,
     GitHubPayloadException,
@@ -143,5 +144,12 @@ class GitHubClient(GitHubBase):
                 if exception := MESSAGE_EXCEPTIONS.get(message):
                     raise exception(message)
                 raise GitHubException(message)
+
+        if endpoint == "/graphql":
+            if response.data.get("errors", []):
+                raise GitHubGraphQLException(
+                    ", ".join(entry.get("message") for entry in response.data["errors"])
+                )
+            response.data = response.data.get("data", {})
 
         return response
