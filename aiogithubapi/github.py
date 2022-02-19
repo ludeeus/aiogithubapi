@@ -222,10 +222,9 @@ class GitHub(GitHubBase):
 
         https://docs.github.com/en/graphql
         """
-        response = await self._client.async_call_api(
+        return await self._client.async_call_api(
             endpoint="/graphql",
             data={"query": query, "variables": variables or {}},
             method=HttpMethod.POST,
             **kwargs,
         )
-        return response
