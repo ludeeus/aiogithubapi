@@ -53,7 +53,7 @@ HEADERS_RATELIMITED = {
 HEADERS_TEXT = {**HEADERS, "Content-Type": HttpContentType.TEXT_PLAIN}
 
 
-TEXT_ENDPOINTS = ("markdown", "zen")
+TEXT_ENDPOINTS = ("markdown", "zen", "octocat")
 
 
 @dataclass
