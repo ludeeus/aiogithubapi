@@ -8,7 +8,6 @@ import aiohttp
 
 from .client import GitHubClient
 from .const import GitHubClientKwarg, GitHubRequestKwarg, HttpMethod, RepositoryType
-from .exceptions import GitHubGraphQLException
 from .legacy.github import AIOGitHubAPI as LegacyAIOGitHubAPI
 from .models.base import GitHubBase
 from .models.meta import GitHubMetaModel
@@ -229,9 +228,4 @@ class GitHub(GitHubBase):
             method=HttpMethod.POST,
             **kwargs,
         )
-        if response.data.get("errors", []):
-            raise GitHubGraphQLException(
-                ", ".join(entry.get("message") for entry in response.data["errors"])
-            )
-        response.data = response.data.get("data", {})
         return response
