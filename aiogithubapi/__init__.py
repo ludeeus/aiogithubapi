@@ -22,6 +22,7 @@ from .exceptions import (
     GitHubAuthenticationException,
     GitHubConnectionException,
     GitHubException,
+    GitHubGraphQLException,
     GitHubNotFoundException,
     GitHubNotModifiedException,
     GitHubPayloadException,
@@ -42,6 +43,7 @@ from .models.issue_comment import GitHubIssueCommentModel
 from .models.label import GitHubLabelModel
 from .models.license import GitHubLicenseModel
 from .models.login_oauth import GitHubLoginOauthModel
+from .models.meta import GitHubMetaModel
 from .models.milestone import GitHubMilestoneModel
 from .models.organization import GitHubOrganizationModel
 from .models.owner import GitHubOwnerModel

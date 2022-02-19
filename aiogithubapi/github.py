@@ -8,6 +8,7 @@ import aiohttp
 
 from .client import GitHubClient
 from .const import GitHubClientKwarg, GitHubRequestKwarg, HttpMethod, RepositoryType
+from .exceptions import GitHubGraphQLException
 from .legacy.github import AIOGitHubAPI as LegacyAIOGitHubAPI
 from .models.base import GitHubBase
 from .models.meta import GitHubMetaModel
@@ -222,8 +223,15 @@ class GitHub(GitHubBase):
 
         https://docs.github.com/en/graphql
         """
-        return await self._client.async_call_api(
+        response = await self._client.async_call_api(
             endpoint="/graphql",
             data={"query": query, "variables": variables or {}},
+            method=HttpMethod.POST,
             **kwargs,
         )
+        if response.data.get("errors", []):
+            raise GitHubGraphQLException(
+                ", ".join(entry.get("message") for entry in response.data["errors"])
+            )
+        response.data = response.data.get("data", {})
+        return response
