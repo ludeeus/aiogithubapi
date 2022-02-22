@@ -11,7 +11,7 @@ from typing import TYPE_CHECKING, Any, Awaitable, Callable, Dict, List, Literal
 from uuid import UUID, uuid4
 
 from ..const import LOGGER, GitHubRequestKwarg, RepositoryType
-from ..exceptions import GitHubException, GitHubNotModifiedException
+from ..exceptions import GitHubAuthenticationException, GitHubException, GitHubNotModifiedException
 from ..models.events import GitHubEventModel
 from ..models.response import GitHubResponseModel
 from ..models.user import GitHubAuthenticatedUserModel
@@ -81,6 +81,9 @@ class _GitHubEventsBaseNamespace(BaseNamespace):
                 except GitHubNotModifiedException:
                     await asyncio.sleep(_poll_time)
                     continue
+                except GitHubAuthenticationException as err:
+                    await error_callback(err)
+                    break
                 except GitHubException as err:
                     if error_callback is not None:
                         await error_callback(err)
