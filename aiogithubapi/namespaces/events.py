@@ -7,10 +7,8 @@ from __future__ import annotations
 
 import asyncio
 from datetime import datetime
-from typing import TYPE_CHECKING, Any, Awaitable, Callable, Dict, List
+from typing import TYPE_CHECKING, Any, Awaitable, Callable, Dict, List, Literal
 from uuid import UUID, uuid4
-
-from typing_extensions import Literal
 
 from ..const import LOGGER, GitHubRequestKwarg, RepositoryType
 from ..exceptions import GitHubException, GitHubNotModifiedException
