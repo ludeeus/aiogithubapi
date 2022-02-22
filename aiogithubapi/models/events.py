@@ -25,31 +25,6 @@ class _Repo(GitHubDataModelBase):
     url: str | None = None
 
 
-class _CommitAuthor(GitHubDataModelBase):
-    """Internal entry."""
-
-    id: str | None = None
-    login: str | None = None
-    display_login: str | None = None
-    gravatar_id: str | None = None
-    url: str | None = None
-    avatar_url: str | None = None
-
-
-class _Commit(GitHubDataModelBase):
-    """Internal entry."""
-
-    sha: str | None = None
-    author: _CommitAuthor | None = None
-    message: str | None = None
-    distinct: bool | None = None
-    url: str | None = None
-
-    def _generate_author(self, data: Dict[str, Any] | None) -> _CommitAuthor:
-        """Generate author data."""
-        return _CommitAuthor(data) if data else None
-
-
 class GitHubEventModel(GitHubDataModelBase):
     """GitHub base event data class."""
 
