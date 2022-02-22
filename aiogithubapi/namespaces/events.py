@@ -76,7 +76,6 @@ class _GitHubEventsBaseNamespace(BaseNamespace):
                     response = await self._client.async_call_api(
                         endpoint=f"/{self._space}/{name}/events",
                         etag=_last_etag,
-                        query={"per_page": "1"},
                         **kwargs,
                     )
                 except GitHubNotModifiedException:
@@ -92,6 +91,7 @@ class _GitHubEventsBaseNamespace(BaseNamespace):
                     _poll_time = int(response.headers.x_poll_interval or 60)
 
                 async def _handle_event(event: GitHubEventModel) -> None:
+                    LOGGER.debug("New %s for %s", event.type, name)
                     try:
                         await event_callback(event)
                     except Exception as err:
