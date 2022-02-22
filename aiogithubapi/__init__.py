@@ -37,6 +37,7 @@ from .models.clones import GitHubClonesModel
 from .models.commit import GitHubCommitModel
 from .models.contents import GitHubContentsModel
 from .models.device_login import GitHubLoginDeviceModel
+from .models.events import GitHubEventModel
 from .models.git_tree import GitHubGitTreeModel
 from .models.issue import GitHubIssueModel
 from .models.issue_comment import GitHubIssueCommentModel

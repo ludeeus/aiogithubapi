@@ -15,6 +15,7 @@ from ..models.response import GitHubResponseModel
 from ..models.tag import GitHubTagModel
 from .base import BaseNamespace
 from .contents import GitHubContentsNamespace
+from .events import GitHubEventsReposNamespace
 from .git import GitHubGitNamespace
 from .issues import GitHubIssuesNamespace
 from .pulls import GitHubPullsNamespace
@@ -27,6 +28,7 @@ class GitHubReposNamespace(BaseNamespace):
 
     def __post_init__(self) -> None:
         self._contents = GitHubContentsNamespace(self._client)
+        self._events = GitHubEventsReposNamespace(self._client)
         self._git = GitHubGitNamespace(self._client)
         self._issues = GitHubIssuesNamespace(self._client)
         self._pulls = GitHubPullsNamespace(self._client)
@@ -37,6 +39,11 @@ class GitHubReposNamespace(BaseNamespace):
     def contents(self) -> GitHubContentsNamespace:
         """Property to access the contents namespace"""
         return self._contents
+
+    @property
+    def events(self) -> GitHubEventsReposNamespace:
+        """Property to access the events namespace"""
+        return self._events
 
     @property
     def git(self) -> GitHubGitNamespace:
