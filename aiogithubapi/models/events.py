@@ -26,7 +26,13 @@ class _Repo(GitHubDataModelBase):
 
 
 class GitHubEventModel(GitHubDataModelBase):
-    """GitHub base event data class."""
+    """
+    GitHub base event data class.
+
+    The type is PascalCase
+
+    https://docs.github.com/en/developers/webhooks-and-events/events/github-event-types
+    """
 
     id: str | None = None
     type: str | None = None

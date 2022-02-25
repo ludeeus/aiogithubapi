@@ -38,7 +38,7 @@ class _GitHubEventsBaseNamespace(BaseNamespace):
         name: str,
         event_callback: Callable[[GitHubEventModel], Awaitable[None]],
         *,
-        error_callback: Callable[[], Awaitable[None]] | None = None,
+        error_callback: Callable[[GitHubException], Awaitable[None]] | None = None,
         **kwargs: Dict[GitHubRequestKwarg, Any],
     ) -> UUID:
         """
@@ -47,17 +47,19 @@ class _GitHubEventsBaseNamespace(BaseNamespace):
 
          **Arguments**:
 
-         `repository`
+         `name`
 
-         The repository to return evets from, example "octocat/hello-world"
+         The name to return evets from, example "octocat/hello-world"
 
          `event_callback`
 
-         An async funtion that will be called when new events come in
+         An async funtion that will be called when new events come in,
+         the event will be passed as the first argument.
 
          `error_callback` (Optional)
 
-         An async funtion that will be called when errors occour
+         An async funtion that will be called when errors occour,
+         the exception that where raised will be passed.
 
         https://docs.github.com/en/rest/reference/activity#list-public-events
         """
@@ -93,26 +95,22 @@ class _GitHubEventsBaseNamespace(BaseNamespace):
                     _last_etag = response.headers.etag
                     _poll_time = int(response.headers.x_poll_interval or 60)
 
-                async def _handle_event(event: GitHubEventModel) -> None:
-                    LOGGER.debug("New %s for %s", event.type, name)
-                    try:
-                        await event_callback(event)
-                    except Exception as err:
-                        if error_callback is not None:
-                            await error_callback(err)
-                    return
-
                 response.data = [GitHubEventModel(event) for event in response.data or []]
 
                 if response.data:
-                    await asyncio.gather(
-                        *[
-                            _handle_event(event)
-                            for event in response.data
-                            if event.created_at > _start_time.isoformat()
-                        ]
-                    )
+                    for event in response.data:
+                        if event.created_at < _start_time.isoformat():
+                            continue
+
+                        LOGGER.debug("New %s for %s", event.type, event)
+                        try:
+                            await event_callback(event)
+                        except Exception as err:
+                            if error_callback is not None:
+                                await error_callback(GitHubException(err))
+
                 await asyncio.sleep(_poll_time)
+
             if uuid in self._subscriptions:
                 self._subscriptions.pop(uuid)
 
@@ -163,13 +161,15 @@ class GitHubEventsReposNamespace(_GitHubEventsBaseNamespace):
 
          `event_callback`
 
-         An async funtion that will be called when new events come in
+         An async funtion that will be called when new events come in,
+         the event will be passed as the first argument.
 
          `error_callback` (Optional)
 
-         An async funtion that will be called when errors occour
+         An async funtion that will be called when errors occour,
+         the exception that where raised will be passed.
 
-        https://docs.github.com/en/rest/reference/activity#list-public-events
+        https://docs.github.com/en/rest/reference/activity#list-repository-events
         """
         return await super().subscribe(
             name=repository,
