@@ -37,6 +37,7 @@ class GitHubEventModel(GitHubDataModelBase):
     id: str | None = None
     type: str | None = None
     actor: _Actor | None = None
+    org: _Actor | None = None
     repo: _Repo | None = None
     payload: Dict[str, Any] | None = None
     public: bool | None = None

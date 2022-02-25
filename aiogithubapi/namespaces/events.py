@@ -7,13 +7,14 @@ from __future__ import annotations
 
 import asyncio
 from datetime import datetime
-from typing import TYPE_CHECKING, Any, Awaitable, Callable, Dict, List, Literal
+from typing import TYPE_CHECKING, Any, Awaitable, Callable, Dict, Literal
 from uuid import UUID, uuid4
 
 from ..const import LOGGER, GitHubRequestKwarg, RepositoryType
 from ..exceptions import (
     GitHubAuthenticationException,
     GitHubException,
+    GitHubNotFoundException,
     GitHubNotModifiedException,
 )
 from ..models.events import GitHubEventModel
@@ -33,7 +34,12 @@ class _GitHubEventsBaseNamespace(BaseNamespace):
     ) -> None:
         super().__init__(client)
         self._space = space
-        self._subscriptions: List[UUID] = []
+        self._subscriptions: Dict[str, asyncio.TimerHandle[None]] = {}
+
+    @staticmethod
+    async def _wait(wait_time: float) -> None:
+        """Wait for x seconds"""
+        await asyncio.sleep(wait_time)
 
     async def subscribe(
         self,
@@ -42,7 +48,7 @@ class _GitHubEventsBaseNamespace(BaseNamespace):
         *,
         error_callback: Callable[[GitHubException], Awaitable[None]] | None = None,
         **kwargs: Dict[GitHubRequestKwarg, Any],
-    ) -> UUID:
+    ) -> str:
         """
          Subscribe to an event stream.
          This returns an ID you can use with the unsubscribe method to stop listening for events.
@@ -65,16 +71,15 @@ class _GitHubEventsBaseNamespace(BaseNamespace):
 
         https://docs.github.com/en/rest/reference/activity#list-public-events
         """
-        uuid = uuid4()
-        self._subscriptions.append(uuid)
+        subscription_id = str(uuid4())
 
         async def _subscriber():
             _last_etag: str | None = None
             _backoff_time: int = 300
             _poll_time: int = 60
-            _start_time = datetime.utcnow()
+            _target_time = datetime.utcnow().isoformat()
             LOGGER.debug("Starting activity stream for github.com/%s", name)
-            while uuid in self._subscriptions:
+            while subscription_id in self._subscriptions:
                 try:
                     response = await self._client.async_call_api(
                         endpoint=f"/{self._space}/{name}/events",
@@ -82,58 +87,65 @@ class _GitHubEventsBaseNamespace(BaseNamespace):
                         **kwargs,
                     )
                 except GitHubNotModifiedException:
-                    await asyncio.sleep(_poll_time)
+                    await self._wait(_poll_time)
                     continue
-                except GitHubAuthenticationException as err:
+                except (GitHubAuthenticationException, GitHubNotFoundException) as err:
                     await error_callback(err)
                     break
                 except GitHubException as err:
                     if error_callback is not None:
                         await error_callback(err)
-                    await asyncio.sleep(_backoff_time)
+                    await self._wait(_backoff_time)
                     continue
                 else:
                     _last_etag = response.headers.etag
                     _poll_time = int(response.headers.x_poll_interval or 60)
 
-                response.data = [GitHubEventModel(event) for event in response.data or []]
+                    response.data = [
+                        GitHubEventModel(event) for event in reversed(response.data or [])
+                    ]
 
-                if response.data:
                     for event in response.data:
-                        if event.created_at < _start_time.isoformat():
+                        if event.created_at < _target_time:
                             continue
+                        _target_time = event.created_at
 
-                        LOGGER.debug("New %s for %s", event.type, event)
+                        LOGGER.debug("New %s for %s", event.type, name)
                         try:
                             await event_callback(event)
                         except Exception as err:
                             if error_callback is not None:
                                 await error_callback(GitHubException(err))
 
-                await asyncio.sleep(_poll_time)
+                await self._wait(_poll_time)
 
-            if uuid in self._subscriptions:
-                self._subscriptions.pop(uuid)
+            LOGGER.debug("Stopping activity stream for github.com/%s", name)
+            self.unsubscribe(subscription_id=subscription_id)
 
-        self._client._loop.call_later(1, self._client._loop.create_task, _subscriber())
+        handler = self._client._loop.call_soon(self._client._loop.create_task, _subscriber())
+        self._subscriptions[subscription_id] = handler
 
-        return uuid
+        return subscription_id
 
-    def unsubscribe(self, *, subscription: str | None = None) -> None:
+    def unsubscribe(self, *, subscription_id: str | None = None) -> None:
         """
         Unsubscribe to an event stream
 
         **Arguments**:
 
-        `subscription` (Optional)
+        `subscription_id` (Optional)
 
         The ID you got when you subscribed, if omitted all active subscriptions will be stopped.
         """
-        if not subscription:
-            self._subscriptions.clear()
+        if not subscription_id:
+            for subscription_id in list(self._subscriptions):
+                handler = self._subscriptions[subscription_id]
+                handler.cancel()
+                del self._subscriptions[subscription_id]
             return
-        if subscription in self._subscriptions:
-            self._subscriptions.pop(subscription)
+        if handler := self._subscriptions.get(subscription_id):
+            handler.cancel()
+            del self._subscriptions[subscription_id]
 
 
 class GitHubEventsReposNamespace(_GitHubEventsBaseNamespace):
@@ -149,7 +161,7 @@ class GitHubEventsReposNamespace(_GitHubEventsBaseNamespace):
         *,
         error_callback: Callable[[], Awaitable[None]] | None = None,
         **kwargs: Dict[GitHubRequestKwarg, Any],
-    ) -> UUID:
+    ) -> str:
         """
          Subscribe to an event stream.
          This returns an ID you can use with the unsubscribe method to stop listening for events.
