@@ -69,6 +69,7 @@ class GitHubClient(GitHubBase):
             kwargs=kwargs,
         )
         self._session = session
+        self._loop = asyncio.get_running_loop()
 
     async def async_call_api(
         self,

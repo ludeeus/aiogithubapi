@@ -42,6 +42,7 @@ class GitHubResponseHeadersModel(GitHubDataModelBase):
     x_github_request_id: str | None = None
     x_oauth_client_id: str | None = None
     x_oauth_scopes: str | None = None
+    x_poll_interval: str | None = None
     x_ratelimit_limit: str | None = None
     x_ratelimit_remaining: str | None = None
     x_ratelimit_reset: str | None = None
