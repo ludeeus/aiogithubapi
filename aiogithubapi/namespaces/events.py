@@ -11,10 +11,12 @@ from typing import TYPE_CHECKING, Any, Awaitable, Callable, Dict, List, Literal
 from uuid import UUID, uuid4
 
 from ..const import LOGGER, GitHubRequestKwarg, RepositoryType
-from ..exceptions import GitHubAuthenticationException, GitHubException, GitHubNotModifiedException
+from ..exceptions import (
+    GitHubAuthenticationException,
+    GitHubException,
+    GitHubNotModifiedException,
+)
 from ..models.events import GitHubEventModel
-from ..models.response import GitHubResponseModel
-from ..models.user import GitHubAuthenticatedUserModel
 from .base import BaseNamespace
 
 if TYPE_CHECKING:
@@ -63,7 +65,6 @@ class _GitHubEventsBaseNamespace(BaseNamespace):
 
         https://docs.github.com/en/rest/reference/activity#list-public-events
         """
-        loop = asyncio.get_running_loop()
         uuid = uuid4()
         self._subscriptions.append(uuid)
 
@@ -114,7 +115,7 @@ class _GitHubEventsBaseNamespace(BaseNamespace):
             if uuid in self._subscriptions:
                 self._subscriptions.pop(uuid)
 
-        loop.call_later(1, asyncio.create_task, _subscriber())
+        self._client._loop.call_later(1, self._client._loop.create_task, _subscriber())
 
         return uuid
 
