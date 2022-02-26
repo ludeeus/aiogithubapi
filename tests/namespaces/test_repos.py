@@ -76,7 +76,10 @@ async def test_subscription(github_api: GitHubAPI, mock_requests: MockedRequests
 
 @pytest.mark.asyncio
 async def test_subscription_exceptions_not_modified(
-    github_api: GitHubAPI, mock_response: MockResponse, wait_mock
+    github_api: GitHubAPI,
+    mock_response: MockResponse,
+    mock_requests: MockedRequests,
+    wait_mock: None,
 ):
     event_callback_mock = AsyncMock()
     error_callback_mock = AsyncMock()
@@ -89,7 +92,8 @@ async def test_subscription_exceptions_not_modified(
         error_callback=error_callback_mock,
     )
 
-    await asyncio.sleep(0.1)
+    while not mock_requests.called:
+        await asyncio.sleep(0)
 
     assert subscription_id in github_api.repos.events._subscriptions
     assert not event_callback_mock.called
@@ -101,7 +105,9 @@ async def test_subscription_exceptions_not_modified(
 
 @pytest.mark.asyncio
 async def test_subscription_exceptions_not_found(
-    github_api: GitHubAPI, mock_response: MockResponse, wait_mock
+    github_api: GitHubAPI,
+    mock_response: MockResponse,
+    wait_mock: None,
 ):
     event_callback_mock = AsyncMock()
     error_callback_mock = AsyncMock()
@@ -113,7 +119,9 @@ async def test_subscription_exceptions_not_found(
         event_callback=event_callback_mock,
         error_callback=error_callback_mock,
     )
-    await asyncio.sleep(0.1)
+
+    while not error_callback_mock.called:
+        await asyncio.sleep(0)
 
     assert not event_callback_mock.called
     assert error_callback_mock.called
@@ -124,7 +132,9 @@ async def test_subscription_exceptions_not_found(
 
 @pytest.mark.asyncio
 async def test_subscription_exception(
-    github_api: GitHubAPI, mock_response: MockResponse, wait_mock
+    github_api: GitHubAPI,
+    mock_response: MockResponse,
+    wait_mock: None,
 ):
     event_callback_mock = AsyncMock()
     error_callback_mock = AsyncMock()
@@ -137,7 +147,8 @@ async def test_subscription_exception(
         error_callback=error_callback_mock,
     )
 
-    await asyncio.sleep(0.1)
+    while not error_callback_mock.called:
+        await asyncio.sleep(0)
 
     assert not event_callback_mock.called
     assert error_callback_mock.called
@@ -148,7 +159,9 @@ async def test_subscription_exception(
 
 @pytest.mark.asyncio
 async def test_subscription_exception_in_handler(
-    github_api: GitHubAPI, mock_response: MockResponse, wait_mock
+    github_api: GitHubAPI,
+    mock_response: MockResponse,
+    wait_mock: None,
 ):
     event_callback_mock = AsyncMock(side_effect=TypeError)
     error_callback_mock = AsyncMock()
@@ -159,7 +172,8 @@ async def test_subscription_exception_in_handler(
         error_callback=error_callback_mock,
     )
 
-    await asyncio.sleep(0.1)
+    while not event_callback_mock.called and not error_callback_mock.called:
+        await asyncio.sleep(0)
 
     assert event_callback_mock.called
     assert error_callback_mock.called
