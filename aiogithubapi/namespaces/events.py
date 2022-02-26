@@ -8,7 +8,7 @@ from __future__ import annotations
 import asyncio
 from datetime import datetime
 from typing import TYPE_CHECKING, Any, Awaitable, Callable, Dict, Literal
-from uuid import UUID, uuid4
+from uuid import uuid4
 
 from ..const import LOGGER, GitHubRequestKwarg, RepositoryType
 from ..exceptions import (
@@ -16,12 +16,17 @@ from ..exceptions import (
     GitHubException,
     GitHubNotFoundException,
     GitHubNotModifiedException,
+    GitHubPermissionException,
 )
+from ..helpers import repository_full_name
 from ..models.events import GitHubEventModel
 from .base import BaseNamespace
 
 if TYPE_CHECKING:
     from ..client import GitHubClient
+
+_DEFAULT_BACKOFF = 300
+_DEFAULT_POLL = 60
 
 
 class _GitHubEventsBaseNamespace(BaseNamespace):
@@ -75,10 +80,9 @@ class _GitHubEventsBaseNamespace(BaseNamespace):
 
         async def _subscriber():
             _last_etag: str | None = None
-            _backoff_time: int = 300
             _poll_time: int = 60
             _target_time = datetime.utcnow().isoformat()
-            LOGGER.debug("Starting activity stream for github.com/%s", name)
+            LOGGER.debug("Starting event subscription for github.com/%s", name)
             while subscription_id in self._subscriptions:
                 try:
                     response = await self._client.async_call_api(
@@ -89,17 +93,25 @@ class _GitHubEventsBaseNamespace(BaseNamespace):
                 except GitHubNotModifiedException:
                     await self._wait(_poll_time)
                     continue
-                except (GitHubAuthenticationException, GitHubNotFoundException) as err:
+                except (
+                    GitHubAuthenticationException,
+                    GitHubNotFoundException,
+                    GitHubPermissionException,
+                ) as err:
                     await error_callback(err)
                     break
                 except GitHubException as err:
                     if error_callback is not None:
                         await error_callback(err)
-                    await self._wait(_backoff_time)
+                    await self._wait(_DEFAULT_BACKOFF)
                     continue
                 else:
                     _last_etag = response.headers.etag
-                    _poll_time = int(response.headers.x_poll_interval or 60)
+                    _poll_time = (
+                        int(response.headers.x_poll_interval)
+                        if response.headers.x_poll_interval
+                        else _DEFAULT_POLL
+                    )
 
                     response.data = [
                         GitHubEventModel(event) for event in reversed(response.data or [])
@@ -119,7 +131,7 @@ class _GitHubEventsBaseNamespace(BaseNamespace):
 
                 await self._wait(_poll_time)
 
-            LOGGER.debug("Stopping activity stream for github.com/%s", name)
+            LOGGER.debug("Stopping event subscription for github.com/%s", name)
             self.unsubscribe(subscription_id=subscription_id)
 
         handler = self._client._loop.call_soon(self._client._loop.create_task, _subscriber())
@@ -185,7 +197,7 @@ class GitHubEventsReposNamespace(_GitHubEventsBaseNamespace):
         https://docs.github.com/en/rest/reference/activity#list-repository-events
         """
         return await super().subscribe(
-            name=repository,
+            name=repository_full_name(repository),
             event_callback=event_callback,
             error_callback=error_callback,
             **kwargs,
