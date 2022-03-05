@@ -8,7 +8,13 @@ import pytest
 from aiogithubapi import GitHubAPI, GitHubEventModel, GitHubRepositoryModel
 from aiogithubapi.const import HttpContentType
 
-from tests.common import HEADERS, HEADERS_TEXT, TEST_REPOSITORY_NAME, MockedRequests, MockResponse
+from tests.common import (
+    HEADERS,
+    HEADERS_TEXT,
+    TEST_REPOSITORY_NAME,
+    MockedRequests,
+    MockResponse,
+)
 
 
 @pytest.fixture()
