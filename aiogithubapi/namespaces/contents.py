@@ -57,7 +57,7 @@ class GitHubContentsNamespace(BaseNamespace):
         )
 
         if isinstance(response.data, list):
-            response.data = [GitHubContentsModel(data) for data in response.data]
+            response.data = [GitHubContentsModel.parse_obj(data) for data in response.data]
         else:
-            response.data = GitHubContentsModel(response.data)
+            response.data = GitHubContentsModel.parse_obj(response.data)
         return response

@@ -55,7 +55,7 @@ class GitHubIssuesNamespace(BaseNamespace):
             endpoint=f"/repos/{repository_full_name(repository)}/issues/{issue_number}",
             **kwargs,
         )
-        response.data = GitHubIssueModel(response.data)
+        response.data = GitHubIssueModel.parse_obj(response.data)
         return response
 
     async def create(
@@ -84,7 +84,7 @@ class GitHubIssuesNamespace(BaseNamespace):
             data=data,
             **{**kwargs, GitHubRequestKwarg.METHOD: HttpMethod.POST},
         )
-        response.data = GitHubIssueModel(response.data)
+        response.data = GitHubIssueModel.parse_obj(response.data)
         return response
 
     async def update(
@@ -118,7 +118,7 @@ class GitHubIssuesNamespace(BaseNamespace):
             data=data,
             **{**kwargs, GitHubRequestKwarg.METHOD: HttpMethod.PATCH},
         )
-        response.data = GitHubIssueModel(response.data)
+        response.data = GitHubIssueModel.parse_obj(response.data)
         return response
 
     async def lock(
@@ -205,7 +205,7 @@ class GitHubIssuesNamespace(BaseNamespace):
             endpoint=f"/repos/{repository_full_name(repository)}/issues",
             **kwargs,
         )
-        response.data = [GitHubIssueModel(data) for data in response.data]
+        response.data = [GitHubIssueModel.parse_obj(data) for data in response.data]
         return response
 
     async def get_comment(

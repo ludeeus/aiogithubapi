@@ -1,14 +1,14 @@
 """GitHub device login data class."""
 from __future__ import annotations
 
-from .base import GitHubDataModelBase
+from pydantic import BaseModel
 
 
-class GitHubLoginDeviceModel(GitHubDataModelBase):
+class GitHubLoginDeviceModel(BaseModel):
     """GitHub device login data class."""
 
-    device_code: str | None = None
-    user_code: str | None = None
-    verification_uri: str | None = None
-    expires_in: int | None = None
-    interval: int | None = None
+    device_code: str
+    user_code: str
+    verification_uri: str
+    expires_in: int
+    interval: int

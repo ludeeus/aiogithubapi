@@ -1,31 +1,31 @@
 """GitHub Activity event models"""
 from __future__ import annotations
+from datetime import datetime
+from typing import Any
 
-from typing import Any, Dict
-
-from .base import GitHubDataModelBase
+from pydantic import BaseModel
 
 
-class _Actor(GitHubDataModelBase):
+class _Actor(BaseModel):
     """Internal entry."""
 
-    id: str | None = None
-    login: str | None = None
-    display_login: str | None = None
-    gravatar_id: str | None = None
-    url: str | None = None
-    avatar_url: str | None = None
+    id: str
+    login: str
+    display_login: str
+    gravatar_id: str
+    url: str
+    avatar_url: str
 
 
-class _Repo(GitHubDataModelBase):
+class _Repo(BaseModel):
     """Internal entry."""
 
-    id: str | None = None
-    name: str | None = None
-    url: str | None = None
+    id: str
+    name: str
+    url: str
 
 
-class GitHubEventModel(GitHubDataModelBase):
+class GitHubEventModel(BaseModel):
     """
     GitHub base event data class.
 
@@ -34,19 +34,11 @@ class GitHubEventModel(GitHubDataModelBase):
     https://docs.github.com/en/developers/webhooks-and-events/events/github-event-types
     """
 
-    id: str | None = None
-    type: str | None = None
-    actor: _Actor | None = None
-    org: _Actor | None = None
-    repo: _Repo | None = None
-    payload: Dict[str, Any] | None = None
-    public: bool | None = None
-    created_at: str | None = None
-
-    def _generate_actor(self, data: Dict[str, Any] | None) -> _Actor:
-        """Generate actor data."""
-        return _Actor(data) if data else None
-
-    def _generate_repo(self, data: Dict[str, Any] | None) -> _Repo:
-        """Generate repo data."""
-        return _Repo(data) if data else None
+    id: str
+    type: str
+    actor: _Actor
+    org: _Actor
+    repo: _Repo
+    payload: dict[str, Any]
+    public: bool
+    created_at: datetime

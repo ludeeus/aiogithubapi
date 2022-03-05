@@ -41,7 +41,7 @@ class GitHubTrafficNamespace(BaseNamespace):
             endpoint=f"/repos/{repository}/traffic/clones",
             **kwargs,
         )
-        response.data = GitHubClonesModel(response.data)
+        response.data = GitHubClonesModel(**response.data)
         return response
 
     async def views(

@@ -1,96 +1,67 @@
 """GitHub commit data class."""
 from __future__ import annotations
 
-from typing import Any, Dict
+from pydantic import BaseModel
 
-from .base import GitHubDataModelBase
-from .user import GitHubUserModel
+from .user import GitHubBaseUserModel
 
 
-class _Author(GitHubDataModelBase):
+class _Author(BaseModel):
     """Internal entry."""
 
-    name: str | None = None
-    email: str | None = None
-    date: str | None = None
+    name: str
+    email: str
+    date: str
 
 
 class _Committer(_Author):
     """Internal entry."""
 
 
-class _Tree(GitHubDataModelBase):
+class _Tree(BaseModel):
     """Internal entry."""
 
-    sha: str | None = None
-    url: str | None = None
+    sha: str
+    url: str
 
 
-class _Verification(GitHubDataModelBase):
+class _Verification(BaseModel):
     """Internal entry."""
 
-    verified: bool | None = None
-    reason: str | None = None
-    signature: str | None = None
-    payload: str | None = None
+    verified: bool
+    reason: str
+    signature: str | None
+    payload: str | None
 
 
-class _Parents(GitHubDataModelBase):
+class _Parents(BaseModel):
     """Internal entry."""
 
-    sha: str | None = None
-    url: str | None = None
-    html_url: str | None = None
+    sha: str
+    url: str
+    html_url: str
 
 
-class _Commit(GitHubDataModelBase):
+class _Commit(BaseModel):
     """Internal entry."""
 
-    author: _Author | None = None
-    committer: _Committer | None = None
-    message: str | None = None
-    tree: _Tree | None = None
-    url: str | None = None
-    comment_count: int | None = None
-    verification: _Verification | None = None
-
-    def _generate_author(self, data: Dict[str, Any] | None) -> _Author:
-        """Generate author data."""
-        return _Author(data) if data else None
-
-    def _generate_committer(self, data: Dict[str, Any] | None) -> _Committer:
-        """Generate committer data."""
-        return _Committer(data) if data else None
-
-    def _generate_tree(self, data: Dict[str, Any] | None) -> _Tree:
-        """Generate tree data."""
-        return _Tree(data) if data else None
-
-    def _generate_verification(self, data: Dict[str, Any] | None) -> _Verification:
-        """Generate verification data."""
-        return _Verification(data) if data else None
+    author: _Author
+    committer: _Committer
+    message: str
+    tree: _Tree
+    url: str
+    comment_count: int
+    verification: _Verification
 
 
-class GitHubCommitModel(GitHubDataModelBase):
+class GitHubCommitModel(BaseModel):
     """GitHub commit data class."""
 
-    sha: str | None = None
-    commit: _Commit | None = None
-    url: str | None = None
-    html_url: str | None = None
-    comments_url: str | None = None
-    author: GitHubUserModel | None = None
-    committer: GitHubUserModel | None = None
-    parents: list[_Parents] | None = None
-
-    def _generate_commit(self, data: Dict[str, Any] | None) -> _Commit:
-        """Generate commit data."""
-        return _Commit(data) if data else None
-
-    def _generate_author(self, data: Dict[str, Any] | None) -> GitHubUserModel:
-        """Generate author data."""
-        return GitHubUserModel(data) if data else None
-
-    def _generate_committer(self, data: Dict[str, Any] | None) -> GitHubUserModel:
-        """Generate committer data."""
-        return GitHubUserModel(data) if data else None
+    sha: str
+    commit: _Commit
+    url: str
+    html_url: str
+    comments_url: str
+    author: GitHubBaseUserModel
+    committer: GitHubBaseUserModel
+    parents: list[_Parents]

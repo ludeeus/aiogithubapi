@@ -22,6 +22,7 @@ async def wait_mock():
 @pytest.mark.asyncio
 async def test_subscription(github_api: GitHubAPI, mock_requests: MockedRequests):
     event_callback_mock = AsyncMock()
+    raise KeyError
 
     subscription_id = await github_api.repos.events.subscribe(
         TEST_REPOSITORY_NAME, event_callback=event_callback_mock

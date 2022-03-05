@@ -1,15 +1,15 @@
 """GitHub label data class."""
 from __future__ import annotations
 
-from .base import GitHubDataModelBase
+from pydantic import BaseModel
 
 
-class GitHubLabelModel(GitHubDataModelBase):
+class GitHubLabelModel(BaseModel):
     """GitHub label data class."""
 
-    color: str | None = None
-    default: bool | None = None
-    description: str | None = None
-    id: int | None = None
-    name: str | None = None
-    url: str | None = None
+    color: str
+    default: bool
+    description: str
+    id: int
+    name: str
+    url: str

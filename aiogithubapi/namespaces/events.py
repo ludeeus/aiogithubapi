@@ -114,7 +114,7 @@ class _GitHubEventsBaseNamespace(BaseNamespace):
                     )
 
                     response.data = [
-                        GitHubEventModel(event) for event in reversed(response.data or [])
+                        GitHubEventModel.parse_obj(event) for event in reversed(response.data or [])
                     ]
 
                     for event in response.data:

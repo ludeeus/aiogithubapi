@@ -1,29 +1,28 @@
 """GitHub milestone data class."""
 from __future__ import annotations
 
-from .base import GitHubDataModelBase
-from .user import GitHubUserModel
+from datetime import datetime
+
+from pydantic import BaseModel
+
+from .user import GitHubBaseUserModel
 
 
-class GitHubMilestoneModel(GitHubDataModelBase):
+class GitHubMilestoneModel(BaseModel):
     """GitHub milestone data class."""
 
-    closed_at: str | None = None
-    closed_issues: int | None = None
-    created_at: str | None = None
-    description: str | None = None
-    due_on: str | None = None
-    html_url: str | None = None
-    id: int | None = None
-    labels_url: str | None = None
-    number: int | None = None
-    open_issues: int | None = None
-    state: str | None = None
-    title: str | None = None
-    updated_at: str | None = None
-    url: str | None = None
-    creator: GitHubUserModel | None = None
-
-    def _generate_creator(self, data: dict) -> GitHubUserModel:
-        """Generate the creator."""
-        return GitHubUserModel(data)
+    closed_at: datetime
+    closed_issues: int
+    created_at: datetime
+    description: str | None
+    due_on: datetime | None
+    html_url: str
+    id: int
+    labels_url: str
+    number: int
+    open_issues: int
+    state: str
+    title: str
+    updated_at: datetime
+    url: str
+    creator: GitHubBaseUserModel

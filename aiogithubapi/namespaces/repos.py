@@ -113,7 +113,7 @@ class GitHubReposNamespace(BaseNamespace):
             endpoint=f"/repos/{repository_full_name(repository)}/commits",
             **kwargs,
         )
-        response.data = [GitHubCommitModel(data) for data in response.data]
+        response.data = [GitHubCommitModel.parse_obj(data) for data in response.data]
         return response
 
     async def list_tags(

@@ -1,72 +1,67 @@
 """GitHub user models data class."""
 from __future__ import annotations
+from datetime import datetime
 
-from typing import Any, Dict
-
-from .base import GitHubDataModelBase
+from pydantic import BaseModel
 
 
-class GitHubBaseUserModel(GitHubDataModelBase):
+class GitHubBaseUserModel(BaseModel):
     """GitHub base user data class."""
 
-    avatar_url: str | None = None
-    events_url: str | None = None
-    followers_url: str | None = None
-    following_url: str | None = None
-    gists_url: str | None = None
-    gravatar_id: str | None = None
-    html_url: str | None = None
-    id: int | None = None
-    login: str | None = None
-    organizations_url: str | None = None
-    received_events_url: str | None = None
-    repos_url: str | None = None
-    site_admin: bool | None = None
-    starred_url: str | None = None
-    subscriptions_url: str | None = None
-    type: str | None = None
-    url: str | None = None
+    avatar_url: str
+    events_url: str
+    followers_url: str
+    following_url: str
+    gists_url: str
+    gravatar_id: str
+    html_url: str
+    id: int
+    login: str
+    organizations_url: str
+    received_events_url: str
+    repos_url: str
+    site_admin: bool
+    starred_url: str
+    subscriptions_url: str
+    type: str
+    url: str
 
 
 class GitHubUserModel(GitHubBaseUserModel):
     """GitHub user data class."""
 
-    bio: str | None = None
-    blog: str | None = None
-    company: str | None = None
-    created_at: str | None = None
-    email: str | None = None
-    followers: int | None = None
-    following: int | None = None
-    hireable: bool | None = None
-    location: str | None = None
-    name: str | None = None
-    public_gists: int | None = None
-    public_repos: int | None = None
-    twitter_username: str | None = None
-    updated_at: str | None = None
+    bio: str
+    blog: str
+    company: str
+    created_at: datetime
+    email: str
+    followers: int
+    following: int
+    hireable: bool
+    location: str
+    name: str
+    public_gists: int
+    public_repos: int
+    twitter_username: str
+    updated_at: datetime
 
 
 class GitHubAuthenticatedUserModel(GitHubUserModel):
     """GitHub authenticated user data class."""
 
-    collaborators: int | None = None
-    disk_usage: int | None = None
-    owned_private_repos: int | None = None
-    plan: GitHubUserPlanModel | None = None
-    private_gists: int | None = None
-    total_private_repos: int | None = None
-    two_factor_authentication: bool | None = None
-
-    def _generate_plan(self, data: Dict[str, Any] | None) -> GitHubUserPlanModel:
-        """Generate GitHub user plan model."""
-        return GitHubUserPlanModel(data) if data else None
+    collaborators: int
+    disk_usage: int
+    owned_private_repos: int
+    plan: GitHubUserPlanModel
+    private_gists: int
+    total_private_repos: int
+    two_factor_authentication: bool
 
 
-class GitHubUserPlanModel(GitHubDataModelBase):
+class GitHubUserPlanModel(BaseModel):
     """GitHub user plan data class."""
 
-    collaborators: int | None = None
-    name: str | None = None
-    private_repos: int | None = None
-    space: int | None = None
+    collaborators: int
+    name: str
+    private_repos: int
+    space: int

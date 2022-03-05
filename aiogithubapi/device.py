@@ -110,7 +110,7 @@ class GitHubDeviceAPI(GitHubBase):
                 },
             },
         )
-        response.data = GitHubLoginDeviceModel(response.data)
+        response.data = GitHubLoginDeviceModel.parse_obj(response.data)
         self._interval = response.data.interval
         self._expires = datetime.timestamp(datetime.now()) + response.data.expires_in
         return response
