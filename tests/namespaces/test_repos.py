@@ -8,7 +8,7 @@ import pytest
 from aiogithubapi import GitHubAPI, GitHubEventModel, GitHubRepositoryModel
 from aiogithubapi.const import HttpContentType
 
-from tests.common import TEST_REPOSITORY_NAME, MockedRequests, MockResponse
+from tests.common import HEADERS, HEADERS_TEXT, TEST_REPOSITORY_NAME, MockedRequests, MockResponse
 
 
 @pytest.fixture()
@@ -62,7 +62,7 @@ async def test_tarball(
     mock_requests: MockedRequests,
     mock_response: MockResponse,
 ):
-    mock_response.mock_headers = {"content-type": HttpContentType.BASE_GZIP}
+    mock_response.mock_headers = {**HEADERS, "content-type": HttpContentType.BASE_GZIP}
     response = await github_api.repos.tarball("octocat/hello-world")
     assert isinstance(response.data, bytes)
     assert mock_requests.called == 1
@@ -85,7 +85,7 @@ async def test_zipball(
     mock_requests: MockedRequests,
     mock_response: MockResponse,
 ):
-    mock_response.mock_headers = {"content-type": HttpContentType.BASE_ZIP}
+    mock_response.mock_headers = {**HEADERS, "content-type": HttpContentType.BASE_ZIP}
     response = await github_api.repos.zipball("octocat/hello-world")
     assert isinstance(response.data, bytes)
     assert mock_requests.called == 1
@@ -99,4 +99,31 @@ async def test_zipball(
     assert (
         mock_requests.last_request["url"]
         == "https://api.github.com/repos/octocat/hello-world/zipball/main"
+    )
+
+
+@pytest.mark.asyncio
+async def test_readme(
+    github_api: GitHubAPI,
+    mock_requests: MockedRequests,
+    mock_response: MockResponse,
+):
+    mock_response.mock_headers = HEADERS_TEXT
+
+    response = await github_api.repos.readme(TEST_REPOSITORY_NAME)
+    assert response.status == 200
+    assert isinstance(response.data, str)
+    assert mock_requests.called == 1
+    assert (
+        mock_requests.last_request["url"]
+        == "https://api.github.com/repos/octocat/hello-world/readme/"
+    )
+
+    response = await github_api.repos.readme(TEST_REPOSITORY_NAME, dir="test")
+    assert response.status == 200
+    assert isinstance(response.data, str)
+    assert mock_requests.called == 2
+    assert (
+        mock_requests.last_request["url"]
+        == "https://api.github.com/repos/octocat/hello-world/readme/test"
     )

@@ -53,7 +53,13 @@ HEADERS_RATELIMITED = {
 HEADERS_TEXT = {**HEADERS, "Content-Type": HttpContentType.TEXT_PLAIN}
 
 
-TEXT_ENDPOINTS = ("markdown", "zen", "octocat")
+TEXT_ENDPOINTS = (
+    "markdown",
+    "zen",
+    "octocat",
+    "repos/octocat/hello-world/readme/",
+    "repos/octocat/hello-world/readme/test",
+)
 BYTES_ENDPOINT = ("tarball", "zipball")
 
 

@@ -157,7 +157,7 @@ class GitHubReposNamespace(BaseNamespace):
 
          `ref`
 
-         If you omit ref, the repository's default branch (usually main) will be used.
+         The name of the commit/branch/tag. Default: the repository's default branch (usually main)
 
         https://docs.github.com/en/rest/reference/repos#download-a-repository-archive-tar
         """
@@ -185,12 +185,40 @@ class GitHubReposNamespace(BaseNamespace):
 
          `ref`
 
-         If you omit ref, the repository's default branch (usually main) will be used.
+         The name of the commit/branch/tag. Default: the repository's default branch (usually main)
 
         https://docs.github.com/en/rest/reference/repos#download-a-repository-archive-zip
         """
 
         return await self._client.async_call_api(
             endpoint=f"/repos/{repository_full_name(repository)}/zipball/{ref or ''}",
+            **kwargs,
+        )
+
+    async def readme(
+        self,
+        repository: RepositoryType,
+        *,
+        dir: str | None = None,
+        **kwargs: Dict[GitHubRequestKwarg, Any],
+    ) -> GitHubResponseModel[str]:
+        """
+         Gets the preferred README for a repository.
+
+         **Arguments**:
+
+         `repository`
+
+         The repository to return the zip from, example "octocat/hello-world"
+
+         `dir`
+
+         The alternate path to look for a README file
+
+        https://docs.github.com/en/rest/reference/repos#download-a-repository-archive-zip
+        """
+
+        return await self._client.async_call_api(
+            endpoint=f"/repos/{repository_full_name(repository)}/readme/{dir or ''}",
             **kwargs,
         )
