@@ -54,6 +54,7 @@ HEADERS_TEXT = {**HEADERS, "Content-Type": HttpContentType.TEXT_PLAIN}
 
 
 TEXT_ENDPOINTS = ("markdown", "zen", "octocat")
+BYTES_ENDPOINT = ("tarball", "zipball")
 
 
 @dataclass
@@ -93,7 +94,7 @@ class MockResponse:
             pages[rel_type] = {"rel": rel_type, "url": link}
         return pages
 
-    async def json(self):
+    async def json(self, **_):
         """json."""
         if self.mock_raises is not None:
             raise self.mock_raises  # pylint: disable=raising-bad-type
@@ -131,6 +132,10 @@ class MockResponse:
             if self.throw_on_file_error:
                 raise OSError(f"Missing fixture for {self.mock_endpoint}") from None
             return ""
+
+    async def read(self, **_):
+        """read."""
+        return b""
 
     def clear(self):
         """clear."""

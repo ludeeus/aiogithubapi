@@ -124,14 +124,19 @@ class GitHubClient(GitHubBase):
             return response
 
         try:
-            response.data = await result.text(encoding="utf-8")
-            if HttpContentType.BASE_JSON in str(response.headers.content_type):
-                response.data = json.loads(response.data)
+            if HttpContentType.BASE_JSON in (response.headers.content_type or ""):
+                response.data = await result.json(encoding="utf-8")
+            elif (response.headers.content_type or "") in (
+                HttpContentType.BASE_ZIP,
+                HttpContentType.BASE_GZIP,
+            ):
+                response.data = await result.read()
+            else:
+                response.data = await result.text(encoding="utf-8")
         except BaseException as exception:
             raise GitHubException(
                 f"Could not handle response data from '{self._base_request_data.request_url(endpoint)}' with - {exception}"
             )
-
         message = response.data.get("message") if isinstance(response.data, dict) else None
 
         if message is not None and "rate limit" in message:
