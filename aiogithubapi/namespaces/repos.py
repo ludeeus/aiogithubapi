@@ -138,3 +138,59 @@ class GitHubReposNamespace(BaseNamespace):
         )
         response.data = [GitHubTagModel(data) for data in response.data]
         return response
+
+    async def tarball(
+        self,
+        repository: RepositoryType,
+        *,
+        ref: str | None = None,
+        **kwargs: Dict[GitHubRequestKwarg, Any],
+    ) -> GitHubResponseModel[bytes]:
+        """
+         Download a repository archive (tar)
+
+         **Arguments**:
+
+         `repository`
+
+         The repository to return the tar from, example "octocat/hello-world"
+
+         `ref`
+
+         If you omit ref, the repository's default branch (usually main) will be used.
+
+        https://docs.github.com/en/rest/reference/repos#download-a-repository-archive-tar
+        """
+
+        return await self._client.async_call_api(
+            endpoint=f"/repos/{repository_full_name(repository)}/tarball/{ref or ''}",
+            **kwargs,
+        )
+
+    async def zipball(
+        self,
+        repository: RepositoryType,
+        *,
+        ref: str | None = None,
+        **kwargs: Dict[GitHubRequestKwarg, Any],
+    ) -> GitHubResponseModel[bytes]:
+        """
+         Download a repository archive (zip)
+
+         **Arguments**:
+
+         `repository`
+
+         The repository to return the zip from, example "octocat/hello-world"
+
+         `ref`
+
+         If you omit ref, the repository's default branch (usually main) will be used.
+
+        https://docs.github.com/en/rest/reference/repos#download-a-repository-archive-zip
+        """
+
+        return await self._client.async_call_api(
+            endpoint=f"/repos/{repository_full_name(repository)}/zipball/{ref or ''}",
+            **kwargs,
+        )

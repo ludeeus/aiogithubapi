@@ -163,6 +163,8 @@ class HttpContentType(str, Enum):
     """HTTP Content Types."""
 
     BASE_JSON = "application/json"
+    BASE_ZIP = "application/zip"
+    BASE_GZIP = "application/x-gzip"
 
     JSON = "application/json;charset=utf-8"
     TEXT_PLAIN = "text/plain;charset=utf-8"
