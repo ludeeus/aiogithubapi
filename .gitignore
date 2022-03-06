@@ -1,5 +1,6 @@
 *egg*
 __pycache__
+__target__
 .coverage
 coverage.xml
 .vscode

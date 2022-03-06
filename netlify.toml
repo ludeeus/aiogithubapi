@@ -1,0 +1,9 @@
+[build]
+publish = "docs/aiogithubapi/"
+command = """
+restore_home_cache ".cache" "pip cache" &&
+restore_cwd_cache '.venv' 'python virtualenv' &&
+pip3 install -q poetry &&
+poetry install &&
+poetry run pdoc --html --output-dir docs aiogithubapi
+"""
