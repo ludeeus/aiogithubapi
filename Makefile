@@ -24,7 +24,7 @@ test: ## Run all tests
 lint: isort black ## Lint all files
 
 generate: ## Generate models
-	@poetry run datamodel-codegen --url https://raw.githubusercontent.com/github/rest-api-description/main/descriptions/api.github.com/api.github.com.json --output aiogithubapi/generated_models.py --input-file-type openapi --reuse-model --use-default --target-python-version 3.8 --use-schema-description --use-standard-collections --strict-nullable --snake-case-field --use-annotated
+	@poetry run datamodel-codegen --url https://raw.githubusercontent.com/github/rest-api-description/main/descriptions/api.github.com/api.github.com.json --output aiogithubapi/models/generated.py --input-file-type openapi --reuse-model --use-default --target-python-version 3.8 --use-schema-description --snake-case-field --field-include-all-keys
 
 coverage: ## Check the coverage of the package
 	@poetry run pytest tests -rxf -x -v -l --cov=./ --cov-report=xml > /dev/null
