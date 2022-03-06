@@ -34,3 +34,13 @@ async def test_get_authenticated_user_repos(github_api: GitHubAPI, mock_requests
     assert first_repo.name == "Hello-World"
     assert mock_requests.called == 1
     assert mock_requests.last_request["url"] == "https://api.github.com/user/repos"
+
+
+@pytest.mark.asyncio
+async def test_get_authenticated_user_orgs(github_api: GitHubAPI, mock_requests: MockedRequests):
+    response = await github_api.user.orgs()
+    assert response.status == 200
+    first_repo = response.data[0]
+    assert first_repo.login == "github"
+    assert mock_requests.called == 1
+    assert mock_requests.last_request["url"] == "https://api.github.com/user/orgs"
