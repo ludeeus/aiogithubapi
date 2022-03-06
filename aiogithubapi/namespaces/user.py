@@ -8,6 +8,7 @@ from __future__ import annotations
 from typing import Any, Dict
 
 from ..const import GitHubRequestKwarg
+from ..models.organization import GitHubOrganizationMinimalModel
 from ..models.repository import GitHubRepositoryModel
 from ..models.response import GitHubResponseModel
 from ..models.user import GitHubAuthenticatedUserModel
@@ -71,4 +72,18 @@ class GitHubUserNamespace(BaseNamespace):
 
         response.data = [GitHubRepositoryModel(data) for data in response.data]
 
+        return response
+
+    async def orgs(
+        self,
+        **kwargs: Dict[GitHubRequestKwarg, Any],
+    ) -> GitHubResponseModel[list[GitHubOrganizationMinimalModel]]:
+        """
+         List public organization memberships for the specified user.
+
+
+        https://docs.github.com/en/rest/reference/orgs#list-organizations-for-the-authenticated-user
+        """
+        response = await self._client.async_call_api(endpoint="/user/orgs", **kwargs)
+        response.data = [GitHubOrganizationMinimalModel(data) for data in response.data or []]
         return response
