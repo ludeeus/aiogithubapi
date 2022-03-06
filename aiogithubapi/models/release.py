@@ -40,7 +40,7 @@ class GitHubReleaseModel(BaseModel):
     prerelease: bool
     created_at: str
     published_at: str
-    assets: list[dict]
+    assets: list[GitHubReleaseAssetModel]
     tarball_url: str
     zipball_url: str
     body: str
