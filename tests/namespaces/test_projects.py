@@ -1,8 +1,5 @@
 """Test projects namespace."""
 # pylint: disable=missing-docstring
-
-from types import NoneType
-
 import pytest
 
 from aiogithubapi import GitHubAPI, GitHubProjectModel
