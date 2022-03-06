@@ -17,6 +17,7 @@ TOKEN = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 CLIENT_ID = "xxxxxx"
 DEVICE_CODE = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 
+TEST_ORGANIZATION = "octocat"
 TEST_REPOSITORY_NAME = "octocat/hello-world"
 TEST_USER_NAME = "octocat"
 
