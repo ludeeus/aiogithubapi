@@ -67,7 +67,7 @@ class GitHubOrganizationModel(GitHubDataModelBase):
 
     def _generate_plan(self, data: Dict[str, Any]) -> _Plan:
         """Generate GitHubLabelModel list from data."""
-        return _Plan(data)
+        return _Plan(data) if data else None
 
 
 class GitHubOrganizationMinimalModel(GitHubDataModelBase):

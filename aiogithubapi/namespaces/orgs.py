@@ -14,38 +14,30 @@ from ..models.organization import (
 )
 from ..models.response import GitHubResponseModel
 from .base import BaseNamespace
+from .projects import GitHubOrganizationProjectsNamespace
 
 
 class GitHubOrgsNamespace(BaseNamespace):
     """Methods for the orgs namespace"""
 
+    def __post_init__(self) -> None:
+        self._projects = GitHubOrganizationProjectsNamespace(self._client)
+
+    @property
+    def projects(self) -> GitHubOrganizationProjectsNamespace:
+        """Property to access the users projects namespace"""
+        return self._projects
+
     async def list(
         self,
-        *,
-        since: int | None = None,
-        per_page: int | None = None,
         **kwargs: Dict[GitHubRequestKwarg, Any],
     ) -> GitHubResponseModel[list[GitHubOrganizationMinimalModel]]:
         """
          List organizations
 
-         **Arguments**:
-
-         `since`
-
-         An organization ID. Only return organizations with an ID greater than this ID.
-
-         `per_page`
-
-         Results per page (max 100) Default: `30`
 
         https://docs.github.com/en/rest/reference/orgs#list-organizations
         """
-        if since is not None:
-            kwargs["query"] = {**kwargs.get("query", {}), "since": since}
-        if per_page is not None:
-            kwargs["query"] = {**kwargs.get("query", {}), "per_page": per_page}
-
         response = await self._client.async_call_api(
             endpoint="/organizations",
             **kwargs,
