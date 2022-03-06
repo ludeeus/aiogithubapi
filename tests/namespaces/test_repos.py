@@ -1,11 +1,8 @@
 """Test repos namespace."""
 # pylint: disable=missing-docstring
-import asyncio
-from unittest.mock import AsyncMock, patch
-
 import pytest
 
-from aiogithubapi import GitHubAPI, GitHubEventModel, GitHubRepositoryModel
+from aiogithubapi import GitHubAPI, GitHubRepositoryModel
 from aiogithubapi.const import HttpContentType
 
 from tests.common import (
@@ -15,15 +12,6 @@ from tests.common import (
     MockedRequests,
     MockResponse,
 )
-
-
-@pytest.fixture()
-async def wait_mock():
-    async def _mocker(_, __):
-        await asyncio.sleep(0)
-
-    with patch("aiogithubapi.namespaces.events._GitHubEventsBaseNamespace._wait", _mocker):
-        yield
 
 
 @pytest.mark.asyncio

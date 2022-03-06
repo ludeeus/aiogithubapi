@@ -13,6 +13,7 @@ from .models.base import GitHubBase
 from .models.meta import GitHubMetaModel
 from .models.rate_limit import GitHubRateLimitModel
 from .models.response import GitHubResponseModel
+from .namespaces.orgs import GitHubOrgsNamespace
 from .namespaces.repos import GitHubReposNamespace
 from .namespaces.user import GitHubUserNamespace
 from .namespaces.users import GitHubUsersNamespace
@@ -71,21 +72,27 @@ class GitHub(GitHubBase):
         self._repos = GitHubReposNamespace(self._client)
         self._user = GitHubUserNamespace(self._client)
         self._users = GitHubUsersNamespace(self._client)
+        self._orgs = GitHubOrgsNamespace(self._client)
 
     @property
     def repos(self) -> GitHubReposNamespace:
-        """Property to access the repos namespace"""
+        """Property to access the repos namespace."""
         return self._repos
 
     @property
     def users(self) -> GitHubUsersNamespace:
-        """Property to access the users namespace"""
+        """Property to access the users namespace."""
         return self._users
 
     @property
     def user(self) -> GitHubUserNamespace:
-        """Property to access the user namespace"""
+        """Property to access the user namespace."""
         return self._user
+
+    @property
+    def orgs(self) -> GitHubOrgsNamespace:
+        """Property to access the orgs namespace."""
+        return self._orgs
 
     async def __aenter__(self) -> GitHub:
         """Async enter."""
