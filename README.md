@@ -37,9 +37,9 @@ Which includes:
 - The `GitHubDevice` class in `aiogithubapi`, replaced with `GitHubDeviceAPI`
 - The `GitHub` class in `aiogithubapi`, replaced with `GitHubAPI`
 
-Later this year, warning logs will start to be emitted for deprecated code.
+Later this year (2022), warning logs will start to be emitted for deprecated code.
 
-Early next year, the old code will be removed.
+Early next year (2023), the old code will be removed.
 
 ## Contribute
 

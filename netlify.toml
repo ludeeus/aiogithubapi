@@ -1,0 +1,7 @@
+[build]
+publish = "docs/aiogithubapi/"
+command = """
+pip3 install -q poetry &&
+poetry install &&
+poetry run pdoc --html --output-dir docs aiogithubapi
+"""

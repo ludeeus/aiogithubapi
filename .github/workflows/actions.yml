@@ -26,7 +26,10 @@ jobs:
         run:  make requirements
 
       - name: 🖤 Lint with Black
-        run:  black . --check
+        run:  make black-check
+
+      - name: 🔤 Lint with isort
+        run: make isort-check
 
   test:
     name: Test with Python ${{ matrix.python-version }}
@@ -47,10 +50,13 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: 📦 Install dependencies
-        run:  make requirements
+        run: make requirements
 
       - name: 🏃 Run tests
-        run:  make test
+        run: make test
+
+      - name: 🛠 Build
+        run: make build
 
   coverage:
     name: Coverage
