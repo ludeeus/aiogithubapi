@@ -19,6 +19,7 @@ from aiogithubapi.const import GitHubRequestKwarg, HttpStatusCode
 
 from tests.common import (
     EXPECTED_ETAG,
+    HEADERS,
     TEST_REQUEST_HEADERS,
     MockedRequests,
     MockResponse,
@@ -200,7 +201,7 @@ async def test_response_object(github_api: GitHubAPI, mock_response: MockRespons
     assert response.last_page_number == 46
     assert not response.is_last_page
 
-    mock_response.mock_headers = {"Link": None}
+    mock_response.mock_headers = {**HEADERS, "Link": None}
     response = await github_api.generic("/generic")
     assert response.is_last_page
     assert response.page_number == 1
@@ -208,6 +209,6 @@ async def test_response_object(github_api: GitHubAPI, mock_response: MockRespons
     assert response.last_page_number is None
     assert response.pages == {}
 
-    mock_response.mock_headers = {"Link": ""}
+    mock_response.mock_headers = {**HEADERS, "Link": ""}
     response = await github_api.generic("/generic")
     assert response.page_number == 1

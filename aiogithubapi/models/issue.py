@@ -1,6 +1,5 @@
 """GitHub issue data class."""
 from __future__ import annotations
-from datetime import datetime
 
 from pydantic import BaseModel
 
@@ -28,7 +27,7 @@ class GitHubIssueModel(BaseModel):
     closed_by: GitHubBaseUserModel
     comments_url: str
     comments: int
-    created_at: datetime
+    created_at: str
     events_url: str
     html_url: str
     id: int
@@ -39,7 +38,7 @@ class GitHubIssueModel(BaseModel):
     repository_url: str
     state: str
     title: str
-    updated_at: datetime
+    updated_at: str
     url: str
     pull_request: _PullRequest | None
     assignees: list[GitHubBaseUserModel]

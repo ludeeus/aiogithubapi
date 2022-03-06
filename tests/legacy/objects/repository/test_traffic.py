@@ -1,5 +1,4 @@
 # pylint: disable=missing-docstring, redefined-outer-name, unused-import
-import datetime
 import json
 
 import pytest

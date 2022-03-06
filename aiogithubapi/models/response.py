@@ -5,66 +5,75 @@ from __future__ import annotations
 from typing import Any, Dict, Generic
 
 from aiohttp.client import ClientResponse
+from pydantic import BaseModel, root_validator
 from yarl import URL
 
 from ..const import GenericType, HttpStatusCode
 from .base import GitHubDataModelBase
 
 
-class GitHubResponseHeadersModel(GitHubDataModelBase):
+class GitHubResponseHeadersModel(BaseModel):
     """GitHub response header model."""
 
-    access_control_allow_origin: str | None = None
-    access_control_expose_headers: str | None = None
-    cache_control: str | None = None
-    content_encoding: str | None = None
-    content_security_policy: str | None = None
-    content_length: str | None = None
-    content_type: str | None = None
-    date: str | None = None
-    etag: str | None = None
-    github_authentication_token_expiration: str | None = None
-    last_modified: str | None = None
-    link: str | None = None
-    referrer_policy: str | None = None
-    server: str | None = None
-    strict_transport_security: str | None = None
-    transfer_encoding: str | None = None
-    vary: str | None = None
-    retry_after: str | None = None
-    expect_ct: str | None = None
-    permissions_policy: str | None = None
-    x_accepted_oauth_scopes: str | None = None
-    x_commonmarker_version: str | None = None
-    x_content_type_options: str | None = None
-    x_frame_options: str | None = None
-    x_github_media_type: str | None = None
-    x_github_request_id: str | None = None
-    x_oauth_client_id: str | None = None
-    x_oauth_scopes: str | None = None
-    x_poll_interval: str | None = None
-    x_ratelimit_limit: str | None = None
-    x_ratelimit_remaining: str | None = None
-    x_ratelimit_reset: str | None = None
-    x_ratelimit_resource: str | None = None
-    x_ratelimit_used: str | None = None
-    x_xss_protection: str | None = None
+    access_control_allow_origin: str
+    access_control_expose_headers: str
+    cache_control: str
+    content_encoding: str
+    content_security_policy: str
+    content_length: str | None
+    content_type: str
+    date: str
+    etag: str
+    github_authentication_token_expiration: str | None
+    last_modified: str | None
+    link: str | None
+    referrer_policy: str
+    server: str
+    strict_transport_security: str
+    transfer_encoding: str
+    vary: str
+    retry_after: str | None
+    expect_ct: str | None
+    permissions_policy: str | None
+    x_accepted_oauth_scopes: str
+    x_commonmarker_version: str | None
+    x_content_type_options: str
+    x_frame_options: str
+    x_github_media_type: str
+    x_github_request_id: str
+    x_oauth_client_id: str | None
+    x_oauth_scopes: str
+    x_poll_interval: str | None
+    x_ratelimit_limit: str
+    x_ratelimit_remaining: str
+    x_ratelimit_reset: str
+    x_ratelimit_resource: str
+    x_ratelimit_used: str
+    x_xss_protection: str
+
+    @root_validator(pre=True)
+    def _convert_keys(cls, values):
+        new_values = {}
+        for key, value in values.items():
+            new_values[key.replace("-", "_").lower()] = value
+
+        return new_values
 
 
 class GitHubResponseModel(GitHubDataModelBase, Generic[GenericType]):
     """GitHub response data class."""
 
     _process_data: bool = False
-    _raw_data: ClientResponse
+    _raw_data: ClientResponse | None = None
     _slugify_keys: bool = True
 
-    headers: GitHubResponseHeadersModel = None
-    status: HttpStatusCode = None
+    headers: GitHubResponseHeadersModel | None = None
+    status: HttpStatusCode | None = None
     data: GenericType | None = None
 
     def __post_init__(self):
         """Post init."""
-        self.headers = GitHubResponseHeadersModel(self._raw_data.headers)
+        self.headers = GitHubResponseHeadersModel.parse_obj(self._raw_data.headers)
         self.status = self._raw_data.status
 
     @property

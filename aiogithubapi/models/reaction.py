@@ -1,26 +1,25 @@
 """GitHub reaction data class."""
-from __future__ import annotations
-
-from .base import GitHubDataModelBase
+from pydantic import BaseModel, root_validator
 
 
-class GitHubReactionModel(GitHubDataModelBase):
+class GitHubReactionModel(BaseModel):
     """GitHub reaction data class."""
 
-    _log_missing: bool = False
+    url: str
+    total_count: int
+    thumbs_up: int
+    thumbs_down: int
+    laugh: int
+    hooray: int
+    confused: int
+    heart: int
+    rocket: int
+    eyes: int
 
-    url: str | None = None
-    total_count: int | None = None
-    thumbs_up: int | None = None
-    thumbs_down: int | None = None
-    laugh: int | None = None
-    hooray: int | None = None
-    confused: int | None = None
-    heart: int | None = None
-    rocket: int | None = None
-    eyes: int | None = None
-
-    def __post_init__(self):
-        """Initialize attributes."""
-        self.thumbs_up = self._raw_data.get("+1", 0)
-        self.thumbs_down = self._raw_data.get("-1", 0)
+    @root_validator(pre=True)
+    def _handle_thumps_up_down(cls, values):
+        values["thumbs_down"] = values.get("-1", 0)
+        values["thumbs_up"] = values.get("+1", 0)
+        del values["+1"]
+        del values["-1"]
+        return values

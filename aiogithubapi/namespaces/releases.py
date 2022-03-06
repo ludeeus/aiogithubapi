@@ -39,5 +39,5 @@ class GitHubReleasesNamespace(BaseNamespace):
             endpoint=f"/repos/{repository}/releases",
             **kwargs,
         )
-        response.data = [GitHubReleaseModel(data) for data in response.data]
+        response.data = [GitHubReleaseModel.parse_obj(data) for data in response.data]
         return response

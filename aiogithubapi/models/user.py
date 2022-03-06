@@ -1,6 +1,5 @@
 """GitHub user models data class."""
 from __future__ import annotations
-from datetime import datetime
 
 from pydantic import BaseModel
 
@@ -33,7 +32,7 @@ class GitHubUserModel(GitHubBaseUserModel):
     bio: str
     blog: str
     company: str
-    created_at: datetime
+    created_at: str
     email: str
     followers: int
     following: int
@@ -43,7 +42,7 @@ class GitHubUserModel(GitHubBaseUserModel):
     public_gists: int
     public_repos: int
     twitter_username: str
-    updated_at: datetime
+    updated_at: str
 
 
 class GitHubAuthenticatedUserModel(GitHubUserModel):

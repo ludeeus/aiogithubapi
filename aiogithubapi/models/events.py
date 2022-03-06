@@ -1,6 +1,5 @@
 """GitHub Activity event models"""
 from __future__ import annotations
-from datetime import datetime
 from typing import Any
 
 from pydantic import BaseModel
@@ -41,4 +40,4 @@ class GitHubEventModel(BaseModel):
     repo: _Repo
     payload: dict[str, Any]
     public: bool
-    created_at: datetime
+    created_at: str
