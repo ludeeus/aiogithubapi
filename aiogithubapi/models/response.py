@@ -15,41 +15,41 @@ from .base import GitHubDataModelBase
 class GitHubResponseHeadersModel(BaseModel):
     """GitHub response header model."""
 
-    access_control_allow_origin: str
-    access_control_expose_headers: str
-    cache_control: str
-    content_encoding: str
-    content_security_policy: str
+    access_control_allow_origin: str | None
+    access_control_expose_headers: str | None
+    cache_control: str | None
+    content_encoding: str | None
+    content_security_policy: str | None
     content_length: str | None
-    content_type: str
-    date: str
+    content_type: str | None
+    date: str | None
     etag: str | None
     github_authentication_token_expiration: str | None
     last_modified: str | None
     link: str | None
-    referrer_policy: str
-    server: str
-    strict_transport_security: str
-    transfer_encoding: str
-    vary: str
+    referrer_policy: str | None
+    server: str | None
+    strict_transport_security: str | None
+    transfer_encoding: str | None
+    vary: str | None
     retry_after: str | None
     expect_ct: str | None
     permissions_policy: str | None
-    x_accepted_oauth_scopes: str
+    x_accepted_oauth_scopes: str | None
     x_commonmarker_version: str | None
-    x_content_type_options: str
-    x_frame_options: str
-    x_github_media_type: str
-    x_github_request_id: str
+    x_content_type_options: str | None
+    x_frame_options: str | None
+    x_github_media_type: str | None
+    x_github_request_id: str | None
     x_oauth_client_id: str | None
-    x_oauth_scopes: str
+    x_oauth_scopes: str | None
     x_poll_interval: str | None
-    x_ratelimit_limit: str
-    x_ratelimit_remaining: str
-    x_ratelimit_reset: str
-    x_ratelimit_resource: str
-    x_ratelimit_used: str
-    x_xss_protection: str
+    x_ratelimit_limit: str | None
+    x_ratelimit_remaining: str | None
+    x_ratelimit_reset: str | None
+    x_ratelimit_resource: str | None
+    x_ratelimit_used: str | None
+    x_xss_protection: str | None
 
     @root_validator(pre=True)
     def _convert_keys(cls, values):
