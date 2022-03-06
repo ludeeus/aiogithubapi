@@ -23,7 +23,7 @@ class GitHubResponseHeadersModel(BaseModel):
     content_length: str | None
     content_type: str
     date: str
-    etag: str
+    etag: str | None
     github_authentication_token_expiration: str | None
     last_modified: str | None
     link: str | None
