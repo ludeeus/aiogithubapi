@@ -18,6 +18,7 @@ from .contents import GitHubContentsNamespace
 from .events import GitHubEventsReposNamespace
 from .git import GitHubGitNamespace
 from .issues import GitHubIssuesNamespace
+from .projects import GitHubRepositoryProjectsNamespace
 from .pulls import GitHubPullsNamespace
 from .releases import GitHubReleasesNamespace
 from .traffic import GitHubTrafficNamespace
@@ -34,6 +35,12 @@ class GitHubReposNamespace(BaseNamespace):
         self._pulls = GitHubPullsNamespace(self._client)
         self._releases = GitHubReleasesNamespace(self._client)
         self._traffic = GitHubTrafficNamespace(self._client)
+        self._projects = GitHubRepositoryProjectsNamespace(self._client)
+
+    @property
+    def projects(self) -> GitHubRepositoryProjectsNamespace:
+        """Property to access the users projects namespace"""
+        return self._projects
 
     @property
     def contents(self) -> GitHubContentsNamespace:

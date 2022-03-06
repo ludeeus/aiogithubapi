@@ -49,6 +49,7 @@ from .models.milestone import GitHubMilestoneModel
 from .models.organization import GitHubOrganizationMinimalModel, GitHubOrganizationModel
 from .models.owner import GitHubOwnerModel
 from .models.permissions import GitHubPermissionsModel
+from .models.projects import GitHubProjectModel
 from .models.pull_request import GitHubPullRequestModel
 from .models.rate_limit import (
     GitHubRateLimitModel,

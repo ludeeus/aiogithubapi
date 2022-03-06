@@ -13,10 +13,19 @@ from ..models.repository import GitHubRepositoryModel
 from ..models.response import GitHubResponseModel
 from ..models.user import GitHubUserModel
 from .base import BaseNamespace
+from .projects import GitHubUsersProjectsNamespace
 
 
 class GitHubUsersNamespace(BaseNamespace):
     """Methods for the users namespace"""
+
+    def __post_init__(self) -> None:
+        self._projects = GitHubUsersProjectsNamespace(self._client)
+
+    @property
+    def projects(self) -> GitHubUsersProjectsNamespace:
+        """Property to access the users projects namespace"""
+        return self._projects
 
     async def get(
         self,

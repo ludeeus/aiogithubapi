@@ -25,18 +25,6 @@ async def test_list_organizations(github_api: GitHubAPI, mock_requests: MockedRe
 
 
 @pytest.mark.asyncio
-async def test_list_organizations_with_args(github_api: GitHubAPI, mock_requests: MockedRequests):
-    response = await github_api.orgs.list(since=1, per_page=1)
-    assert response.status == 200
-    assert isinstance(response.data, list)
-    fist = response.data[0]
-    assert isinstance(fist, GitHubOrganizationMinimalModel)
-    assert fist.login == "github"
-    assert mock_requests.called == 1
-    assert mock_requests.last_request["url"] == "https://api.github.com/organizations"
-
-
-@pytest.mark.asyncio
 async def test_get_organization(github_api: GitHubAPI, mock_requests: MockedRequests):
     response = await github_api.orgs.get(TEST_ORGANIZATION)
     assert response.status == 200
