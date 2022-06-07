@@ -97,7 +97,7 @@ class AIOGitHubAPIRepository(AIOGitHubAPIBaseClient):
     async def get_contents(
         self, path: str, ref: str or None = None, etag: Optional[str] = None
     ) -> list["AIOGitHubAPIRepositoryContent"] or "AIOGitHubAPIRepositoryContent":
-        """Retrun a list of repository content objects."""
+        """Return a list of repository content objects."""
         _endpoint = f"/repos/{self.full_name}/contents/{path}"
         _params = {"path": path}
         _headers = {}
@@ -115,7 +115,7 @@ class AIOGitHubAPIRepository(AIOGitHubAPIBaseClient):
     async def get_tree(
         self, ref: str or None = None, etag: Optional[str] = None
     ) -> list["AIOGitHubAPIRepositoryTreeContent"] or list:
-        """Retrun a list of repository tree objects."""
+        """Return a list of repository tree objects."""
         if ref is None:
             raise AIOGitHubAPIException("Missing ref")
         _endpoint = f"/repos/{self.full_name}/git/trees/{ref}"
@@ -134,7 +134,7 @@ class AIOGitHubAPIRepository(AIOGitHubAPIBaseClient):
     async def get_rendered_contents(
         self, path: str, ref: str or None = None, etag: Optional[str] = None
     ) -> str:
-        """Retrun a redered representation of a file."""
+        """Return a redered representation of a file."""
         _endpoint = f"/repos/{self.full_name}/contents/{path}"
         _headers = {"Accept": "application/vnd.github.v3.html"}
         _params = {"path": path}
@@ -152,7 +152,7 @@ class AIOGitHubAPIRepository(AIOGitHubAPIBaseClient):
     async def get_releases(
         self, prerelease: bool = False, returnlimit: int = 5, etag: Optional[str] = None
     ) -> list["AIOGitHubAPIRepositoryRelease"] or list:
-        """Retrun a list of repository release objects."""
+        """Return a list of repository release objects."""
         _endpoint = f"/repos/{self.full_name}/releases"
         _headers = {}
         if etag:
@@ -172,7 +172,7 @@ class AIOGitHubAPIRepository(AIOGitHubAPIBaseClient):
         return contents
 
     async def set_last_commit(self, etag: Optional[str] = None) -> None:
-        """Retrun a list of repository release objects."""
+        """Return a list of repository release objects."""
         _endpoint = f"/repos/{self.full_name}/branches/{self.default_branch}"
         _headers = {}
         if etag:
@@ -181,7 +181,7 @@ class AIOGitHubAPIRepository(AIOGitHubAPIBaseClient):
         self._last_commit = response.data["commit"]["sha"][0:7]
 
     async def get_last_commit(self, etag: Optional[str] = None) -> None:
-        """Retrun a list of repository release objects."""
+        """Return a list of repository release objects."""
         _endpoint = f"/repos/{self.full_name}/branches/{self.default_branch}"
         _headers = {}
         if etag:
