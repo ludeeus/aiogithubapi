@@ -26,7 +26,7 @@ backoff = "^1.10.0"
 
 [tool.poetry.dev-dependencies]
 aresponses = "^2.1.5"
-black = "^22.1.0"
+black = "^22.8.0"
 isort = "^5.10.1"
 mypy = "^0.931"
 pdoc3 = "^0.10.0"
