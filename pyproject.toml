@@ -21,7 +21,7 @@ version = "0"
 
 [tool.poetry.dependencies]
 python = "^3.8"
-aiohttp = "^3.8.3"
+aiohttp = "^3.8"
 backoff = "^1.10.0"
 
 [tool.poetry.dev-dependencies]
