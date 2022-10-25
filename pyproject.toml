@@ -22,7 +22,7 @@ version = "0"
 [tool.poetry.dependencies]
 python = "^3.8"
 aiohttp = "^3.8"
-backoff = "^1.10.0"
+backoff = "<3"
 
 [tool.poetry.dev-dependencies]
 aresponses = "^2.1.6"
@@ -34,8 +34,6 @@ pylint = "^2.15.5"
 pytest = "^7.2.0"
 pytest-asyncio = "^0.15.1"
 pytest-cov = "^4.0.0"
-
-
 
 [tool.black]
 line-length = 100
