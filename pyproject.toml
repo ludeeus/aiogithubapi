@@ -25,7 +25,7 @@ aiohttp = "^3.6.1"
 backoff = "^1.10.0"
 
 [tool.poetry.dev-dependencies]
-aresponses = "^2.1.5"
+aresponses = "^2.1.6"
 black = "^22.1.0"
 isort = "^5.10.1"
 mypy = "^0.931"
