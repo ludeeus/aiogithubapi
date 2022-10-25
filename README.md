@@ -11,10 +11,8 @@ This is not a full client for the API (Have you seen it, it's huge), and will pr
 Things are added when needed or requested.
 
 If something you need is missing please raise [a feature request to have it added](https://github.com/ludeeus/aiogithubapi/issues/new?assignees=&labels=enhancement&template=feature_request.md) or [create a PR 🎉](#contribute).
-You can also use [`GitHubAPI.generic`](https://aiogithubapi.netlify.app/github.html#aiogithubapi.github.GitHub.generic)
-while you wait for your request or contribution to be implemented.
 
-For examples on how to use it see [the documentation](https://aiogithubapi.netlify.app/) and/or the [tests directory](./tests).
+For examples on how to use it see the [tests directory](./tests).
 
 ## Install
 
