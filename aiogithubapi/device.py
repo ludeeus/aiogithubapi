@@ -153,9 +153,11 @@ class GitHubDeviceAPI(GitHubBase):
             )
 
             if error := response.data.get("error"):
-                if error == DeviceFlowError.AUTHORIZATION_PENDING:
-                    self.logger.debug(response.data.get("error_description"))
-                    await asyncio.sleep(self._interval)
+                self.logger.debug(response.data.get("error_description"))
+                if error in (DeviceFlowError.AUTHORIZATION_PENDING, DeviceFlowError.SLOW_DOWN):
+                    await asyncio.sleep(
+                        (self._interval or 1) + (5 if error == DeviceFlowError.SLOW_DOWN else 0)
+                    )
                 else:
                     raise GitHubException(response.data.get("error_description"))
             else:
