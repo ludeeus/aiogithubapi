@@ -2,6 +2,11 @@ change-template: '- #$NUMBER $TITLE @$AUTHOR'
 sort-direction: ascending
 exclude-labels:
   - "release-drafter-ignore"
+categories:
+  - title: "Dependency Updates"
+    label: "dependencies"
+    collapse-after: 1
+
 template: |
   ## What’s Changed
   $CHANGES
