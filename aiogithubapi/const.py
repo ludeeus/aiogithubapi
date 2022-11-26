@@ -1,16 +1,15 @@
 """Constants for aiogithubapi."""
 from __future__ import annotations
 
-import sys
-
 from dataclasses import dataclass
 from logging import Logger, getLogger
+import sys
 from typing import Dict, Literal, TypeVar, Union
 
 from aiohttp.hdrs import ACCEPT, CONTENT_TYPE, USER_AGENT
 
 if sys.version_info.major == 3 and sys.version_info.minor >= 11:
-    from enum import StrEnum, IntEnum
+    from enum import IntEnum, StrEnum
 else:
     from enum import Enum
 
