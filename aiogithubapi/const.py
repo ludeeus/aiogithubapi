@@ -16,6 +16,9 @@ else:
     class StrEnum(str, Enum):
         """Workaround untill lowest version is Python3.11."""
 
+        def __str__(self) -> str:
+            return str(self.value)
+
     class IntEnum(int, Enum):
         """Workaround untill lowest version is Python3.11."""
 
