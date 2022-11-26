@@ -1,6 +1,6 @@
 {
 	"name": "aiogithubapi",
-	"image": "ghcr.io/ludeeus/devcontainer/python:stable",
+	"image": "mcr.microsoft.com/vscode/devcontainers/python:0-3.11-bullseye",
 	"context": "..",
 	"postCreateCommand": "make requirements",
 	"extensions": [
@@ -9,6 +9,7 @@
 		"ryanluker.vscode-coverage-gutters",
 		"ms-python.vscode-pylance"
 	],
+	"remoteUser": "vscode",
 	"settings": {
 		"files.eol": "\n",
 		"editor.tabSize": 4,
