@@ -29,13 +29,6 @@ _DEFAULT_BACKOFF = 300
 _DEFAULT_POLL = 60
 
 
-class SubscriptionType(TypedDict):
-    """Custom type for subscriptions."""
-
-    task: asyncio.Task[None]
-    handler: asyncio.TimerHandle[None]
-
-
 class _GitHubEventsBaseNamespace(BaseNamespace):
     """Methods for the events namespace"""
 
@@ -46,7 +39,7 @@ class _GitHubEventsBaseNamespace(BaseNamespace):
     ) -> None:
         super().__init__(client)
         self._space = space
-        self._subscriptions: Dict[str, SubscriptionType] = {}
+        self._subscriptions: Dict[str, asyncio.Task[None]] = {}
 
     @staticmethod
     async def _wait(wait_time: float) -> None:
@@ -90,7 +83,7 @@ class _GitHubEventsBaseNamespace(BaseNamespace):
             _poll_time: int = 60
             _target_time = datetime.utcnow().isoformat()
             LOGGER.debug("Starting event subscription for github.com/%s", name)
-            subscription_task = self._subscriptions[subscription_id]["task"]
+            subscription_task = self._subscriptions[subscription_id]
             while not subscription_task.cancelled():
                 try:
                     response = await self._client.async_call_api(
@@ -142,12 +135,7 @@ class _GitHubEventsBaseNamespace(BaseNamespace):
             LOGGER.debug("Stopping event subscription for github.com/%s", name)
             self.unsubscribe(subscription_id=subscription_id)
 
-        subscription_task = self._client._loop.create_task(_subscriber())
-        subscription_handler = self._client._loop.call_soon(subscription_task)
-        self._subscriptions[subscription_id] = {
-            "task": subscription_task,
-            "handler": subscription_handler,
-        }
+        self._subscriptions[subscription_id] = asyncio.create_task(_subscriber())
 
         return subscription_id
 
@@ -166,26 +154,20 @@ class _GitHubEventsBaseNamespace(BaseNamespace):
         The ID you got when you subscribed, if omitted all active subscriptions will be stopped.
         """
 
-        def _cancel_subscription(subid: str, subscription: SubscriptionType) -> asyncio.Task:
-            subscription_handler = subscription["handler"]
-            if not subscription_handler.cancelled():
-                subscription_handler.cancel()
-
-            subscription_task = subscription["task"]
-            if not subscription_task.cancelled():
-                subscription_task.cancel()
-
+        def _cancel_subscription(subid: str, task: asyncio.Task[None]) -> asyncio.Task:
+            if not task.cancelled():
+                task.cancel()
             del self._subscriptions[subid]
-            return subscription_task
+            return task
 
         return [
-            _cancel_subscription(subid=subid, subscription=subscription)
+            _cancel_subscription(subid=subid, task=task)
             for subid in (
                 [subscription_id]
                 if subscription_id is not None
                 else list(self._subscriptions.keys())
             )
-            if (subscription := self._subscriptions.get(subid)) is not None
+            if (task := self._subscriptions.get(subid)) is not None
         ]
 
     async def unsubscribe_all(self) -> None:
