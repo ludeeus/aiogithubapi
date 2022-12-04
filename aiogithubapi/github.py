@@ -37,6 +37,8 @@ class GitHub(GitHubBase):
         self,
         token: str = None,
         session: aiohttp.ClientSession = None,
+        *,
+        api_version: str | None = None,
         **kwargs: Dict[GitHubClientKwarg, Any],
     ) -> None:
         """
@@ -67,7 +69,7 @@ class GitHub(GitHubBase):
             token = os.getenv("GITHUB_TOKEN")
 
         self._session = session
-        self._client = GitHubClient(token=token, session=session, **kwargs)
+        self._client = GitHubClient(token=token, session=session, api_version=api_version, **kwargs)
 
         # Namespaces
         self._repos = GitHubReposNamespace(self._client)
@@ -149,6 +151,17 @@ class GitHub(GitHubBase):
         https://docs.github.com/en/rest/reference/emojis#get-emojis
         """
         return await self._client.async_call_api(endpoint="/emojis", **kwargs)
+
+    async def versions(
+        self,
+        **kwargs: Dict[GitHubRequestKwarg, Any],
+    ) -> GitHubResponseModel[list[str]]:
+        """
+        Get all supported GitHub API versions.
+
+        https://docs.github.com/en/rest/meta#get-all-api-versions
+        """
+        return await self._client.async_call_api(endpoint="/versions", **kwargs)
 
     async def markdown(
         self,

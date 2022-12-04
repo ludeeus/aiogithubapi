@@ -4,7 +4,7 @@ from aiohttp import ClientSession
 import pytest
 
 from aiogithubapi.client import GitHubClient
-from aiogithubapi.const import BASE_API_HEADERS, DEFAULT_USER_AGENT, GitHubClientKwarg
+from aiogithubapi.const import BASE_API_HEADERS, DEFAULT_USER_AGENT, HEADER_GITHUB_API_VERSION, GitHubClientKwarg
 
 from tests.common import TOKEN
 
@@ -37,6 +37,18 @@ async def test_client_constrution_with_token(client_session: ClientSession):
     assert base_request_data.token == TOKEN
     assert base_request_data.headers == {
         **BASE_API_HEADERS,
+        "Authorization": "token xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    }
+
+
+@pytest.mark.asyncio
+async def test_client_constrution_with_api_version(client_session: ClientSession):
+    client = GitHubClient(session=client_session, token=TOKEN, api_version="3000-01-01")
+    base_request_data = client._base_request_data
+    assert base_request_data.token == TOKEN
+    assert base_request_data.headers == {
+        **BASE_API_HEADERS,
+        HEADER_GITHUB_API_VERSION: "3000-01-01",
         "Authorization": "token xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
     }
 

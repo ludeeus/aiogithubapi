@@ -46,3 +46,9 @@ async def test_token():
     assert GitHubAPI(token=TOKEN)._client._base_request_data.token == TOKEN
     with patch("os.environ", {"GITHUB_TOKEN": TOKEN}):
         assert GitHubAPI()._client._base_request_data.token == TOKEN
+
+
+@pytest.mark.asyncio
+async def test_api_version():
+    assert GitHubAPI()._client._base_request_data.token is None
+    assert GitHubAPI(token=TOKEN, api_version="3000-01-01")._client._base_request_data.api_version == "3000-01-01"

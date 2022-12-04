@@ -10,6 +10,7 @@ from ..const import (
     BASE_API_HEADERS,
     BASE_API_URL,
     DEFAULT_USER_AGENT,
+    HEADER_GITHUB_API_VERSION,
     GitHubClientKwarg,
 )
 from .base import GitHubBase
@@ -21,6 +22,7 @@ class GitHubBaseRequestDataModel(GitHubBase):
 
     kwargs: Dict[GitHubClientKwarg, Any]
     token: str | None = None
+    api_version: str | None = None
 
     def __post_init__(self):
         """Check user agent."""
@@ -53,4 +55,6 @@ class GitHubBaseRequestDataModel(GitHubBase):
             headers.update(kwarg_headers)
         if client_name := self.kwargs.get(GitHubClientKwarg.CLIENT_NAME):
             headers[USER_AGENT] = client_name
+        if self.api_version is not None:
+            headers[HEADER_GITHUB_API_VERSION] = self.api_version
         return headers
