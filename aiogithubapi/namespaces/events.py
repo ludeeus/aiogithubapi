@@ -188,12 +188,10 @@ class _GitHubEventsBaseNamespace(BaseNamespace):
             if (subscription := self._subscriptions.get(subid)) is not None
         ]
 
-    async def stop_all_subscriptions(self) -> None:
+    async def unsubscribe_all(self) -> None:
         """Unsubscribe and wait for all subscriptions to be done."""
-        if all_tasks := [s["task"] for s in list(self._subscriptions.values())]:
-            for subscription_id in list(self._subscriptions):
-                self.unsubscribe(subscription_id=subscription_id)
-            await asyncio.wait(all_tasks)
+        if tasks := self.unsubscribe():
+            await asyncio.wait(tasks)
 
 
 class GitHubEventsReposNamespace(_GitHubEventsBaseNamespace):

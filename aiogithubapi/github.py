@@ -109,7 +109,7 @@ class GitHub(GitHubBase):
 
     async def __aexit__(self, *exc_info) -> None:
         """Async exit."""
-        await self.repos.events.stop_all_subscriptions()
+        await self.repos.events.unsubscribe_all()
         await self.close_session()
 
     async def close_session(self) -> None:

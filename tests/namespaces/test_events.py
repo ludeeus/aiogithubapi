@@ -70,7 +70,7 @@ async def test_stopping_all_subscriptions(github_api: GitHubAPI, mock_requests: 
 
     assert len(asyncio.all_tasks(github_api._client._loop) - tasks_before) == 2
 
-    await github_api.repos.events.stop_all_subscriptions()
+    await github_api.repos.events.unsubscribe_all()
     assert len(asyncio.all_tasks(github_api._client._loop) - tasks_before) == 0
 
 
@@ -109,6 +109,7 @@ async def test_subscription_exceptions_not_modified(
     mock_requests: MockedRequests,
     wait_mock: None,
 ):
+    mock_requests.clear()
     event_callback_mock = AsyncMock()
     error_callback_mock = AsyncMock()
 
@@ -120,7 +121,7 @@ async def test_subscription_exceptions_not_modified(
         error_callback=error_callback_mock,
     )
 
-    while not mock_requests.called > 1:
+    while mock_requests.called < 10:
         await asyncio.sleep(0)
 
     assert subscription_id in github_api.repos.events._subscriptions
