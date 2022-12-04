@@ -21,6 +21,7 @@ class GitHubRateLimitResourcesModel(GitHubDataModelBase):
     core: GitHubRateLimitResourceModel | None = None
     search: GitHubRateLimitResourceModel | None = None
     graphql: GitHubRateLimitResourceModel | None = None
+    dependency_snapshots: GitHubRateLimitResourceModel | None = None
     integration_manifest: GitHubRateLimitResourceModel | None = None
     source_import: GitHubRateLimitResourceModel | None = None
     code_scanning_upload: GitHubRateLimitResourceModel | None = None
@@ -43,6 +44,9 @@ class GitHubRateLimitResourcesModel(GitHubDataModelBase):
         return GitHubRateLimitResourceModel(data) if data else None
 
     def _generate_code_scanning_upload(self, data: Any) -> GitHubRateLimitResourceModel:
+        return GitHubRateLimitResourceModel(data) if data else None
+
+    def _generate_dependency_snapshots(self, data: Any) -> GitHubRateLimitResourceModel:
         return GitHubRateLimitResourceModel(data) if data else None
 
 
