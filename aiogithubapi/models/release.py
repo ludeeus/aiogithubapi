@@ -37,6 +37,7 @@ class GitHubReleaseModel(GitHubDataModelBase):
     upload_url: str | None = None
     html_url: str | None = None
     id: int | None = None
+    discussion_url: str | None = None
     author: GitHubBaseUserModel | None = None
     tag_name: str | None = None
     target_commitish: str | None = None
