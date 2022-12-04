@@ -119,11 +119,13 @@ class GitHubClient(GitHubBase):
             or kwargs.get(GitHubRequestKwarg.PARAMS, kwargs.get(GitHubRequestKwarg.QUERY, {})),
             "timeout": timeout or self._base_request_data.timeout,
             "headers": {
-                **(headers or {}),
                 **self._base_request_data.headers,
+                **(headers or {}),
                 **kwargs.get("headers", {}),
             },
         }
+
+        print(request_arguments["headers"])
 
         if etag := kwargs.get(GitHubRequestKwarg.ETAG):
             request_arguments["headers"][aiohttp.hdrs.IF_NONE_MATCH] = etag
