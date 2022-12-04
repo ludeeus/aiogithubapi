@@ -155,7 +155,6 @@ class _GitHubEventsBaseNamespace(BaseNamespace):
         self,
         *,
         subscription_id: str | None = None,
-        wait: bool = True,
     ) -> list[asyncio.Task]:
         """
         Unsubscribe to an event stream
@@ -193,7 +192,7 @@ class _GitHubEventsBaseNamespace(BaseNamespace):
         """Unsubscribe and wait for all subscriptions to be done."""
         if all_tasks := [s["task"] for s in list(self._subscriptions.values())]:
             for subscription_id in list(self._subscriptions):
-                self.unsubscribe(subscription_id=subscription_id, wait=False)
+                self.unsubscribe(subscription_id=subscription_id)
             await asyncio.wait(all_tasks)
 
 
