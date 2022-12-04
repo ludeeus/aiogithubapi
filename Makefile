@@ -36,5 +36,8 @@ isort-check:
 black:
 	@poetry run black --fast aiogithubapi
 
+example:
+	@poetry run python example.py
+
 black-check:
 	@poetry run black --check --fast aiogithubapi

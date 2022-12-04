@@ -61,11 +61,14 @@ class GitHubClient(GitHubBase):
         self,
         session: aiohttp.ClientSession,
         token: str | None = None,
+        *,
+        api_version: str | None = None,
         **kwargs: Dict[GitHubClientKwarg, Any],
     ) -> None:
         """Initialise the GitHub API client."""
         self._base_request_data = GitHubBaseRequestDataModel(
             token=token,
+            api_version=api_version,
             kwargs=kwargs,
         )
         self._session = session
