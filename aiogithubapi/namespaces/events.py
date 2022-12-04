@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import asyncio
 from datetime import datetime
-from typing import TYPE_CHECKING, Any, Awaitable, Callable, Dict, Literal
+from typing import TYPE_CHECKING, Any, Awaitable, Callable, Dict, Literal, TypedDict
 from uuid import uuid4
 
 from ..const import LOGGER, GitHubRequestKwarg, RepositoryType
@@ -29,6 +29,13 @@ _DEFAULT_BACKOFF = 300
 _DEFAULT_POLL = 60
 
 
+class SubscriptionType(TypedDict):
+    """Custom type for subscriptions."""
+
+    task: asyncio.Task[None]
+    handler: asyncio.TimerHandle[None]
+
+
 class _GitHubEventsBaseNamespace(BaseNamespace):
     """Methods for the events namespace"""
 
@@ -39,7 +46,8 @@ class _GitHubEventsBaseNamespace(BaseNamespace):
     ) -> None:
         super().__init__(client)
         self._space = space
-        self._subscriptions: Dict[str, asyncio.TimerHandle[None]] = {}
+        self._subscriptions: Dict[str, SubscriptionType] = {}
+        self._active_subscriptions: set[str] = set()
 
     @staticmethod
     async def _wait(wait_time: float) -> None:
@@ -83,7 +91,8 @@ class _GitHubEventsBaseNamespace(BaseNamespace):
             _poll_time: int = 60
             _target_time = datetime.utcnow().isoformat()
             LOGGER.debug("Starting event subscription for github.com/%s", name)
-            while subscription_id in self._subscriptions:
+            subscription_task = self._subscriptions[subscription_id]["task"]
+            while not subscription_task.cancelled():
                 try:
                     response = await self._client.async_call_api(
                         endpoint=f"/{self._space}/{name}/events",
@@ -134,8 +143,12 @@ class _GitHubEventsBaseNamespace(BaseNamespace):
             LOGGER.debug("Stopping event subscription for github.com/%s", name)
             self.unsubscribe(subscription_id=subscription_id)
 
-        handler = self._client._loop.call_soon(self._client._loop.create_task, _subscriber())
-        self._subscriptions[subscription_id] = handler
+        subscription_task = self._client._loop.create_task(_subscriber())
+        subscription_handler = self._client._loop.call_soon(subscription_task)
+        self._subscriptions[subscription_id] = {
+            "task": subscription_task,
+            "handler": subscription_handler,
+        }
 
         return subscription_id
 
@@ -149,15 +162,31 @@ class _GitHubEventsBaseNamespace(BaseNamespace):
 
         The ID you got when you subscribed, if omitted all active subscriptions will be stopped.
         """
+
+        def _cancel_subscription(id: str)-> None:
+            if subscription := self._subscriptions.get(id):
+                subscription_handler = subscription["handler"]
+                if not subscription_handler.cancelled():
+                    subscription_handler.cancel()
+
+                subscription_task = subscription["task"]
+                if not subscription_task.cancelled():
+                    subscription_task.cancel()
+
+                del self._subscriptions[id]
+
         if not subscription_id:
+            for subscription_id in list(self._subscriptions.keys()):
+                _cancel_subscription(subscription_id)
+        else:
+            _cancel_subscription(subscription_id)
+
+    async def stop_all_subscriptions(self) -> None:
+        """Unsubscribe and wait for all subscriptions to be done."""
+        if all_tasks := [s["task"] for s in list(self._subscriptions.values())]:
             for subscription_id in list(self._subscriptions):
-                handler = self._subscriptions[subscription_id]
-                handler.cancel()
-                del self._subscriptions[subscription_id]
-            return
-        if handler := self._subscriptions.get(subscription_id):
-            handler.cancel()
-            del self._subscriptions[subscription_id]
+                self.unsubscribe(subscription_id=subscription_id)
+            await asyncio.wait(all_tasks)
 
 
 class GitHubEventsReposNamespace(_GitHubEventsBaseNamespace):
