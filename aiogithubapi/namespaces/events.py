@@ -166,7 +166,7 @@ class _GitHubEventsBaseNamespace(BaseNamespace):
         The ID you got when you subscribed, if omitted all active subscriptions will be stopped.
         """
 
-        def _cancel_subscription(subid: str, subscription: SubscriptionType) -> asyncio.Task | None:
+        def _cancel_subscription(subid: str, subscription: SubscriptionType) -> asyncio.Task:
             subscription_handler = subscription["handler"]
             if not subscription_handler.cancelled():
                 subscription_handler.cancel()
