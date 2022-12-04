@@ -24,6 +24,12 @@
             "remaining": 5000,
             "reset": 1642155380
         },
+        "dependency_snapshots": {
+            "limit": 5000,
+            "used": 0,
+            "remaining": 5000,
+            "reset": 1642155380
+        },
         "source_import": {
             "limit": 100,
             "used": 0,
