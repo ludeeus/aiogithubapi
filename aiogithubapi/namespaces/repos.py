@@ -103,21 +103,58 @@ class GitHubReposNamespace(BaseNamespace):
     async def list_commits(
         self,
         repository: RepositoryType,
+        *,
+        sha: str | None = None,
+        path: str | None = None,
+        author: str | None = None,
+        since: str | None = None,
+        until: str | None = None,
+        per_page: int = 30,
+        page: int = 0,
         **kwargs: Dict[GitHubRequestKwarg, Any],
     ) -> GitHubResponseModel[List[GitHubCommitModel]]:
         """
-         List commits
+        List commits from a repository.
 
-         **Arguments**:
+        **Arguments**:
 
-         `repository`
+        - `repository`: The repository to return commits from, specified as
+            `<owner>/<repository>`, e.g. "octocat/hello-world".
+        - `sha`: Filter the commits to only those with the given SHA.
+        - `path`: Filter the commits to only those with changes to the given path.
+        - `author`: Filter the commits to only those with the given author.
+        - `since`: Filter the commits to only those that were made after the given
+            date and time. The `since` parameter should be formatted as an ISO 8601
+            date and time, e.g. "2022-12-03T12:34:56Z".
+        - `until`: Filter the commits to only those that were made before the given
+            date and time. The `until` parameter should be formatted as an ISO 8601
+            date and time, e.g. "2022-12-03T12:34:56Z".
+        - `per_page`: The number of commits to return per page. The default value is
+            30 and the maximum allowed value is 100.
+        - `page`: The page number to return. The default value is 0 (the first page).
 
-         The repository to return commits from, example "octocat/hello-world"
-
+        For more details, see the API documentation at:
         https://docs.github.com/en/rest/reference/repos#list-commits
         """
+        params = {
+            "per_page": per_page,
+            "page": page,
+        }
+
+        if sha is not None:
+            params["sha"] = sha
+        if path is not None:
+            params["path"] = path
+        if author is not None:
+            params["author"] = author
+        if since is not None:
+            params["since"] = since
+        if until is not None:
+            params["until"] = until
+
         response = await self._client.async_call_api(
             endpoint=f"/repos/{repository_full_name(repository)}/commits",
+            params=params,
             **kwargs,
         )
         response.data = [GitHubCommitModel(data) for data in response.data]

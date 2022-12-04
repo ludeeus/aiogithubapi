@@ -167,6 +167,7 @@ class GitHub(GitHubBase):
     async def markdown(
         self,
         text: str,
+        *,
         mode: str | None = None,
         context: RepositoryType | None = None,
         **kwargs: Dict[GitHubRequestKwarg, Any],
