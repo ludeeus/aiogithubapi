@@ -47,7 +47,6 @@ class _GitHubEventsBaseNamespace(BaseNamespace):
         super().__init__(client)
         self._space = space
         self._subscriptions: Dict[str, SubscriptionType] = {}
-        self._active_subscriptions: set[str] = set()
 
     @staticmethod
     async def _wait(wait_time: float) -> None:
@@ -152,7 +151,12 @@ class _GitHubEventsBaseNamespace(BaseNamespace):
 
         return subscription_id
 
-    def unsubscribe(self, *, subscription_id: str | None = None) -> None:
+    def unsubscribe(
+        self,
+        *,
+        subscription_id: str | None = None,
+        wait: bool = True,
+    ) -> list[asyncio.Task]:
         """
         Unsubscribe to an event stream
 
@@ -163,29 +167,33 @@ class _GitHubEventsBaseNamespace(BaseNamespace):
         The ID you got when you subscribed, if omitted all active subscriptions will be stopped.
         """
 
-        def _cancel_subscription(id: str)-> None:
-            if subscription := self._subscriptions.get(id):
-                subscription_handler = subscription["handler"]
-                if not subscription_handler.cancelled():
-                    subscription_handler.cancel()
+        def _cancel_subscription(subid: str, subscription: SubscriptionType) -> asyncio.Task | None:
+            subscription_handler = subscription["handler"]
+            if not subscription_handler.cancelled():
+                subscription_handler.cancel()
 
-                subscription_task = subscription["task"]
-                if not subscription_task.cancelled():
-                    subscription_task.cancel()
+            subscription_task = subscription["task"]
+            if not subscription_task.cancelled():
+                subscription_task.cancel()
 
-                del self._subscriptions[id]
+            del self._subscriptions[subid]
+            return subscription_task
 
-        if not subscription_id:
-            for subscription_id in list(self._subscriptions.keys()):
-                _cancel_subscription(subscription_id)
-        else:
-            _cancel_subscription(subscription_id)
+        return [
+            _cancel_subscription(subid=subid, subscription=subscription)
+            for subid in (
+                [subscription_id]
+                if subscription_id is not None
+                else list(self._subscriptions.keys())
+            )
+            if (subscription := self._subscriptions.get(subid)) is not None
+        ]
 
     async def stop_all_subscriptions(self) -> None:
         """Unsubscribe and wait for all subscriptions to be done."""
         if all_tasks := [s["task"] for s in list(self._subscriptions.values())]:
             for subscription_id in list(self._subscriptions):
-                self.unsubscribe(subscription_id=subscription_id)
+                self.unsubscribe(subscription_id=subscription_id, wait=False)
             await asyncio.wait(all_tasks)
 
 

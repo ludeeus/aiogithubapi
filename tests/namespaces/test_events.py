@@ -22,6 +22,9 @@ async def wait_mock():
 
 @pytest.mark.asyncio
 async def test_subscription(github_api: GitHubAPI, mock_requests: MockedRequests):
+    tasks_before = asyncio.all_tasks(github_api._client._loop)  # This includes the test task
+    assert len(tasks_before) == 1
+
     event_callback_mock = AsyncMock()
 
     subscription_id = await github_api.repos.events.subscribe(
@@ -35,8 +38,12 @@ async def test_subscription(github_api: GitHubAPI, mock_requests: MockedRequests
     event: GitHubEventModel = event_callback_mock.call_args[0][0]
     assert event.type == "PushEvent"
 
-    github_api.repos.events.unsubscribe(subscription_id=subscription_id)
+    assert len(asyncio.all_tasks(github_api._client._loop) - tasks_before) == 1
+
+    tasks = github_api.repos.events.unsubscribe(subscription_id=subscription_id)
+    await asyncio.wait(tasks)
     assert not github_api.repos.events._subscriptions
+    assert len(asyncio.all_tasks(github_api._client._loop) - tasks_before) == 0
 
 
 @pytest.mark.asyncio
