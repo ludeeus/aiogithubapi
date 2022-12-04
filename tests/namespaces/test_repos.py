@@ -26,7 +26,7 @@ async def test_get_repository(github_api: GitHubAPI, mock_requests: MockedReques
 
 @pytest.mark.asyncio
 async def test_list_commits(github_api: GitHubAPI, mock_requests: MockedRequests):
-    response = await github_api.repos.list_commits(TEST_REPOSITORY_NAME)
+    response = await github_api.repos.list_commits(TEST_REPOSITORY_NAME, sha="main", path="README.md", author="awesome_author", since="2021-01-01", until="2021-01-02")
     assert response.status == 200
     assert isinstance(response.data, list)
     assert response.data[0].commit.message == "Merge pull request #6"
