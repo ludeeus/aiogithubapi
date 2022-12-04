@@ -163,6 +163,7 @@ async def test_subscription_exceptions_not_found(
 async def test_subscription_exception(
     github_api: GitHubAPI,
     mock_response: MockResponse,
+    mock_requests: MockedRequests,
     wait_mock: None,
 ):
     event_callback_mock = AsyncMock()
@@ -177,6 +178,9 @@ async def test_subscription_exception(
     )
 
     while not error_callback_mock.called:
+        await asyncio.sleep(0)
+
+    while mock_requests.called < 10:
         await asyncio.sleep(0)
 
     assert not event_callback_mock.called
