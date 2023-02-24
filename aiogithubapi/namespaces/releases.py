@@ -41,3 +41,28 @@ class GitHubReleasesNamespace(BaseNamespace):
         )
         response.data = [GitHubReleaseModel(data) for data in response.data]
         return response
+
+    async def latest(
+        self,
+        repository: RepositoryType,
+        **kwargs: Dict[GitHubRequestKwarg, Any],
+    ) -> GitHubResponseModel[GitHubReleaseModel]:
+        """
+        Get the latest release
+
+        This returns the latest release for the specified repository.
+
+        **Arguments**:
+
+        `repository`
+
+        The repository to return the latest release for, example "octocat/hello-world"
+
+        https://docs.github.com/en/rest/reference/repos#get-the-latest-release
+        """
+        response = await self._client.async_call_api(
+            endpoint=f"/repos/{repository}/releases/latest",
+            **kwargs,
+        )
+        response.data = GitHubReleaseModel(response.data)
+        return response
