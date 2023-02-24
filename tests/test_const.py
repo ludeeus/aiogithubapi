@@ -19,6 +19,8 @@ def test_enum_value():
     assert TestStrEnum.TEST == "test"
     assert TestStrEnum.TEST.value == "test"
     assert str(TestStrEnum.TEST) == "test"
+    assert f"{TestStrEnum.TEST}" == "test"
+    assert "{}".format(TestStrEnum.TEST) == "test"
 
     assert TestIntEnum.TEST == 4
     assert TestIntEnum.TEST.value == 4
