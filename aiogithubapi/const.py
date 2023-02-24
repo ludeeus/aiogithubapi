@@ -2,11 +2,26 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from enum import Enum
 from logging import Logger, getLogger
+import sys
 from typing import Dict, Literal, TypeVar, Union
 
 from aiohttp.hdrs import ACCEPT, CONTENT_TYPE, USER_AGENT
+
+if sys.version_info.major == 3 and sys.version_info.minor >= 11:
+    from enum import IntEnum, StrEnum
+else:
+    from enum import Enum
+
+    class StrEnum(str, Enum):
+        """Workaround untill lowest version is Python3.11."""
+
+        def __str__(self) -> str:
+            return str(self.value)
+
+    class IntEnum(int, Enum):
+        """Workaround untill lowest version is Python3.11."""
+
 
 GenericType = TypeVar("GenericType")
 
@@ -54,7 +69,7 @@ class Repository:
 RepositoryType = Union[str, Dict[Literal["owner", "repo"], str], Repository]
 
 
-class GitHubRequestAcceptHeader(str, Enum):
+class GitHubRequestAcceptHeader(StrEnum):
     """
     GitHub uses vaious accept headers to enable certain features.
 
@@ -69,7 +84,7 @@ class GitHubRequestAcceptHeader(str, Enum):
     PREVIEW = PREVIEW_MERCY
 
 
-class GitHubClientKwarg(str, Enum):
+class GitHubClientKwarg(StrEnum):
     """
     kwargs that are used by the client.
 
@@ -91,7 +106,7 @@ class GitHubClientKwarg(str, Enum):
     CLIENT_NAME = "client_name"
 
 
-class GitHubRequestKwarg(str, Enum):
+class GitHubRequestKwarg(StrEnum):
     """
     kwargs that are used by requests.
 
@@ -118,7 +133,7 @@ class GitHubRequestKwarg(str, Enum):
     SCOPE = "scope"
 
 
-class HttpStatusCode(int, Enum):
+class HttpStatusCode(IntEnum):
     """HTTP Status codes."""
 
     OK = 200
@@ -144,7 +159,7 @@ class HttpStatusCode(int, Enum):
     GATEWAY_TIMEOUT = 504
 
 
-class GitHubIssueLockReason(str, Enum):
+class GitHubIssueLockReason(StrEnum):
     """Reason for issue lock."""
 
     OFF_TOPIC = "off-topic"
@@ -153,7 +168,7 @@ class GitHubIssueLockReason(str, Enum):
     RESOLVED = "resolved"
 
 
-class HttpMethod(str, Enum):
+class HttpMethod(StrEnum):
     """HTTP Methods."""
 
     GET = "GET"
@@ -163,7 +178,7 @@ class HttpMethod(str, Enum):
     PUT = "PUT"
 
 
-class HttpContentType(str, Enum):
+class HttpContentType(StrEnum):
     """HTTP Content Types."""
 
     BASE_JSON = "application/json"
@@ -175,7 +190,7 @@ class HttpContentType(str, Enum):
     TEXT_HTML = "text/html;charset=utf-8"
 
 
-class DeviceFlowError(str, Enum):
+class DeviceFlowError(StrEnum):
     """
     Errors for Device Flow.
 
