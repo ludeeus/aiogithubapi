@@ -39,6 +39,10 @@ ACCEPT_HEADERS: Dict[str, str] = {
 # but it is adviced to use your own when building out your application
 DEFAULT_USER_AGENT = f"aiogithubapi/{PROJECT_VERSION}"
 
+# https://docs.github.com/en/rest/overview/api-versions
+HEADER_GITHUB_API_VERSION = "X-GitHub-Api-Version"
+DEFAULT_API_VERSION = "2022-11-28"
+
 BASE_API_URL = "https://api.github.com"
 BASE_GITHUB_URL = "https://github.com"
 OAUTH_DEVICE_LOGIN_PATH = "/login/device/code"
@@ -214,4 +218,5 @@ BASE_API_HEADERS: Dict[str, str] = {
     ACCEPT: GitHubRequestAcceptHeader.BASE.value,
     CONTENT_TYPE: HttpContentType.JSON.value,
     USER_AGENT: DEFAULT_USER_AGENT,
+    HEADER_GITHUB_API_VERSION: DEFAULT_API_VERSION,
 }

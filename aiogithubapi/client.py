@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 import asyncio
-import json
 from typing import Any, Dict
 
 import aiohttp
@@ -61,11 +60,22 @@ class GitHubClient(GitHubBase):
         self,
         session: aiohttp.ClientSession,
         token: str | None = None,
+        *,
+        api_version: str | None = None,
         **kwargs: Dict[GitHubClientKwarg, Any],
     ) -> None:
-        """Initialise the GitHub API client."""
+        """
+        Initialise the GitHub API client.
+
+        **Arguments:**
+        `session`: The aiohttp client session to use for making requests.
+        `token`: The GitHub access token to use for authenticating requests. Can be a string or None.
+        `api_version`: The version of the GitHub API to use. Can be a string or None.
+
+        """
         self._base_request_data = GitHubBaseRequestDataModel(
             token=token,
+            api_version=api_version,
             kwargs=kwargs,
         )
         self._session = session
@@ -76,17 +86,42 @@ class GitHubClient(GitHubBase):
         endpoint: str,
         *,
         data: Dict[str, Any] | str | None = None,
+        headers: Dict[str, Any] | None = None,
+        method: HttpMethod = HttpMethod.GET,
+        params: Dict[str, Any] | None = None,
+        timeout: int | None = None,
         **kwargs: Dict[GitHubRequestKwarg, Any],
     ) -> GitHubResponseModel:
-        """Execute the API call."""
+        """
+        Makes an HTTP request to the specified endpoint using the specified parameters.
+
+        This method is asynchronous, meaning that it will not block the execution of the program while the request is being made and processed.
+
+        **Arguments**:
+
+        -  `endpoint` (Required): The API endpoint to call.
+
+        **Optional arguments**:
+        - `endpoint`: The API endpoint to call.
+        - `data`: The data to include in the request body. Can be a dictionary, a string, or None.
+        - `headers`: The headers to include in the request. Can be a dictionary or None.
+        - `method`: The HTTP method to use for the request. Defaults to GET.
+        - `params`: The query parameters to include in the request. Can be a dictionary or None.
+        - `timeout`: The maximum amount of time to wait for the request to complete, in seconds. Can be an integer or None.
+
+        Returns:
+        A GitHubResponseModel object representing the API response.
+        """
         request_arguments: Dict[str, Any] = {
             "url": self._base_request_data.request_url(endpoint),
-            "method": kwargs.get(GitHubRequestKwarg.METHOD, HttpMethod.GET).lower(),
-            "params": kwargs.get(GitHubRequestKwarg.PARAMS)
-            or kwargs.get(GitHubRequestKwarg.QUERY, {}),
-            "timeout": self._base_request_data.timeout,
+            "method": kwargs.get(GitHubRequestKwarg.METHOD, method).lower(),
+            "params": params
+            or kwargs.get(GitHubRequestKwarg.PARAMS, kwargs.get(GitHubRequestKwarg.QUERY, {})),
+            "timeout": timeout or self._base_request_data.timeout,
             "headers": {
+                **(headers or {}),
                 **self._base_request_data.headers,
+                **(headers or {}),
                 **kwargs.get("headers", {}),
             },
         }

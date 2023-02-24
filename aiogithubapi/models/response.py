@@ -38,6 +38,7 @@ class GitHubResponseHeadersModel(GitHubDataModelBase):
     x_commonmarker_version: str | None = None
     x_content_type_options: str | None = None
     x_frame_options: str | None = None
+    x_github_api_version_selected: str | None = None
     x_github_media_type: str | None = None
     x_github_request_id: str | None = None
     x_oauth_client_id: str | None = None
