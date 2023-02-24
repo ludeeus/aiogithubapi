@@ -1,26 +1,28 @@
 {
-	"name": "aiogithubapi",
-	"image": "ghcr.io/ludeeus/devcontainer/python:stable",
-	"context": "..",
+	"name": "ludeeus/aiogithubapi",
+	"image": "mcr.microsoft.com/vscode/devcontainers/python:0-3.10-bullseye",
 	"postCreateCommand": "make requirements",
-	"extensions": [
-		"ms-python.python",
-		"github.vscode-pull-request-github",
-		"ryanluker.vscode-coverage-gutters",
-		"ms-python.vscode-pylance"
-	],
-	"settings": {
-		"files.eol": "\n",
-		"editor.tabSize": 4,
-		"terminal.integrated.shell.linux": "/bin/bash",
-		"python.pythonPath": "/usr/local/python/bin/python",
-		"python.analysis.autoSearchPaths": false,
-		"python.linting.pylintEnabled": true,
-		"python.linting.enabled": true,
-		"python.formatting.provider": "black",
-		"editor.formatOnPaste": false,
-		"editor.formatOnSave": true,
-		"editor.formatOnType": true,
-		"files.trimTrailingWhitespace": true
-	}
+	"customizations": {
+		"extensions": [
+			"ms-python.python",
+			"github.vscode-pull-request-github",
+			"ryanluker.vscode-coverage-gutters",
+			"ms-python.vscode-pylance"
+		],
+		"settings": {
+			"files.eol": "\n",
+			"editor.tabSize": 4,
+			"terminal.integrated.shell.linux": "/bin/bash",
+			"python.pythonPath": "/usr/local/python/bin/python",
+			"python.analysis.autoSearchPaths": false,
+			"python.linting.pylintEnabled": true,
+			"python.linting.enabled": true,
+			"python.formatting.provider": "black",
+			"editor.formatOnPaste": false,
+			"editor.formatOnSave": true,
+			"editor.formatOnType": true,
+			"files.trimTrailingWhitespace": true
+		}
+	},
+	"remoteUser": "vscode"
 }
