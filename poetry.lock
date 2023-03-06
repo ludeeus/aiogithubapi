@@ -937,21 +937,22 @@ testing = ["argcomplete", "hypothesis (>=3.56)", "mock", "nose", "pygments (>=2.
 
 [[package]]
 name = "pytest-asyncio"
-version = "0.15.1"
-description = "Pytest support for asyncio."
+version = "0.20.3"
+description = "Pytest support for asyncio"
 category = "dev"
 optional = false
-python-versions = ">= 3.6"
+python-versions = ">=3.7"
 files = [
-    {file = "pytest-asyncio-0.15.1.tar.gz", hash = "sha256:2564ceb9612bbd560d19ca4b41347b54e7835c2f792c504f698e05395ed63f6f"},
-    {file = "pytest_asyncio-0.15.1-py3-none-any.whl", hash = "sha256:3042bcdf1c5d978f6b74d96a151c4cfb9dcece65006198389ccd7e6c60eb1eea"},
+    {file = "pytest-asyncio-0.20.3.tar.gz", hash = "sha256:83cbf01169ce3e8eb71c6c278ccb0574d1a7a3bb8eaaf5e50e0ad342afb33b36"},
+    {file = "pytest_asyncio-0.20.3-py3-none-any.whl", hash = "sha256:f129998b209d04fcc65c96fc85c11e5316738358909a8399e93be553d7656442"},
 ]
 
 [package.dependencies]
-pytest = ">=5.4.0"
+pytest = ">=6.1.0"
 
 [package.extras]
-testing = ["coverage", "hypothesis (>=5.7.1)"]
+docs = ["sphinx (>=5.3)", "sphinx-rtd-theme (>=1.0)"]
+testing = ["coverage (>=6.2)", "flaky (>=3.5.0)", "hypothesis (>=5.7.1)", "mypy (>=0.931)", "pytest-trio (>=0.7.0)"]
 
 [[package]]
 name = "pytest-cov"
@@ -1174,4 +1175,4 @@ testing = ["flake8 (<5)", "func-timeout", "jaraco.functools", "jaraco.itertools"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "7c25688875b250fe6558947333cb21088b94304cd97abb642bbc371f79a2bdc6"
+content-hash = "2ed36a92a60b8e484a7fa1f966cc62e5f3a9fa94031f259dde5b8b44be338230"
