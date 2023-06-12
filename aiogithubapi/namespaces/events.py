@@ -66,12 +66,12 @@ class _GitHubEventsBaseNamespace(BaseNamespace):
 
          `event_callback`
 
-         An async funtion that will be called when new events come in,
+         An async function that will be called when new events come in,
          the event will be passed as the first argument.
 
          `error_callback` (Optional)
 
-         An async funtion that will be called when errors occour,
+         An async function that will be called when errors occur,
          the exception that where raised will be passed.
 
         https://docs.github.com/en/rest/reference/activity#list-public-events
@@ -202,12 +202,12 @@ class GitHubEventsReposNamespace(_GitHubEventsBaseNamespace):
 
          `event_callback`
 
-         An async funtion that will be called when new events come in,
+         An async function that will be called when new events come in,
          the event will be passed as the first argument.
 
          `error_callback` (Optional)
 
-         An async funtion that will be called when errors occour,
+         An async function that will be called when errors occur,
          the exception that where raised will be passed.
 
         https://docs.github.com/en/rest/reference/activity#list-repository-events

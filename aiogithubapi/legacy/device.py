@@ -65,7 +65,7 @@ class AIOGitHubAPIDeviceLogin:
         await self._close()
 
     async def async_register_device(self) -> AIOGitHubAPILoginDevice:
-        """Register the device and return a object that contains the user code for authorization."""
+        """Register the device and return an object that contains the user code for authorization."""
         params = {"client_id": self.client_id, "scope": self.scope}
         response = await async_call_api(
             session=self.session,

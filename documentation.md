@@ -42,5 +42,5 @@ asyncio.get_event_loop().run_until_complete(with_token())
 ## Usage notes
 
 - When constructing the client, you should pass a `client_name` parameter, or a user agent string.
-- Each response object has a `etag` attribute, which can be used to make subsequent requests.
-    - If you pass a `etag` parameter, and the API returns a 304 Not Modified, the client will raise `GitHubNotModifiedException`
+- Each response object has an `etag` attribute, which can be used to make subsequent requests.
+    - If you pass an `etag` parameter, and the API returns a 304 Not Modified, the client will raise `GitHubNotModifiedException`
