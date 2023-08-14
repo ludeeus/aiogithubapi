@@ -6,7 +6,7 @@ https://docs.github.com/en/rest/reference/activity#events
 from __future__ import annotations
 
 import asyncio
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import TYPE_CHECKING, Any, Awaitable, Callable, Dict, Literal, TypedDict
 from uuid import uuid4
 
@@ -81,7 +81,7 @@ class _GitHubEventsBaseNamespace(BaseNamespace):
         async def _subscriber():
             _last_etag: str | None = None
             _poll_time: int = 60
-            _target_time = datetime.utcnow().isoformat()
+            _target_time = datetime.now(tz=timezone.utc).replace(tzinfo=None).isoformat()
             LOGGER.debug("Starting event subscription for github.com/%s", name)
             subscription_task = self._subscriptions[subscription_id]
             while not subscription_task.cancelled():
