@@ -6,7 +6,7 @@ https://docs.github.com/en/rest/reference/activity#events
 from __future__ import annotations
 
 import asyncio
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import TYPE_CHECKING, Any, Awaitable, Callable, Dict, Literal, TypedDict
 from uuid import uuid4
 
@@ -66,12 +66,12 @@ class _GitHubEventsBaseNamespace(BaseNamespace):
 
          `event_callback`
 
-         An async funtion that will be called when new events come in,
+         An async function that will be called when new events come in,
          the event will be passed as the first argument.
 
          `error_callback` (Optional)
 
-         An async funtion that will be called when errors occour,
+         An async function that will be called when errors occur,
          the exception that where raised will be passed.
 
         https://docs.github.com/en/rest/reference/activity#list-public-events
@@ -81,7 +81,7 @@ class _GitHubEventsBaseNamespace(BaseNamespace):
         async def _subscriber():
             _last_etag: str | None = None
             _poll_time: int = 60
-            _target_time = datetime.utcnow().isoformat()
+            _target_time = datetime.now(tz=timezone.utc).replace(tzinfo=None).isoformat()
             LOGGER.debug("Starting event subscription for github.com/%s", name)
             subscription_task = self._subscriptions[subscription_id]
             while not subscription_task.cancelled():
@@ -202,12 +202,12 @@ class GitHubEventsReposNamespace(_GitHubEventsBaseNamespace):
 
          `event_callback`
 
-         An async funtion that will be called when new events come in,
+         An async function that will be called when new events come in,
          the event will be passed as the first argument.
 
          `error_callback` (Optional)
 
-         An async funtion that will be called when errors occour,
+         An async function that will be called when errors occur,
          the exception that where raised will be passed.
 
         https://docs.github.com/en/rest/reference/activity#list-repository-events

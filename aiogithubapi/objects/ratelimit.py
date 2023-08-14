@@ -4,7 +4,7 @@ AIOGitHubAPI: objects.ratelimit
 https://developer.github.com/v3/rate_limit/
 """
 # pylint: disable=missing-docstring
-from datetime import datetime
+from datetime import datetime, timezone
 
 from .base import AIOGitHubAPIBase
 
@@ -24,10 +24,10 @@ class AIOGitHubAPIRateLimit(AIOGitHubAPIBase):
 
     @property
     def reset_utc(self) -> None:
-        """Return date + time in UTC for next reset."""
+        """Return naïve date + time in UTC for next reset."""
         if self.reset is None:
             return None
-        return datetime.utcfromtimestamp(int(self.reset))
+        return datetime.fromtimestamp(int(self.reset), tz=timezone.utc).replace(tzinfo=None)
 
     def load_from_response_headers(self, headers: dict) -> None:
         """

@@ -12,7 +12,7 @@ from ...repository.issue.comment import (
 
 
 class AIOGitHubAPIRepositoryIssue(AIOGitHubAPIBaseClient):
-    """Issue commment user GitHub API implementation."""
+    """Issue comment user GitHub API implementation."""
 
     @property
     def html_url(self):
