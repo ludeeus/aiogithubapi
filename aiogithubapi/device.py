@@ -98,7 +98,7 @@ class GitHubDeviceAPI(GitHubBase):
         self,
         **kwargs: Dict[GitHubRequestKwarg, Any],
     ) -> GitHubResponseModel[GitHubLoginDeviceModel]:
-        """Register the device and return a object that contains the user code for authorization."""
+        """Register the device and return an object that contains the user code for authorization."""
         response = await self._client.async_call_api(
             endpoint=OAUTH_DEVICE_LOGIN_PATH,
             **{
@@ -155,9 +155,11 @@ class GitHubDeviceAPI(GitHubBase):
             if error := response.data.get("error"):
                 self.logger.debug(response.data.get("error_description"))
                 if error in (DeviceFlowError.AUTHORIZATION_PENDING, DeviceFlowError.SLOW_DOWN):
-                    await asyncio.sleep(
-                        (self._interval or 1) + (5 if error == DeviceFlowError.SLOW_DOWN else 0)
-                    )
+                    if interval := response.data.get("interval"):
+                        self.logger.info(
+                            "Got new interval instruction of %s from the API", interval
+                        )
+                    await asyncio.sleep(interval or self._interval or 5)
                 else:
                     raise GitHubException(response.data.get("error_description"))
             else:

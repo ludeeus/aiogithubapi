@@ -3,7 +3,7 @@
 
 class GitHubException(BaseException):
     """
-    This is raised when unknown exceptions occour.
+    This is raised when unknown exceptions occur.
 
     And it's used as a base for all other exceptions
     so if you want to catch all GitHub related errors
@@ -28,7 +28,7 @@ class GitHubPayloadException(GitHubException):
 
 
 class GitHubGraphQLException(GitHubException):
-    """This is raised when the response from GraphQL calls have erros."""
+    """This is raised when the response from GraphQL calls have errors."""
 
 
 class GitHubPermissionException(GitHubException):
@@ -40,4 +40,4 @@ class GitHubNotModifiedException(GitHubException):
 
 
 class GitHubAuthenticationException(GitHubException):
-    """This is raised when we recieve an authentication issue."""
+    """This is raised when we receive an authentication issue."""

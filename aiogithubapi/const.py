@@ -14,13 +14,13 @@ else:
     from enum import Enum
 
     class StrEnum(str, Enum):
-        """Workaround untill lowest version is Python3.11."""
+        """Workaround until lowest version is Python3.11."""
 
         def __str__(self) -> str:
             return str(self.value)
 
     class IntEnum(int, Enum):
-        """Workaround untill lowest version is Python3.11."""
+        """Workaround until lowest version is Python3.11."""
 
 
 GenericType = TypeVar("GenericType")
@@ -36,7 +36,7 @@ ACCEPT_HEADERS: Dict[str, str] = {
 }
 
 # This is the default user agent,
-# but it is adviced to use your own when building out your application
+# but it is advised to use your own when building out your application
 DEFAULT_USER_AGENT = f"aiogithubapi/{PROJECT_VERSION}"
 
 # https://docs.github.com/en/rest/overview/api-versions
@@ -93,7 +93,7 @@ class GitHubClientKwarg(StrEnum):
     HEADERS:
         Used to set the base headers for all requests.
     BASE_URL:
-        Used to ovveride the base url for all requests. Defaults to https://api.github.com .
+        Used to override the base url for all requests. Defaults to https://api.github.com .
     TIMEOUT:
         Used to set the timeout for all requests. Defaults to 20
     CLIENT_NAME:
