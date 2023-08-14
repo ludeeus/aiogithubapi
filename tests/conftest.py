@@ -6,6 +6,7 @@ from unittest.mock import AsyncMock, patch
 
 import aiohttp
 import pytest
+import pytest_asyncio
 
 from aiogithubapi import GitHub, GitHubAPI, GitHubDevice, GitHubDeviceAPI
 from aiogithubapi.client import AIOGitHubAPIClient
@@ -44,7 +45,7 @@ def mock_response():
     yield MockResponse()
 
 
-@pytest.fixture(autouse=True)
+@pytest_asyncio.fixture(autouse=True)
 async def client_session(mock_response, mock_requests):
     """Mock our the request part of the client session."""
 
@@ -63,14 +64,14 @@ async def client_session(mock_response, mock_requests):
         yield session
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def client(client_session):
     """Fixture to provide a GitHub client object."""
     client_obj = AIOGitHubAPIClient(client_session, TOKEN)
     yield client_obj
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def github(client, client_session):
     """Fixture to provide a GitHub object."""
     async with GitHub(TOKEN, session=client_session) as github_obj:
@@ -78,7 +79,7 @@ async def github(client, client_session):
         yield github_obj
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def github_api(client_session, mock_response):
     """Fixture to provide a GitHub object."""
     mock_response.throw_on_file_error = True
@@ -89,14 +90,14 @@ async def github_api(client_session, mock_response):
         yield github_obj
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def github_device(client_session):
     """Fixture to provide a GitHub Devlice object."""
     async with GitHubDevice(CLIENT_ID, session=client_session) as github_device_obj:
         yield github_device_obj
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def github_device_api(client_session):
     """Fixture to provide a GitHub Devlice object."""
     async with GitHubDeviceAPI(
