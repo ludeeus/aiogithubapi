@@ -88,7 +88,7 @@ async def test_wait_for_confirmation(
         {
             "error": DeviceFlowError.SLOW_DOWN,
             "error_description": "Too many requests have been made in the same timeframe.",
-            "interval": 20
+            "interval": 20,
         },
         {
             "error": DeviceFlowError.AUTHORIZATION_PENDING,
@@ -107,10 +107,9 @@ async def test_wait_for_confirmation(
 
     # Use default interval
     assert asyncio_sleep.call_args_list[-3][0][0] == 1
-    # Use new interval from API
+    # Use new interval from API for all next calls
     assert asyncio_sleep.call_args_list[-2][0][0] == 20
-    # Use default interval
-    assert asyncio_sleep.call_args_list[-1][0][0] == 1
+    assert asyncio_sleep.call_args_list[-1][0][0] == 20
 
     assert mock_requests.last_request["url"] == "https://github.com/login/oauth/access_token"
     assert "Pending user authorization" in caplog.text
@@ -122,7 +121,6 @@ async def test_error_while_waiting(
     github_device_api: GitHubDeviceAPI,
     mock_response: MockResponse,
 ):
-    mock_response.mock_data = {"error": "any",
-                               "error_description": "Any error message"}
+    mock_response.mock_data = {"error": "any", "error_description": "Any error message"}
     with pytest.raises(GitHubException, match="Any error message"):
         await github_device_api.activation(device_code=DEVICE_CODE)
