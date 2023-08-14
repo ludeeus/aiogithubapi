@@ -81,7 +81,7 @@ class _GitHubEventsBaseNamespace(BaseNamespace):
         async def _subscriber():
             _last_etag: str | None = None
             _poll_time: int = 60
-            _target_time = datetime.now(timezone.utc).replace(tzinfo=None).isoformat()
+            _target_time = datetime.now(tz=timezone.utc).replace(tzinfo=None).isoformat()
             LOGGER.debug("Starting event subscription for github.com/%s", name)
             subscription_task = self._subscriptions[subscription_id]
             while not subscription_task.cancelled():

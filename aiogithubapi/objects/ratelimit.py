@@ -27,7 +27,7 @@ class AIOGitHubAPIRateLimit(AIOGitHubAPIBase):
         """Return naïve date + time in UTC for next reset."""
         if self.reset is None:
             return None
-        return datetime.fromtimestamp(int(self.reset), timezone.utc).replace(tzinfo=None)
+        return datetime.fromtimestamp(int(self.reset), tz=timezone.utc).replace(tzinfo=None)
 
     def load_from_response_headers(self, headers: dict) -> None:
         """
