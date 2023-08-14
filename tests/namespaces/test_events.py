@@ -4,6 +4,7 @@ import asyncio
 from unittest.mock import AsyncMock, patch
 
 import pytest
+import pytest_asyncio
 import aiohttp
 
 from aiogithubapi import GitHubAPI, GitHubEventModel
@@ -11,7 +12,7 @@ from aiogithubapi import GitHubAPI, GitHubEventModel
 from tests.common import TEST_REPOSITORY_NAME, TOKEN, MockedRequests, MockResponse
 
 
-@pytest.fixture()
+@pytest_asyncio.fixture
 async def wait_mock():
     async def _mocker(_, __):
         await asyncio.sleep(0)
@@ -22,7 +23,8 @@ async def wait_mock():
 
 @pytest.mark.asyncio
 async def test_subscription(github_api: GitHubAPI, mock_requests: MockedRequests):
-    tasks_before = asyncio.all_tasks(github_api._client._loop)  # This includes the test task
+    tasks_before = asyncio.all_tasks(
+        github_api._client._loop)  # This includes the test task
     assert len(tasks_before) == 1
 
     event_callback_mock = AsyncMock()
@@ -40,7 +42,8 @@ async def test_subscription(github_api: GitHubAPI, mock_requests: MockedRequests
 
     assert len(asyncio.all_tasks(github_api._client._loop) - tasks_before) == 1
 
-    tasks = github_api.repos.events.unsubscribe(subscription_id=subscription_id)
+    tasks = github_api.repos.events.unsubscribe(
+        subscription_id=subscription_id)
     await asyncio.wait(tasks)
     assert not github_api.repos.events._subscriptions
     assert len(asyncio.all_tasks(github_api._client._loop) - tasks_before) == 0
@@ -48,7 +51,8 @@ async def test_subscription(github_api: GitHubAPI, mock_requests: MockedRequests
 
 @pytest.mark.asyncio
 async def test_stopping_all_subscriptions(github_api: GitHubAPI, mock_requests: MockedRequests):
-    tasks_before = asyncio.all_tasks(github_api._client._loop)  # This includes the test task
+    tasks_before = asyncio.all_tasks(
+        github_api._client._loop)  # This includes the test task
     assert len(tasks_before) == 1
 
     event_callback_mock = AsyncMock()
