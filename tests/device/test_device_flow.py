@@ -86,6 +86,11 @@ async def test_wait_for_confirmation(
             "error_description": "Pending user authorization",
         },
         {
+            "error": DeviceFlowError.SLOW_DOWN,
+            "error_description": "Too many requests have been made in the same timeframe.",
+            "interval": 20
+        },
+        {
             "error": DeviceFlowError.AUTHORIZATION_PENDING,
             "error_description": "Pending user authorization",
         },
@@ -97,11 +102,19 @@ async def test_wait_for_confirmation(
     ]
     response = await github_device_api.activation(device_code=DEVICE_CODE)
     assert response.status == 200
-    assert mock_requests.called == 4
-    assert asyncio_sleep.call_count == 3
+    assert mock_requests.called == 5
+    assert asyncio_sleep.call_count == 4
+
+    # Use default interval
+    assert asyncio_sleep.call_args_list[-3][0][0] == 1
+    # Use new interval from API
+    assert asyncio_sleep.call_args_list[-2][0][0] == 20
+    # Use default interval
     assert asyncio_sleep.call_args_list[-1][0][0] == 1
+
     assert mock_requests.last_request["url"] == "https://github.com/login/oauth/access_token"
     assert "Pending user authorization" in caplog.text
+    assert "Got new interval instruction of 20 from the API" in caplog.text
 
 
 @pytest.mark.asyncio
@@ -109,6 +122,7 @@ async def test_error_while_waiting(
     github_device_api: GitHubDeviceAPI,
     mock_response: MockResponse,
 ):
-    mock_response.mock_data = {"error": "any", "error_description": "Any error message"}
+    mock_response.mock_data = {"error": "any",
+                               "error_description": "Any error message"}
     with pytest.raises(GitHubException, match="Any error message"):
         await github_device_api.activation(device_code=DEVICE_CODE)
