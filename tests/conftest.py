@@ -28,19 +28,19 @@ def asyncio_sleep():
 
 @pytest.fixture()
 def mock_requests():
-    """Return a new mock request instanse."""
+    """Return a new mock request instance."""
     yield MockedRequests()
 
 
 @pytest.fixture()
 def response():
-    """Return a new mock response instanse."""
+    """Return a new mock response instance."""
     yield MockResponse()
 
 
 @pytest.fixture()
 def mock_response():
-    """Return a new mock response instanse."""
+    """Return a new mock response instance."""
     yield MockResponse()
 
 

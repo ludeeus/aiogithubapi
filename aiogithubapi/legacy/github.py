@@ -63,7 +63,7 @@ class AIOGitHubAPI(AIOGitHubAPIBase):
         repo: str,
         etag: Optional[str] = None,
     ) -> AIOGitHubAPIRepository:
-        """Retrun AIOGitHubAPIRepository object."""
+        """Return AIOGitHubAPIRepository object."""
         _endpoint = f"/repos/{repo}"
         _headers = {"Accept": ACCEPT_HEADERS["preview"]}
         if etag:
@@ -77,7 +77,7 @@ class AIOGitHubAPI(AIOGitHubAPIBase):
         self, org: str, page: int = 1, etag: Optional[str] = None
     ) -> List[AIOGitHubAPIRepository]:
         """
-        Retrun a list of AIOGitHubAPIRepository objects.
+        Return a list of AIOGitHubAPIRepository objects.
 
         param | required | Default | description
         -- | -- | -- | --
@@ -104,7 +104,7 @@ class AIOGitHubAPI(AIOGitHubAPIBase):
         return response.data.get("data")
 
     async def get_rate_limit(self) -> dict:
-        """Retrun current rate limits."""
+        """Return current rate limits."""
         _endpoint = "/rate_limit"
 
         await self.client.get(endpoint=_endpoint)
@@ -112,7 +112,7 @@ class AIOGitHubAPI(AIOGitHubAPIBase):
 
     async def render_markdown(self, content: str, etag: Optional[str] = None) -> str:
         """
-        Retrun AIOGitHubAPIRepository object.
+        Return AIOGitHubAPIRepository object.
 
         [API Docs](https://docs.github.com/en/rest/reference/markdown#render-a-markdown-document-in-raw-mode)
 

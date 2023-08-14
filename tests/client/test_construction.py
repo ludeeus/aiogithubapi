@@ -10,7 +10,7 @@ from tests.common import TOKEN
 
 
 @pytest.mark.asyncio
-async def test_client_constrution_defaults(
+async def test_client_construction_defaults(
     client_session: ClientSession, caplog: pytest.CaptureFixture
 ):
     client = GitHubClient(session=client_session)
@@ -31,7 +31,7 @@ async def test_client_constrution_defaults(
 
 
 @pytest.mark.asyncio
-async def test_client_constrution_with_token(client_session: ClientSession):
+async def test_client_construction_with_token(client_session: ClientSession):
     client = GitHubClient(session=client_session, token=TOKEN)
     base_request_data = client._base_request_data
     assert base_request_data.token == TOKEN
@@ -42,7 +42,7 @@ async def test_client_constrution_with_token(client_session: ClientSession):
 
 
 @pytest.mark.asyncio
-async def test_client_constrution_with_api_version(client_session: ClientSession):
+async def test_client_construction_with_api_version(client_session: ClientSession):
     client = GitHubClient(session=client_session, token=TOKEN, api_version="3000-01-01")
     base_request_data = client._base_request_data
     assert base_request_data.token == TOKEN
@@ -54,14 +54,14 @@ async def test_client_constrution_with_api_version(client_session: ClientSession
 
 
 @pytest.mark.asyncio
-async def test_client_constrution_with_kwargs_timeout(client_session: ClientSession):
+async def test_client_construction_with_kwargs_timeout(client_session: ClientSession):
     client = GitHubClient(session=client_session, **{GitHubClientKwarg.TIMEOUT: 10})
     base_request_data = client._base_request_data
     assert base_request_data.timeout == 10
 
 
 @pytest.mark.asyncio
-async def test_client_constrution_with_kwargs_base_url(client_session: ClientSession):
+async def test_client_construction_with_kwargs_base_url(client_session: ClientSession):
     client = GitHubClient(
         session=client_session, **{GitHubClientKwarg.BASE_URL: "https://example.com"}
     )
@@ -70,7 +70,7 @@ async def test_client_constrution_with_kwargs_base_url(client_session: ClientSes
 
 
 @pytest.mark.asyncio
-async def test_client_constrution_with_kwargs_headers(client_session: ClientSession):
+async def test_client_construction_with_kwargs_headers(client_session: ClientSession):
     client = GitHubClient(
         session=client_session, **{GitHubClientKwarg.HEADERS: {"User-Agent": "test/client"}}
     )
@@ -79,7 +79,7 @@ async def test_client_constrution_with_kwargs_headers(client_session: ClientSess
 
 
 @pytest.mark.asyncio
-async def test_client_constrution_with_kwargs_client_name(client_session: ClientSession):
+async def test_client_construction_with_kwargs_client_name(client_session: ClientSession):
     client = GitHubClient(
         session=client_session, **{GitHubClientKwarg.CLIENT_NAME: "test_client/1.2.3"}
     )

@@ -98,7 +98,7 @@ class GitHubDeviceAPI(GitHubBase):
         self,
         **kwargs: Dict[GitHubRequestKwarg, Any],
     ) -> GitHubResponseModel[GitHubLoginDeviceModel]:
-        """Register the device and return a object that contains the user code for authorization."""
+        """Register the device and return an object that contains the user code for authorization."""
         response = await self._client.async_call_api(
             endpoint=OAUTH_DEVICE_LOGIN_PATH,
             **{

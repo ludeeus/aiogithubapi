@@ -11,7 +11,7 @@ from ...users.user import AIOGitHubAPIUsersUser
 
 
 class AIOGitHubAPIRepositoryIssueCommentUser(AIOGitHubAPIUsersUser):
-    """Issue commment user GitHub API implementation."""
+    """Issue comment user GitHub API implementation."""
 
     @property
     def login(self):
