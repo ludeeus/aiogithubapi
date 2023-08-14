@@ -135,7 +135,6 @@ class GitHubDeviceAPI(GitHubBase):
 
         _user_confirmed = None
         while _user_confirmed is None:
-
             if self._expires < datetime.timestamp(datetime.now()):
                 raise GitHubException("User took too long to enter key")
 
