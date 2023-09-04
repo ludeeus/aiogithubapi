@@ -31,7 +31,7 @@ isort = "^5.12.0"
 mypy = "^1.5"
 pdoc3 = "^0.10.0"
 pylint = "^2.17.5"
-pytest = "^7.4.0"
+pytest = "^7.4.1"
 pytest-asyncio = "^0.21.1"
 pytest-cov = "^4.1.0"
 
