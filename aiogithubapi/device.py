@@ -135,7 +135,6 @@ class GitHubDeviceAPI(GitHubBase):
 
         _user_confirmed = None
         while _user_confirmed is None:
-
             if self._expires < datetime.timestamp(datetime.now()):
                 raise GitHubException("User took too long to enter key")
 
@@ -156,10 +155,11 @@ class GitHubDeviceAPI(GitHubBase):
                 self.logger.debug(response.data.get("error_description"))
                 if error in (DeviceFlowError.AUTHORIZATION_PENDING, DeviceFlowError.SLOW_DOWN):
                     if interval := response.data.get("interval"):
+                        self._interval = interval
                         self.logger.info(
                             "Got new interval instruction of %s from the API", interval
                         )
-                    await asyncio.sleep(interval or self._interval or 5)
+                    await asyncio.sleep(self._interval or 5)
                 else:
                     raise GitHubException(response.data.get("error_description"))
             else:
