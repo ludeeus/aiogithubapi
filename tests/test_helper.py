@@ -29,6 +29,8 @@ def test_sigstore_success():
             repository="test",
             workflow="test",
             tag="test",
+            workflow_name="test",
+            workflow_trigger="release",
         )
         assert verification.success
         assert "reason" not in verification.json()
@@ -46,6 +48,8 @@ def test_sigstore_failure():
             repository="test",
             workflow="test",
             tag="test",
+            workflow_name="test",
+            workflow_trigger="release",
         )
         assert not verification.success
         assert verification.reason == "Some reason"
