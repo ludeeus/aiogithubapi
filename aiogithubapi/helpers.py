@@ -47,7 +47,7 @@ async def async_call_api(
     )
 
 
-def sigstore_verify_downloaded_release_asset(
+def sigstore_verify_release_asset(
     asset: bytes,
     signature_bundle: bytes,
     repository: str,

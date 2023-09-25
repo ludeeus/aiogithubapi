@@ -3,7 +3,7 @@ from io import BytesIO
 import json
 from unittest.mock import patch
 from aiogithubapi import Repository
-from aiogithubapi.helpers import repository_full_name, sigstore_verify_downloaded_release_asset
+from aiogithubapi.helpers import repository_full_name, sigstore_verify_release_asset
 from sigstore.verify import VerificationSuccess, VerificationFailure
 
 
@@ -23,7 +23,7 @@ def test_sigstore_success():
     with patch("aiogithubapi.helpers.Verifier.verify", return_value=VerificationSuccess()), patch(
         "aiogithubapi.helpers.VerificationMaterials.from_bundle"
     ):
-        verification = sigstore_verify_downloaded_release_asset(
+        verification = sigstore_verify_release_asset(
             asset=b"test",
             signature_bundle=bytes(json.dumps({"critical": {"identity": "test"}}), "utf-8"),
             repository="test",
@@ -40,7 +40,7 @@ def test_sigstore_failure():
         "aiogithubapi.helpers.Verifier.verify",
         return_value=VerificationFailure(reason="Some reason"),
     ), patch("aiogithubapi.helpers.VerificationMaterials.from_bundle"):
-        verification = sigstore_verify_downloaded_release_asset(
+        verification = sigstore_verify_release_asset(
             asset=b"test",
             signature_bundle=bytes(json.dumps({"critical": {"identity": "test"}}), "utf-8"),
             repository="test",
