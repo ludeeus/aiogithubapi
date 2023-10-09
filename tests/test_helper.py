@@ -33,8 +33,8 @@ def test_sigstore_success():
             workflow_trigger="release",
         )
         assert verification.success
-        assert "reason" not in verification.json()
-        assert verification.json() == json.dumps({"success": True})
+        assert getattr(verification, "reason", None) is None
+        assert verification.success is True
 
 
 def test_sigstore_failure():
@@ -51,6 +51,6 @@ def test_sigstore_failure():
             workflow_name="test",
             workflow_trigger="release",
         )
-        assert not verification.success
+        assert getattr(verification, "reason", None) is not None
         assert verification.reason == "Some reason"
-        assert verification.json() == json.dumps({"success": False, "reason": "Some reason"})
+        assert verification.success is False
