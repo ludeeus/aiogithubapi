@@ -47,8 +47,6 @@ jobs:
           - version: "3.10"
           - version: "3.11"
           - version: "3.12"
-          - version: "3.13"
-            prereleases: true
     steps:
       - name: 📥 Checkout the repository
         uses: actions/checkout@v4.1.0
