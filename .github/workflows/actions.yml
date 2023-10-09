@@ -18,10 +18,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 📥 Checkout the repository
-        uses: actions/checkout@v4.0.0
+        uses: actions/checkout@v4.1.0
 
       - name: 🛠 Set up Python 3
-        uses: actions/setup-python@v4.7.0
+        uses: actions/setup-python@v4.7.1
         id: python
         with:
           python-version: 3.x
@@ -47,15 +47,14 @@ jobs:
           - version: "3.10"
           - version: "3.11"
           - version: "3.12"
-            prereleases: true
     steps:
       - name: 📥 Checkout the repository
-        uses: actions/checkout@v4.0.0
+        uses: actions/checkout@v4.1.0
         with:
           fetch-depth: 0
 
-      - name: 🛠️ Set up Python ${{ matrix.python.version }}
-        uses: actions/setup-python@v4.7.0
+      - name: 🛠️ Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4.7.1
         with:
           python-version: ${{ matrix.python.version }}
           allow-prereleases: ${{ matrix.python.prereleases || false }}
@@ -75,12 +74,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 📥 Checkout the repository
-        uses: actions/checkout@v4.0.0
+        uses: actions/checkout@v4.1.0
         with:
           fetch-depth: 0
 
       - name: 🛠 Set up Python 3.10
-        uses: actions/setup-python@v4.7.0
+        uses: actions/setup-python@v4.7.1
         id: python
         with:
           python-version: "3.10"
