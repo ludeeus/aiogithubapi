@@ -21,7 +21,7 @@ from .const import (
     GitHubRequestKwarg,
     HttpMethod,
 )
-from .exceptions import GitHubException
+from .exceptions import GitHubAuthenticationException, GitHubException
 from .legacy.device import AIOGitHubAPIDeviceLogin as LegacyAIOGitHubAPIDeviceLogin
 from .models.base import GitHubBase
 from .models.device_login import GitHubLoginDeviceModel
@@ -150,6 +150,14 @@ class GitHubDeviceAPI(GitHubBase):
                     },
                 },
             )
+
+            if (
+                isinstance(response.data, str)
+                and "You have exceeded a secondary rate limit" in response.data
+            ):
+                raise GitHubAuthenticationException(
+                    "Secondary rate limit exceeded, try again in 1 hour"
+                )
 
             if error := response.data.get("error"):
                 self.logger.debug(response.data.get("error_description"))
