@@ -1,7 +1,7 @@
 # aiogithubapi
 
 [![codecov](https://codecov.io/gh/ludeeus/aiogithubapi/branch/main/graph/badge.svg)](https://codecov.io/gh/ludeeus/aiogithubapi)
-![python version](https://img.shields.io/badge/Python-3.8=><=3.12-blue.svg)
+![python version](https://img.shields.io/badge/Python-3.11=><=3.12-blue.svg)
 [![PyPI](https://img.shields.io/pypi/v/aiogithubapi)](https://pypi.org/project/aiogithubapi)
 ![Actions](https://github.com/ludeeus/aiogithubapi/workflows/Actions/badge.svg?branch=main)
 
