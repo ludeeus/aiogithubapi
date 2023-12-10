@@ -2,6 +2,7 @@
 # pylint: disable=missing-docstring,protected-access
 from datetime import datetime
 from unittest.mock import AsyncMock
+from aiogithubapi.exceptions import GitHubAuthenticationException
 
 import pytest
 
@@ -123,4 +124,14 @@ async def test_error_while_waiting(
 ):
     mock_response.mock_data = {"error": "any", "error_description": "Any error message"}
     with pytest.raises(GitHubException, match="Any error message"):
+        await github_device_api.activation(device_code=DEVICE_CODE)
+
+
+@pytest.mark.asyncio
+async def test_secondary_rate_limit(
+    github_device_api: GitHubDeviceAPI,
+    mock_response: MockResponse,
+):
+    mock_response.mock_data = "<html><p>You have exceeded a secondary rate limit.<br></html>"
+    with pytest.raises(GitHubAuthenticationException, match="Secondary rate limit exceeded"):
         await github_device_api.activation(device_code=DEVICE_CODE)
