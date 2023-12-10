@@ -22,6 +22,7 @@ version = "0"
 [tool.poetry.dependencies]
 python = "^3.8"
 aiohttp = "^3.8"
+async-timeout = "^4"
 backoff = "<3"
 sigstore = "<2"
 
