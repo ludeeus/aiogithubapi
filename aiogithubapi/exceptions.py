@@ -1,7 +1,7 @@
 """Custom exceptions for aiogithubapi."""
 
 
-class GitHubException(BaseException):
+class GitHubException(Exception):
     """
     This is raised when unknown exceptions occur.
 
