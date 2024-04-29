@@ -24,7 +24,7 @@ python = "^3.8"
 aiohttp = "^3.8"
 async-timeout = "^4"
 backoff = "<3"
-sigstore = "<2"
+sigstore = "^2.1.5"
 
 [tool.poetry.dev-dependencies]
 aresponses = "^2.1.6"
