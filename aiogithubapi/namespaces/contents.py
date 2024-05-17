@@ -51,7 +51,7 @@ class GitHubContentsNamespace(BaseNamespace):
             endpoint=f"/repos/{repository_full_name(repository)}"
             f"/contents{f'/{path}' if path else ''}",
             **{
-                GitHubRequestKwarg.HEADERS: {ACCEPT: str(GitHubRequestAcceptHeader.BASE_JSON)},
+                GitHubRequestKwarg.HEADERS: {ACCEPT: GitHubRequestAcceptHeader.BASE_JSON.value},
                 **kwargs,
             },
         )
