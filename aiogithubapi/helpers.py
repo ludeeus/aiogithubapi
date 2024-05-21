@@ -58,14 +58,15 @@ def sigstore_verify_release_asset(
 
     Deprecated function, a replacement will not be added.
     """
-    from warnings import warn
+    from warnings import warn # noqa
 
     warn(
         "The 'sigstore_verify_release_asset' function is deprecated and will be removed in a future version.",
         stacklevel=2,
     )
+    from io import BytesIO # noqa
+
     from sigstore.verify import VerificationMaterials, Verifier, models, policy  # noqa
-    from io import BytesIO
 
     verifier = Verifier.production()
     policies = [
