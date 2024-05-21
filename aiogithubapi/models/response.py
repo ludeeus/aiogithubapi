@@ -1,4 +1,5 @@
 """GitHub response data class."""
+
 # pylint: disable=protected-access
 from __future__ import annotations
 

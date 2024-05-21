@@ -3,6 +3,7 @@ Methods for the events namespace
 
 https://docs.github.com/en/rest/reference/activity#events
 """
+
 from __future__ import annotations
 
 import asyncio

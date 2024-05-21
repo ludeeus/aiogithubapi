@@ -1,4 +1,5 @@
 """AIOGitHubAPI: Exceptions"""
+
 from ..exceptions import (
     GitHubAuthenticationException,
     GitHubException,

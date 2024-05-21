@@ -3,6 +3,7 @@ Methods for the traffic namespace
 
 https://docs.github.com/en/rest/reference/repos#traffic
 """
+
 from __future__ import annotations
 
 from typing import Any, Dict

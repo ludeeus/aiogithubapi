@@ -3,6 +3,7 @@ Methods for the git namespace
 
 https://docs.github.com/en/rest/reference/git
 """
+
 from __future__ import annotations
 
 from typing import Any, Dict

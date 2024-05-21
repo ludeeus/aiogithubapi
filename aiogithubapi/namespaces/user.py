@@ -3,6 +3,7 @@ Methods for the authenticated user namespace
 
 https://docs.github.com/en/rest/reference/users#get-the-authenticated-user
 """
+
 from __future__ import annotations
 
 from typing import Any, Dict

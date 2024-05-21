@@ -3,6 +3,7 @@ Methods for the orgs namespace
 
 https://docs.github.com/en/rest/reference/orgs
 """
+
 from __future__ import annotations
 
 from typing import Any, Dict

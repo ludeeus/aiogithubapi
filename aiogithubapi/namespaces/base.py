@@ -1,4 +1,5 @@
 """Used for the GitHub API namespace."""
+
 from ..client import GitHubClient
 
 

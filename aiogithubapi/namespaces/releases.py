@@ -3,6 +3,7 @@ Methods for the releases namespace
 
 https://docs.github.com/en/rest/reference/repos#releases
 """
+
 from __future__ import annotations
 
 from typing import Any, Dict, List

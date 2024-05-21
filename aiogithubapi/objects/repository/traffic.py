@@ -3,6 +3,7 @@ AIOGitHubAPI: Repository Traffic
 
 https://docs.github.com/en/rest/reference/repos#traffic
 """
+
 from typing import Optional
 
 from aiohttp.hdrs import IF_NONE_MATCH

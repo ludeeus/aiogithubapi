@@ -3,6 +3,7 @@ Methods for the issues namespace
 
 https://docs.github.com/en/rest/reference/pulls
 """
+
 from typing import Any, Dict, List
 
 from ..const import GitHubRequestKwarg, RepositoryType

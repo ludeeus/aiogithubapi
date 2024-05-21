@@ -4,6 +4,7 @@ AIOGitHubAPI: AioGitHubClient
 This is the class that do the requests against the API
 It also keeps track of ratelimits
 """
+
 # pylint: disable=redefined-builtin, too-many-arguments
 from __future__ import annotations
 

@@ -3,6 +3,7 @@ Methods for the users namespace
 
 https://docs.github.com/en/rest/reference/users
 """
+
 from __future__ import annotations
 
 from typing import Any, Dict

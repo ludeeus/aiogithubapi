@@ -32,7 +32,7 @@ setuptools = { version = ">=60.0.0", optional = true }
 
 [tool.poetry.dev-dependencies]
 aresponses = "^2.1.6"
-black = "^23.11.0"
+black = "^24.3.0"
 isort = "^5.12.0"
 mypy = "^1.10"
 pdoc3 = "^0.10.0"

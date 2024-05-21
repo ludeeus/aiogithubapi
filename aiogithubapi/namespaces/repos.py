@@ -3,6 +3,7 @@ Methods for the repos namespace
 
 https://docs.github.com/en/rest/reference/repos
 """
+
 from __future__ import annotations
 
 from typing import Any, Dict, List

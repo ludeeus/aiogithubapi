@@ -1,4 +1,5 @@
 """Base class for all GitHub objects."""
+
 from __future__ import annotations
 
 from logging import Logger

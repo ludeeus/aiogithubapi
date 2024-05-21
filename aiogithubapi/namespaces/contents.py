@@ -3,6 +3,7 @@ Methods for the contents namespace
 
 https://docs.github.com/en/rest/reference/repos#contents
 """
+
 from __future__ import annotations
 
 from typing import Any, Dict

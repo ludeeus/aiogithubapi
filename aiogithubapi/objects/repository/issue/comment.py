@@ -3,6 +3,7 @@ AIOGitHubAPI: Issue Comment
 
 https://developer.github.com/v3/issues/comments/
 """
+
 from ...base import AIOGitHubAPIBaseClient
 
 # pylint: disable=missing-docstring

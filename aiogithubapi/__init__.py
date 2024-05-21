@@ -3,6 +3,7 @@ Asynchronous Python client for the GitHub API https://github.com/ludeeus/aiogith
 
 .. include:: ../documentation.md
 """
+
 from .common.exceptions import (
     AIOGitHubAPIAuthenticationException,
     AIOGitHubAPIException,
