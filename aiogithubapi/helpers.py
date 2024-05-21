@@ -1,7 +1,6 @@
 """Helpers for AIOGitHubAPI."""
 from __future__ import annotations
 
-from io import BytesIO
 from typing import TYPE_CHECKING, Optional
 
 import aiohttp
@@ -66,6 +65,7 @@ def sigstore_verify_release_asset(
         stacklevel=2,
     )
     from sigstore.verify import VerificationMaterials, Verifier, models, policy  # noqa
+    from io import BytesIO
 
     verifier = Verifier.production()
     policies = [
