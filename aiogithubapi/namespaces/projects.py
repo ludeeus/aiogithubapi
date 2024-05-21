@@ -3,6 +3,7 @@ Methods for the projects namespace
 
 https://docs.github.com/en/rest/reference/projects
 """
+
 from __future__ import annotations
 
 from typing import Any, Dict

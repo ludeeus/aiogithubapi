@@ -1,4 +1,5 @@
 """This is the class that do the requests against the API."""
+
 from __future__ import annotations
 
 import asyncio

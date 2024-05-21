@@ -1,4 +1,5 @@
 """GitHub pull_request data model."""
+
 from __future__ import annotations
 
 from .issue import GitHubIssueModel

@@ -1,4 +1,5 @@
 """Helpers for AIOGitHubAPI."""
+
 from asyncio import CancelledError, TimeoutError
 from typing import Optional
 

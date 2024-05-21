@@ -3,6 +3,7 @@ Class for OAuth device flow authentication.
 
 https://docs.github.com/en/developers/apps/authorizing-oauth-apps#device-flow
 """
+
 from __future__ import annotations
 
 import asyncio

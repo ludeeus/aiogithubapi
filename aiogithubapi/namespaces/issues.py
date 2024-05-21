@@ -3,6 +3,7 @@ Methods for the issues namespace
 
 https://docs.github.com/en/rest/reference/issues
 """
+
 from __future__ import annotations
 
 from typing import Any, Dict, List

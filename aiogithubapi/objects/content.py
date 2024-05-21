@@ -1,4 +1,5 @@
 """AIOGitHubAPI: objects.content"""
+
 from .base import AIOGitHubAPIBase
 
 
