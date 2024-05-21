@@ -39,7 +39,7 @@ pytest-asyncio = "^0.23.2"
 pytest-cov = "^4.1.0"
 
 [tool.poetry.extras]
-verify = ["sigstore", "securesystemslib"]
+deprecated-verify = ["sigstore", "securesystemslib"]
 
 [tool.black]
 line-length = 100
