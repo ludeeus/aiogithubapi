@@ -1,17 +1,9 @@
 """Helpers for AIOGitHubAPI."""
 from __future__ import annotations
 
-from io import BytesIO
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
 
 import aiohttp
-from sigstore.verify import (
-    VerificationMaterials,
-    VerificationResult,
-    Verifier,
-    models,
-    policy,
-)
 
 from .const import HttpMethod, Repository, RepositoryType
 from .legacy.helpers import (
@@ -20,6 +12,9 @@ from .legacy.helpers import (
     short_sha,
 )
 from .objects.base import AIOGitHubAPIResponse
+
+if TYPE_CHECKING:
+    from sigstore.verify import VerificationResult
 
 
 def repository_full_name(repository: RepositoryType) -> str:
@@ -59,7 +54,20 @@ def sigstore_verify_release_asset(
     offline_verification: bool = False,
     **kwargs,
 ) -> VerificationResult:
-    """Verify release asset."""
+    """Verify release asset.
+
+    Deprecated function, a replacement will not be added.
+    """
+    from warnings import warn  # noqa
+
+    warn(
+        "The 'sigstore_verify_release_asset' function is deprecated and will be removed in a future version.",
+        stacklevel=2,
+    )
+    from io import BytesIO  # noqa
+
+    from sigstore.verify import VerificationMaterials, Verifier, models, policy  # noqa
+
     verifier = Verifier.production()
     policies = [
         policy.Identity(

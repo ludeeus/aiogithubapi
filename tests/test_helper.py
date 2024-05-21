@@ -20,8 +20,8 @@ def test_repository():
 
 
 def test_sigstore_success():
-    with patch("aiogithubapi.helpers.Verifier.verify", return_value=VerificationSuccess()), patch(
-        "aiogithubapi.helpers.VerificationMaterials.from_bundle"
+    with patch("sigstore.verify.Verifier.verify", return_value=VerificationSuccess()), patch(
+        "sigstore.verify.VerificationMaterials.from_bundle"
     ):
         verification = sigstore_verify_release_asset(
             asset=b"test",
@@ -39,9 +39,9 @@ def test_sigstore_success():
 
 def test_sigstore_failure():
     with patch(
-        "aiogithubapi.helpers.Verifier.verify",
+        "sigstore.verify.Verifier.verify",
         return_value=VerificationFailure(reason="Some reason"),
-    ), patch("aiogithubapi.helpers.VerificationMaterials.from_bundle"):
+    ), patch("sigstore.verify.VerificationMaterials.from_bundle"):
         verification = sigstore_verify_release_asset(
             asset=b"test",
             signature_bundle=bytes(json.dumps({"critical": {"identity": "test"}}), "utf-8"),
