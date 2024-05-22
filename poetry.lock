@@ -135,8 +135,8 @@ files = [
 [package.dependencies]
 aiohttp = [
     {version = ">=3.7.0", markers = "python_version >= \"3.10\" and python_version < \"3.12\""},
-    {version = ">=3.7.0,<3.8.dev0 || >=3.9.dev0", markers = "python_version >= \"3.12\""},
     {version = ">=3.6.0", markers = "python_version >= \"3.8\" and python_version < \"3.10\""},
+    {version = ">=3.7.0,<3.8.dev0 || >=3.9.dev0", markers = "python_version >= \"3.12\""},
 ]
 pytest-asyncio = {version = ">=0.17.0", markers = "python_version >= \"3.7\""}
 
@@ -1279,8 +1279,8 @@ astroid = ">=3.2.2,<=3.3.0-dev0"
 colorama = {version = ">=0.4.5", markers = "sys_platform == \"win32\""}
 dill = [
     {version = ">=0.2", markers = "python_version < \"3.11\""},
-    {version = ">=0.3.6", markers = "python_version >= \"3.11\" and python_version < \"3.12\""},
     {version = ">=0.3.7", markers = "python_version >= \"3.12\""},
+    {version = ">=0.3.6", markers = "python_version >= \"3.11\" and python_version < \"3.12\""},
 ]
 isort = ">=4.2.5,<5.13.0 || >5.13.0,<6"
 mccabe = ">=0.6,<0.8"
@@ -1406,13 +1406,13 @@ use-chardet-on-py3 = ["chardet (>=3.0.2,<6)"]
 
 [[package]]
 name = "securesystemslib"
-version = "0.31.0"
+version = "1.0.0"
 description = "A library that provides cryptographic and general-purpose routines for Secure Systems Lab projects at NYU"
 optional = true
 python-versions = "~=3.8"
 files = [
-    {file = "securesystemslib-0.31.0-py3-none-any.whl", hash = "sha256:549d70f7be6460252d016f03edc5ec0128fee56af55d2b863a5db14541ddbf18"},
-    {file = "securesystemslib-0.31.0.tar.gz", hash = "sha256:c1594afbcd5db198ec90c487e1720154afb71743d9f4bccf3dfda84de650c478"},
+    {file = "securesystemslib-1.0.0-py3-none-any.whl", hash = "sha256:a6d118c24eae8227a1cf2d9c173f47956709958f601eeaa38e86f6505a31455e"},
+    {file = "securesystemslib-1.0.0.tar.gz", hash = "sha256:50f5053e274066502da7785dfd12b21e61131ca6e8b57ecedd2da0d1e9cd66c1"},
 ]
 
 [package.extras]
@@ -1421,9 +1421,9 @@ azurekms = ["azure-identity", "azure-keyvault-keys", "cryptography (>=40.0.0)"]
 crypto = ["cryptography (>=40.0.0)"]
 gcpkms = ["cryptography (>=40.0.0)", "google-cloud-kms"]
 hsm = ["asn1crypto", "cryptography (>=40.0.0)", "pykcs11"]
-pynacl = ["pynacl (>1.2.0)"]
 pyspx = ["pyspx (>=0.5.0)"]
 sigstore = ["sigstore (>=2.0,<3.0)"]
+vault = ["cryptography (>=40.0.0)", "hvac"]
 
 [[package]]
 name = "setuptools"
@@ -1687,4 +1687,4 @@ deprecated-verify = ["securesystemslib", "setuptools", "sigstore"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "02c802ffba0f882b788ea5ec11a69c00387f4a86515a20eba8236cbade817e97"
+content-hash = "e9dadff983168d3421954a2ba4196acc38bdb663a84e3f6607732e44210ea1a9"
