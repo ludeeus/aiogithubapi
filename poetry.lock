@@ -1139,13 +1139,12 @@ files = [
 
 [[package]]
 name = "pdoc3"
-version = "0.10.0"
+version = "0.11.0"
 description = "Auto-generate API documentation for Python projects."
 optional = false
-python-versions = ">= 3.6"
+python-versions = ">=3.7"
 files = [
-    {file = "pdoc3-0.10.0-py3-none-any.whl", hash = "sha256:ba45d1ada1bd987427d2bf5cdec30b2631a3ff5fb01f6d0e77648a572ce6028b"},
-    {file = "pdoc3-0.10.0.tar.gz", hash = "sha256:5f22e7bcb969006738e1aa4219c75a32f34c2d62d46dc9d2fb2d3e0b0287e4b7"},
+    {file = "pdoc3-0.11.0.tar.gz", hash = "sha256:12f28c6ee045ca8ad6a624b86d1982c51de20e83c0a721cd7b0933f44ae0a655"},
 ]
 
 [package.dependencies]
@@ -1687,4 +1686,4 @@ deprecated-verify = ["securesystemslib", "setuptools", "sigstore"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "14682060db9d6027d928f4e0a3f0eb66462b2f86bb6646c4c6ba7163183f1f79"
+content-hash = "141a1ac81cd0934d22fccab5677cf5c9511180363c2126d5f472f926babdcf27"
