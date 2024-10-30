@@ -38,4 +38,4 @@ jobs:
         run: poetry build --no-interaction
 
       - name: 🚀 Publish to PyPi
-        uses: pypa/gh-action-pypi-publish@897895f1e160c830e369f9779632ebc134688e1b # v1.10.2
+        uses: pypa/gh-action-pypi-publish@fb13cb306901256ace3dab689990e13a5550ffaa # v1.11.0
