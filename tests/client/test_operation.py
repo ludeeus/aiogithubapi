@@ -211,3 +211,19 @@ async def test_response_object(github_api: GitHubAPI, mock_response: MockRespons
     mock_response.mock_headers = {"Link": ""}
     response = await github_api.generic("/generic")
     assert response.page_number == 1
+
+
+@pytest.mark.asyncio
+async def test_created_with_message_handling(github_api: GitHubAPI, mock_response: MockResponse):
+    """Ensure 201 Created with a message does not raise an exception."""
+    mock_response.mock_status = 201
+    mock_response.mock_data = {
+        "message": "Some info message",
+        "id": 123,
+        "name": "created-object"
+    }
+    response = await github_api.generic("/generic")
+    assert response.status == HttpStatusCode.CREATED
+    assert response.data["message"] == "Some info message"
+    assert response.data["id"] == 123
+    assert response.data["name"] == "created-object"
