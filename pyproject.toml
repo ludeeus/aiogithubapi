@@ -4,15 +4,10 @@ requires = ["poetry-core>=1.0.0"]
 
 [project]
 name = "aiogithubapi"
-version = "0"
-description = "Asynchronous Python client for the GitHub API"
 readme = "README.md"
 license = { text = "MIT" }
 dynamic = ["readme", "classifiers", "dependencies", "optional-dependencies"]
 requires-python = ">=3.9"
-authors = [
-    { name = "Ludeeus", email = "joasoe@proton.me" },
-]
 maintainers = [
     { name = "Ludeeus", email = "joasoe@proton.me" },
 ]
@@ -28,6 +23,10 @@ maintainers = [
 "Bug tracker" = "https://github.com/ludeeus/aiogithubapi/issues"
 
 [tool.poetry]
+name = "aiogithubapi"
+version = "0"
+description = "Asynchronous Python client for the GitHub API"
+authors = ["Ludeeus <ludeeus@ludeeus.dev>"]
 classifiers = [
   "Intended Audience :: Developers",
   "Natural Language :: English",
