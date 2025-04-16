@@ -6,11 +6,11 @@ help: ## Shows this help message
 	@echo
 
 requirements: install-poetry ## Install requirements
-	@poetry install --all-groups
+	@poetry install --all-groups --all-extras
 	@poetry check
 
 install: ## Install aiogithubapi
-	@poetry install --all-groups
+	@poetry install --all-groups --all-extras
 
 install-poetry:
 	@curl -sSL https://install.python-poetry.org | python3 -
