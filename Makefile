@@ -13,7 +13,7 @@ install: ## Install aiogithubapi
 	@poetry install --all-groups --all-extras
 
 install-poetry:
-	@pipx install "poetry<2"
+	@curl -sSL https://install.python-poetry.org | python3 -
 
 build: ## Build the package
 	@poetry build
