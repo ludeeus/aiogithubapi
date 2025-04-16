@@ -13,7 +13,7 @@ install: ## Install aiogithubapi
 	@poetry install --extras "deprecated-verify"
 
 install-poetry:
-	@curl -sSL https://install.python-poetry.org | python3 -
+	@pipx install "poetry<2"
 
 build: ## Build the package
 	@poetry build
