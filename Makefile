@@ -6,11 +6,11 @@ help: ## Shows this help message
 	@echo
 
 requirements: install-poetry ## Install requirements
-	@poetry install --all-groups --all-extras
+	@poetry install --extras "deprecated-verify"
 	@poetry check
 
 install: ## Install aiogithubapi
-	@poetry install --all-groups --all-extras
+	@poetry install --extras "deprecated-verify"
 
 install-poetry:
 	@curl -sSL https://install.python-poetry.org | python3 -

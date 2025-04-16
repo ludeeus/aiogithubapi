@@ -8,7 +8,7 @@ version = "0"
 description = "Asynchronous Python client for the GitHub API"
 readme = "README.md"
 license = { text = "MIT" }
-dynamic = ["readme", "classifiers", "dependencies"]
+dynamic = ["readme", "classifiers", "dependencies", "optional-dependencies"]
 requires-python = ">=3.8"
 authors = [
     { name = "Ludeeus", email = "joasoe@proton.me" },
@@ -16,14 +16,12 @@ authors = [
 maintainers = [
     { name = "Ludeeus", email = "joasoe@proton.me" },
 ]
-
 [project.optional-dependencies]
 "deprecated-verify" = [
     "sigstore <2",
     "securesystemslib <1",
     "setuptools >=60.0.0"
   ]
-
 
 [project.urls]
 "Repository" = "https://github.com/ludeeus/aiogithubapi"
@@ -45,12 +43,8 @@ aiohttp = "^3.8"
 async-timeout = "^5"
 backoff = "<3"
 
-# Optional dependencies for deprecated-verify
-sigstore = { version = "<2", optional = true }
-securesystemslib = { version = "<1", optional = true }
-setuptools = { version = ">=60.0.0", optional = true }
 
-[poetry.group.dev.dependencies]
+[tool.poetry.group.dev.dependencies]
 aresponses = "^3.0.0"
 black = "^24.8.0"
 isort = "^5.12.0"
