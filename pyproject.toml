@@ -2,35 +2,49 @@
 build-backend = "poetry.core.masonry.api"
 requires = ["poetry-core>=1.0.0"]
 
+[project]
+name = "aiogithubapi"
+version = "0"
+description = "Asynchronous Python client for the GitHub API"
+readme = "README.md"
+license = { text = "MIT" }
+dynamic = ["readme", "classifiers", "dependencies", "optional-dependencies"]
+requires-python = ">=3.9"
+authors = [
+    { name = "Ludeeus", email = "joasoe@proton.me" },
+]
+maintainers = [
+    { name = "Ludeeus", email = "joasoe@proton.me" },
+]
+[project.optional-dependencies]
+"deprecated-verify" = [
+    "sigstore <2",
+    "securesystemslib <1",
+    "setuptools >=60.0.0"
+  ]
+
+[project.urls]
+"Repository" = "https://github.com/ludeeus/aiogithubapi"
+"Bug tracker" = "https://github.com/ludeeus/aiogithubapi/issues"
+
 [tool.poetry]
-authors = ["Ludeeus <ludeeus@ludeeus.dev>"]
 classifiers = [
   "Intended Audience :: Developers",
   "Natural Language :: English",
   "Topic :: Software Development :: Libraries :: Python Modules",
 ]
-description = "Asynchronous Python client for the GitHub API"
+
 exclude = ['**/__pycache__']
 include = ["aiogithubapi", "aiogithubapi.*", "LICENCE.md"]
-license = "MIT"
-maintainers = ["Ludeeus <ludeeus@ludeeus.dev>"]
-name = "aiogithubapi"
-readme = "README.md"
-repository = "https://github.com/ludeeus/aiogithubapi"
-version = "0"
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.9"
 aiohttp = "^3.8"
 async-timeout = "^5"
 backoff = "<3"
 
-# Optional dependencies for deprecated-verify
-sigstore = { version = "<2", optional = true }
-securesystemslib = { version = "<1", optional = true }
-setuptools = { version = ">=60.0.0", optional = true }
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 aresponses = "^3.0.0"
 black = "^24.8.0"
 isort = "^5.12.0"
@@ -41,8 +55,6 @@ pytest = "^8.3.4"
 pytest-asyncio = "^0.24.0"
 pytest-cov = "^5.0.0"
 
-[tool.poetry.extras]
-deprecated-verify = ["sigstore", "securesystemslib", "setuptools"]
 
 [tool.black]
 line-length = 100
@@ -56,7 +68,6 @@ profile = "black"
 
 [tool.pylint.'MESSAGES CONTROL']
 disable = "unsubscriptable-object,duplicate-code"
-
 
 [tool.coverage.run]
 source = ["aiogithubapi"]

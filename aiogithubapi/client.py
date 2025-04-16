@@ -185,7 +185,9 @@ class GitHubClient(GitHubBase):
             if message is not None:
                 if exception := MESSAGE_EXCEPTIONS.get(message):
                     raise exception(message)
-                raise GitHubException(message)
+                # For a 201 Created response, we assume the operation was successful and ignore any "message" field.
+                if response.status != HttpStatusCode.CREATED:
+                    raise GitHubException(message)
 
         if endpoint == "/graphql" and response.data.get("errors", []):
             raise GitHubGraphQLException(
