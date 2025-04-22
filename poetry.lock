@@ -225,26 +225,6 @@ files = [
 ]
 
 [[package]]
-name = "betterproto"
-version = "2.0.0b5"
-description = "A better Protobuf / gRPC generator & library"
-optional = true
-python-versions = ">=3.6.2,<4.0"
-groups = ["main"]
-markers = "extra == \"deprecated-verify\""
-files = [
-    {file = "betterproto-2.0.0b5-py3-none-any.whl", hash = "sha256:d3e6115c7d5136f1d5974e565b7560273f66b43065e74218e472321ee1258f4c"},
-    {file = "betterproto-2.0.0b5.tar.gz", hash = "sha256:00a301c70a2db4d3cdd2b261522ae1d34972fb04b655a154d67daaaf4131102e"},
-]
-
-[package.dependencies]
-grpclib = ">=0.4.1,<0.5.0"
-python-dateutil = ">=2.8,<3.0"
-
-[package.extras]
-compiler = ["black (>=19.3b0)", "isort (>=5.10.1,<6.0.0)", "jinja2 (>=3.0.3)"]
-
-[[package]]
 name = "black"
 version = "25.1.0"
 description = "The uncompromising code formatter."
@@ -295,10 +275,9 @@ uvloop = ["uvloop (>=0.15.2)"]
 name = "certifi"
 version = "2025.1.31"
 description = "Python package for providing Mozilla's CA Bundle."
-optional = true
+optional = false
 python-versions = ">=3.6"
 groups = ["main"]
-markers = "extra == \"deprecated-verify\""
 files = [
     {file = "certifi-2025.1.31-py3-none-any.whl", hash = "sha256:ca78db4565a652026a4db2bcdf68f2fb589ea80d0be70e03929ed730746b84fe"},
     {file = "certifi-2025.1.31.tar.gz", hash = "sha256:3d5da6925056f6f18f119200434a4780a94263f10d1c21d032a6f6b2baa20651"},
@@ -389,10 +368,9 @@ pycparser = "*"
 name = "charset-normalizer"
 version = "3.4.1"
 description = "The Real First Universal Charset Detector. Open, modern and actively maintained alternative to Chardet."
-optional = true
+optional = false
 python-versions = ">=3.7"
 groups = ["main"]
-markers = "extra == \"deprecated-verify\""
 files = [
     {file = "charset_normalizer-3.4.1-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:91b36a978b5ae0ee86c394f5a54d6ef44db1de0815eb43de826d41d21e4af3de"},
     {file = "charset_normalizer-3.4.1-cp310-cp310-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:7461baadb4dc00fd9e0acbe254e3d7d2112e7f92ced2adc96e54ef6501c5f176"},
@@ -823,89 +801,6 @@ files = [
     {file = "frozenlist-1.4.1-py3-none-any.whl", hash = "sha256:04ced3e6a46b4cfffe20f9ae482818e34eba9b5fb0ce4056e4cc9b6e212d09b7"},
     {file = "frozenlist-1.4.1.tar.gz", hash = "sha256:c037a86e8513059a2613aaba4d817bb90b9d9b6b69aace3ce9c877e8c8ed402b"},
 ]
-
-[[package]]
-name = "grpclib"
-version = "0.4.7"
-description = "Pure-Python gRPC implementation for asyncio"
-optional = true
-python-versions = ">=3.7"
-groups = ["main"]
-markers = "extra == \"deprecated-verify\""
-files = [
-    {file = "grpclib-0.4.7.tar.gz", hash = "sha256:2988ef57c02b22b7a2e8e961792c41ccf97efc2ace91ae7a5b0de03c363823c3"},
-]
-
-[package.dependencies]
-h2 = ">=3.1.0,<5"
-multidict = "*"
-
-[package.extras]
-protobuf = ["protobuf (>=3.20.0)"]
-
-[[package]]
-name = "h2"
-version = "4.2.0"
-description = "Pure-Python HTTP/2 protocol implementation"
-optional = true
-python-versions = ">=3.9"
-groups = ["main"]
-markers = "extra == \"deprecated-verify\""
-files = [
-    {file = "h2-4.2.0-py3-none-any.whl", hash = "sha256:479a53ad425bb29af087f3458a61d30780bc818e4ebcf01f0b536ba916462ed0"},
-    {file = "h2-4.2.0.tar.gz", hash = "sha256:c8a52129695e88b1a0578d8d2cc6842bbd79128ac685463b887ee278126ad01f"},
-]
-
-[package.dependencies]
-hpack = ">=4.1,<5"
-hyperframe = ">=6.1,<7"
-
-[[package]]
-name = "hpack"
-version = "4.1.0"
-description = "Pure-Python HPACK header encoding"
-optional = true
-python-versions = ">=3.9"
-groups = ["main"]
-markers = "extra == \"deprecated-verify\""
-files = [
-    {file = "hpack-4.1.0-py3-none-any.whl", hash = "sha256:157ac792668d995c657d93111f46b4535ed114f0c9c8d672271bbec7eae1b496"},
-    {file = "hpack-4.1.0.tar.gz", hash = "sha256:ec5eca154f7056aa06f196a557655c5b009b382873ac8d1e66e79e87535f1dca"},
-]
-
-[[package]]
-name = "hyperframe"
-version = "6.1.0"
-description = "Pure-Python HTTP/2 framing"
-optional = true
-python-versions = ">=3.9"
-groups = ["main"]
-markers = "extra == \"deprecated-verify\""
-files = [
-    {file = "hyperframe-6.1.0-py3-none-any.whl", hash = "sha256:b03380493a519fce58ea5af42e4a42317bf9bd425596f7a0835ffce80f1a42e5"},
-    {file = "hyperframe-6.1.0.tar.gz", hash = "sha256:f630908a00854a7adeabd6382b43923a4c4cd4b821fcb527e6ab9e15382a3b08"},
-]
-
-[[package]]
-name = "id"
-version = "1.5.0"
-description = "A tool for generating OIDC identities"
-optional = true
-python-versions = ">=3.8"
-groups = ["main"]
-markers = "extra == \"deprecated-verify\""
-files = [
-    {file = "id-1.5.0-py3-none-any.whl", hash = "sha256:f1434e1cef91f2cbb8a4ec64663d5a23b9ed43ef44c4c957d02583d61714c658"},
-    {file = "id-1.5.0.tar.gz", hash = "sha256:292cb8a49eacbbdbce97244f47a97b4c62540169c976552e497fd57df0734c1d"},
-]
-
-[package.dependencies]
-requests = "*"
-
-[package.extras]
-dev = ["build", "bump (>=1.3.2)", "id[lint,test]"]
-lint = ["bandit", "interrogate", "mypy", "ruff (<0.8.2)", "types-requests"]
-test = ["coverage[toml]", "pretend", "pytest", "pytest-cov"]
 
 [[package]]
 name = "idna"
@@ -1674,29 +1569,12 @@ pytest = ">=4.6"
 testing = ["fields", "hunter", "process-tests", "pytest-xdist", "virtualenv"]
 
 [[package]]
-name = "python-dateutil"
-version = "2.9.0.post0"
-description = "Extensions to the standard Python datetime module"
-optional = true
-python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,>=2.7"
-groups = ["main"]
-markers = "extra == \"deprecated-verify\""
-files = [
-    {file = "python-dateutil-2.9.0.post0.tar.gz", hash = "sha256:37dd54208da7e1cd875388217d5e00ebd4179249f90fb72437e91a35459a0ad3"},
-    {file = "python_dateutil-2.9.0.post0-py2.py3-none-any.whl", hash = "sha256:a8b2bc7bffae282281c8140a97d3aa9c14da0b136dfe83f850eea9a5f7470427"},
-]
-
-[package.dependencies]
-six = ">=1.5"
-
-[[package]]
 name = "requests"
 version = "2.32.3"
 description = "Python HTTP for Humans."
-optional = true
+optional = false
 python-versions = ">=3.8"
 groups = ["main"]
-markers = "extra == \"deprecated-verify\""
 files = [
     {file = "requests-2.32.3-py3-none-any.whl", hash = "sha256:70761cfe03c773ceb22aa2f671b4757976145175cdfca038c02654d061d6dcc6"},
     {file = "requests-2.32.3.tar.gz", hash = "sha256:55365417734eb18255590a9ff9eb97e9e1da868d4ccd6402399eaf68af20a760"},
@@ -1716,10 +1594,9 @@ use-chardet-on-py3 = ["chardet (>=3.0.2,<6)"]
 name = "securesystemslib"
 version = "0.31.0"
 description = "A library that provides cryptographic and general-purpose routines for Secure Systems Lab projects at NYU"
-optional = true
+optional = false
 python-versions = "~=3.8"
 groups = ["main"]
-markers = "extra == \"deprecated-verify\""
 files = [
     {file = "securesystemslib-0.31.0-py3-none-any.whl", hash = "sha256:549d70f7be6460252d016f03edc5ec0128fee56af55d2b863a5db14541ddbf18"},
     {file = "securesystemslib-0.31.0.tar.gz", hash = "sha256:c1594afbcd5db198ec90c487e1720154afb71743d9f4bccf3dfda84de650c478"},
@@ -1759,67 +1636,33 @@ type = ["importlib_metadata (>=7.0.2) ; python_version < \"3.10\"", "jaraco.deve
 
 [[package]]
 name = "sigstore"
-version = "1.1.2"
+version = "1.0.0"
 description = "A tool for signing Python package distributions"
 optional = true
 python-versions = ">=3.7"
 groups = ["main"]
 markers = "extra == \"deprecated-verify\""
 files = [
-    {file = "sigstore-1.1.2-py3-none-any.whl", hash = "sha256:1f5d74006073a4bc1572290fb133418c25ff76c5a02fcb567c3feb238d425ab3"},
-    {file = "sigstore-1.1.2.tar.gz", hash = "sha256:1252c34b6bf0f5c0680dffe36e1961bd23da9dd77838fc8ece35bcf87a3bf6df"},
+    {file = "sigstore-1.0.0-py3-none-any.whl", hash = "sha256:19e96ca2049fd25233f289d3651bc2be41bb8b0a61bb053fc486be6b851875a7"},
+    {file = "sigstore-1.0.0.tar.gz", hash = "sha256:0803f44914d6d12dcd53a112ae7f63714c61f31fd91b07197b3703c28366eea8"},
 ]
 
 [package.dependencies]
 appdirs = ">=1.4,<2.0"
 cryptography = ">=39"
-id = ">=1.0.0"
 importlib_resources = {version = ">=5.7,<6.0", markers = "python_version < \"3.11\""}
-pydantic = ">=1.10,<2.0"
+pydantic = "*"
 pyjwt = ">=2.1"
-pyOpenSSL = ">=23.0.0"
+pyOpenSSL = ">=22.0.0"
 requests = "*"
 securesystemslib = "*"
-sigstore-protobuf-specs = ">=0.1.0,<0.2.0"
-tuf = ">=2.1,<3.0"
+tuf = ">=2.0.0"
 
 [package.extras]
 dev = ["build", "bump (>=1.3.2)", "sigstore[doc,lint,test]"]
 doc = ["pdoc"]
-lint = ["bandit", "black", "interrogate", "isort", "mypy (>=1.1,<2.0)", "ruff (<0.0.262)", "types-requests", "typing-extensions ; python_version < \"3.8\""]
+lint = ["bandit", "black", "interrogate", "isort", "mypy", "ruff (<0.0.219)", "types-requests", "typing-extensions ; python_version < \"3.8\""]
 test = ["coverage[toml]", "pretend", "pytest", "pytest-cov"]
-
-[[package]]
-name = "sigstore-protobuf-specs"
-version = "0.1.0"
-description = "A library for serializing and deserializing Sigstore messages"
-optional = true
-python-versions = ">=3.7"
-groups = ["main"]
-markers = "extra == \"deprecated-verify\""
-files = [
-    {file = "sigstore-protobuf-specs-0.1.0.tar.gz", hash = "sha256:622b2d231613a28ed3e6660acd87818675b4e83486f49a0f0c198ac5475fcb81"},
-    {file = "sigstore_protobuf_specs-0.1.0-py3-none-any.whl", hash = "sha256:0e7766add04b5bd145181936e6fedbb2609d7e959f2740051cbca12572b277a2"},
-]
-
-[package.dependencies]
-betterproto = "2.0.0b5"
-
-[package.extras]
-dev = ["build"]
-
-[[package]]
-name = "six"
-version = "1.17.0"
-description = "Python 2 and 3 compatibility utilities"
-optional = true
-python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,>=2.7"
-groups = ["main"]
-markers = "extra == \"deprecated-verify\""
-files = [
-    {file = "six-1.17.0-py2.py3-none-any.whl", hash = "sha256:4721f391ed90541fddacab5acf947aa0d3dc7d27b2e1e8eda2be8970586c3274"},
-    {file = "six-1.17.0.tar.gz", hash = "sha256:ff70335d468e7eb6ec65b95b99d3a2836546063f63acc5171de367e834932a81"},
-]
 
 [[package]]
 name = "tomli"
@@ -1878,20 +1721,19 @@ files = [
 
 [[package]]
 name = "tuf"
-version = "2.1.0"
+version = "3.1.1"
 description = "A secure updater framework for Python"
-optional = true
-python-versions = ">=3.7"
+optional = false
+python-versions = ">=3.8"
 groups = ["main"]
-markers = "extra == \"deprecated-verify\""
 files = [
-    {file = "tuf-2.1.0-py3-none-any.whl", hash = "sha256:ab22d1143d4d8aa20c94d243de27eedc8cd517e251ddaf4a88c10952358a13ea"},
-    {file = "tuf-2.1.0.tar.gz", hash = "sha256:dbfe18fbdeba6d76144931db88b76e473fa40c431b60d25b455a9adbb07c2397"},
+    {file = "tuf-3.1.1-py3-none-any.whl", hash = "sha256:d6441d11bc9a928cb82cf571519bb99e70ed3ea6fd5a52ce116a8e121023f7ef"},
+    {file = "tuf-3.1.1.tar.gz", hash = "sha256:73b3c89a0acdfe90434bba3118c90c584ef1c56bc0c4565852e917408b774130"},
 ]
 
 [package.dependencies]
 requests = ">=2.19.1"
-securesystemslib = ">=0.22.0"
+securesystemslib = ">=0.26.0"
 
 [[package]]
 name = "typing-extensions"
@@ -1910,10 +1752,9 @@ markers = {main = "extra == \"deprecated-verify\""}
 name = "urllib3"
 version = "2.4.0"
 description = "HTTP library with thread-safe connection pooling, file post, and more."
-optional = true
+optional = false
 python-versions = ">=3.9"
 groups = ["main"]
-markers = "extra == \"deprecated-verify\""
 files = [
     {file = "urllib3-2.4.0-py3-none-any.whl", hash = "sha256:4e16665048960a0900c702d4a66415956a584919c03361cac9f1df5c5dd7e813"},
     {file = "urllib3-2.4.0.tar.gz", hash = "sha256:414bc6535b787febd7567804cc015fee39daab8ad86268f1310a9250697de466"},
