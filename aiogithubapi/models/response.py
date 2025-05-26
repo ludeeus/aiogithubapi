@@ -15,6 +15,7 @@ from .base import GitHubDataModelBase
 class GitHubResponseHeadersModel(GitHubDataModelBase):
     """GitHub response header model."""
 
+    accept_ranges: str | None = None
     access_control_allow_origin: str | None = None
     access_control_expose_headers: str | None = None
     cache_control: str | None = None
@@ -35,6 +36,7 @@ class GitHubResponseHeadersModel(GitHubDataModelBase):
     retry_after: str | None = None
     expect_ct: str | None = None
     permissions_policy: str | None = None
+    x_accepted_github_permissions: str | None = None
     x_accepted_oauth_scopes: str | None = None
     x_commonmarker_version: str | None = None
     x_content_type_options: str | None = None

@@ -27,6 +27,7 @@ class GitHubBaseUserModel(GitHubDataModelBase):
     subscriptions_url: str | None = None
     type: str | None = None
     url: str | None = None
+    user_view_type: str | None = None
 
 
 class GitHubUserModel(GitHubBaseUserModel):
