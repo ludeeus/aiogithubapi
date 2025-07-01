@@ -18,7 +18,7 @@ from tests.legacy.responses.repository_fixture import repository_response
 
 
 @pytest.mark.asyncio
-async def test_get_repo(mock_response, event_loop, repository_response, client_session):
+async def test_get_repo(mock_response, repository_response, client_session):
     mock_response.mock_data = repository_response
 
     async with GitHub(TOKEN, session=client_session) as github:

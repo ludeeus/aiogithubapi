@@ -80,10 +80,10 @@ async def test_stopping_all_subscriptions(github_api: GitHubAPI, mock_requests: 
 
 @pytest.mark.asyncio
 async def test_stopping_all_subscriptions_async_with(
-    event_loop: asyncio.AbstractEventLoop,
     client_session: aiohttp.ClientSession,
     mock_requests: MockedRequests,
 ):
+    event_loop = asyncio.get_event_loop()
     tasks_before = asyncio.all_tasks(event_loop)  # This includes the test task
     assert len(tasks_before) == 1
 
