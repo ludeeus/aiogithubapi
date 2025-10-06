@@ -1,6 +1,6 @@
 {
 	"name": "ludeeus/aiogithubapi",
-	"image": "mcr.microsoft.com/vscode/devcontainers/python:0-3.11-bullseye",
+	"image": "mcr.microsoft.com/vscode/devcontainers/python:2-3.11-bullseye",
 	"postCreateCommand": "make requirements",
 	"customizations": {
 		"extensions": [
