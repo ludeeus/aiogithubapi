@@ -5,7 +5,6 @@ __target__
 coverage.xml
 .vscode
 htmlcov
-build
 dist
 docs
 example.py
