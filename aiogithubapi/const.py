@@ -3,26 +3,11 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from enum import IntEnum, StrEnum
 from logging import Logger, getLogger
-import sys
 from typing import Dict, Literal, TypeVar, Union
 
 from aiohttp.hdrs import ACCEPT, CONTENT_TYPE, USER_AGENT
-
-if sys.version_info.major == 3 and sys.version_info.minor >= 11:
-    from enum import IntEnum, StrEnum
-else:
-    from enum import Enum
-
-    class StrEnum(str, Enum):
-        """Workaround until lowest version is Python3.11."""
-
-        def __str__(self) -> str:
-            return str(self.value)
-
-    class IntEnum(int, Enum):
-        """Workaround until lowest version is Python3.11."""
-
 
 GenericType = TypeVar("GenericType")
 

@@ -7,7 +7,7 @@ name = "aiogithubapi"
 readme = "README.md"
 license = { text = "MIT" }
 dynamic = ["readme", "classifiers", "dependencies", "optional-dependencies"]
-requires-python = ">=3.9"
+requires-python = ">=3.13"
 maintainers = [
     { name = "Ludeeus", email = "joasoe@proton.me" },
 ]
@@ -37,7 +37,7 @@ exclude = ['**/__pycache__']
 include = ["aiogithubapi", "aiogithubapi.*", "LICENCE.md"]
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.13"
 aiohttp = "^3.8"
 async-timeout = "^5"
 backoff = "<3"
