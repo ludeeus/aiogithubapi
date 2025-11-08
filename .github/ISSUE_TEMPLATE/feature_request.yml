@@ -1,0 +1,35 @@
+name: Feature Request
+description: Suggest a feature or change for aiogithubapi
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for your interest in improving aiogithubapi!
+
+  - type: textarea
+    id: idea
+    attributes:
+      label: The idea
+      description: A clear description of what you are suggesting
+      placeholder: Describe the feature you'd like to see
+    validations:
+      required: true
+
+  - type: textarea
+    id: implementation
+    attributes:
+      label: Implementation
+      description: How do you see this being implemented?
+      placeholder: Share your thoughts on how this could work
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives
+      description: Are there any alternative solutions or features you've considered?
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional context
+      description: Any other context, screenshots, or examples about the feature request
