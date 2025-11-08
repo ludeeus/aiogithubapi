@@ -5,7 +5,7 @@
 	"postStartCommand": "scripts/motd",
 	"features": {
 		"ghcr.io/va-h/devcontainers-features/uv:1": {
-			"version": "0.8.22",
+			"version": "0.9.8",
 			"shellautocompletion": true
 		}
 	},
