@@ -5,7 +5,9 @@ __target__
 coverage.xml
 .vscode
 htmlcov
-build
 dist
 docs
 example.py
+.pytest_cache
+.venv
+uv.lock

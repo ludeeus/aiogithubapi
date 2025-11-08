@@ -1,7 +1,14 @@
 {
 	"name": "ludeeus/aiogithubapi",
-	"image": "mcr.microsoft.com/vscode/devcontainers/python:2-3.13-bullseye",
-	"postCreateCommand": "make requirements",
+	"image": "mcr.microsoft.com/vscode/devcontainers/python:2-3.13",
+	"postCreateCommand": "scripts/setup",
+	"postStartCommand": "scripts/motd",
+	"features": {
+		"ghcr.io/va-h/devcontainers-features/uv:1": {
+			"version": "0.8.22",
+			"shellautocompletion": true
+		}
+	},
 	"customizations": {
 		"extensions": [
 			"ms-python.python",

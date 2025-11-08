@@ -1,0 +1,18 @@
+#!/bin/sh
+
+# script/lint: Run linting tools and apply formatting
+
+set -e
+
+cd "$(dirname "$0")/.."
+
+echo "==> Running linting tools..."
+
+echo "==> Running isort..."
+uv run --dev isort aiogithubapi
+
+echo "==> Running black..."
+uv run --dev black --fast aiogithubapi
+
+
+echo "==> Linting completed!"

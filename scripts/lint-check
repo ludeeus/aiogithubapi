@@ -1,0 +1,18 @@
+#!/bin/sh
+
+# script/lint-check: Check linting without making changes.
+
+set -e
+
+cd "$(dirname "$0")/.."
+
+echo "==> Checking linting..."
+
+echo "==> Checking isort..."
+uv run --dev isort aiogithubapi --check-only
+
+echo "==> Checking black..."
+uv run --dev black --check --fast aiogithubapi
+
+
+echo "==> Linting check completed!"
