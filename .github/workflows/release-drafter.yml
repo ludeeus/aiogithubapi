@@ -5,37 +5,16 @@ on:
     branches:
       - main
 
+permissions: {}
+
 jobs:
   release-drafter:
     name: Release Drafter
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
-      - name: 📥 Checkout the repository
-        uses: actions/checkout@v5.0.0
-        with:
-          fetch-depth: 0
-
-      - name: ⏭️ Get next version
-        id: version
-        run: |
-          declare -i newpost
-          latest=$(git describe --tags $(git rev-list --tags --max-count=1))
-          latestpre=$(echo "$latest" | awk '{split($0,a,"."); print a[1] "." a[2]}')
-          datepre=$(date --utc '+%y.%-m')
-          if [[ "$latestpre" == "$datepre" ]]; then
-              latestpost=$(echo "$latest" | awk '{split($0,a,"."); print a[3]}')
-              newpost=$latestpost+1
-          else
-              newpost=0
-          fi
-          echo Current version:    $latest
-          echo New target version: $datepre.$newpost
-          echo "::set-output name=version::$datepre.$newpost"
-
       - name: 🏃 Run Release Drafter
-        uses: release-drafter/release-drafter@v6.1.0
-        with:
-          tag: ${{ steps.version.outputs.version }}
-          name: ${{ steps.version.outputs.version }}
+        uses: release-drafter/release-drafter@b1476f6e6eb133afa41ed8589daba6dc69b4d3f5  # v6.1.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
