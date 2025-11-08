@@ -32,15 +32,12 @@ jobs:
         with:
           version: "0.8.22"
 
-      - name: 📦 Install dependencies
+      - name: Install dependencies
         run: scripts/bootstrap
 
-      - name: 🖤 Lint with Black
-        run: uv run --dev black --check --fast aiogithubapi tests
+      - name: Check lint
+        run: scripts/lint-check
 
-
-      - name: 🔤 Lint with isort
-        run: uv run --dev isort aiogithubapi tests --check-only
 
   test:
     name: Test with Python ${{ matrix.python.version }}
