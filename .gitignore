@@ -9,3 +9,6 @@ build
 dist
 docs
 example.py
+.pytest_cache
+.venv
+uv.lock

@@ -1,58 +1,61 @@
 [build-system]
-build-backend = "poetry.core.masonry.api"
-requires = ["poetry-core>=1.0.0"]
+build-backend = "hatchling.build"
+requires = ["hatchling"]
 
 [project]
 name = "aiogithubapi"
+version = "0"
+description = "Asynchronous Python client for the GitHub API"
 readme = "README.md"
-license = { text = "MIT" }
-dynamic = ["readme", "classifiers", "dependencies", "optional-dependencies"]
+license = "MIT"
 requires-python = ">=3.9"
+authors = [
+    { name = "Ludeeus", email = "ludeeus@ludeeus.dev" },
+]
 maintainers = [
     { name = "Ludeeus", email = "joasoe@proton.me" },
 ]
-[project.optional-dependencies]
-"deprecated-verify" = [
-    "sigstore <2",
-    "securesystemslib <1",
-    "setuptools >=60.0.0"
-  ]
-
-[project.urls]
-"Repository" = "https://github.com/ludeeus/aiogithubapi"
-"Bug tracker" = "https://github.com/ludeeus/aiogithubapi/issues"
-
-[tool.poetry]
-name = "aiogithubapi"
-version = "0"
-description = "Asynchronous Python client for the GitHub API"
-authors = ["Ludeeus <ludeeus@ludeeus.dev>"]
 classifiers = [
-  "Intended Audience :: Developers",
-  "Natural Language :: English",
-  "Topic :: Software Development :: Libraries :: Python Modules",
+    "Intended Audience :: Developers",
+    "Natural Language :: English",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+dependencies = [
+    "aiohttp>=3.8",
+    "async-timeout>=5",
+    "backoff<3",
 ]
 
-exclude = ['**/__pycache__']
-include = ["aiogithubapi", "aiogithubapi.*", "LICENCE.md"]
+[project.optional-dependencies]
+deprecated-verify = [
+    "sigstore<2",
+    "securesystemslib<1",
+    "setuptools>=60.0.0",
+]
 
-[tool.poetry.dependencies]
-python = "^3.9"
-aiohttp = "^3.8"
-async-timeout = "^5"
-backoff = "<3"
+[project.urls]
+Repository = "https://github.com/ludeeus/aiogithubapi"
+"Bug tracker" = "https://github.com/ludeeus/aiogithubapi/issues"
 
+[dependency-groups]
+dev = [
+    "aresponses>=3.0.0",
+    "black>=25.1.0",
+    "isort>=6.0.1",
+    "mypy>=1.13",
+    "pdoc3>=0.11.0",
+    "pylint>=3.2.7",
+    "pytest>=8.3.4",
+    "pytest-asyncio>=1.0.0",
+    "pytest-cov>=7.0.0",
+    "coverage>=7.0.0",
+]
 
-[tool.poetry.group.dev.dependencies]
-aresponses = "^3.0.0"
-black = "^25.1.0"
-isort = "^6.0.1"
-mypy = "^1.13"
-pdoc3 = "^0.11.0"
-pylint = "^3.2.7"
-pytest = "^8.3.4"
-pytest-asyncio = "^1.0.0"
-pytest-cov = "^7.0.0"
+[tool.hatch.build.targets.wheel]
+packages = ["aiogithubapi"]
+
+[tool.hatch.build.targets.sdist]
+include = ["aiogithubapi"]
 
 
 [tool.black]

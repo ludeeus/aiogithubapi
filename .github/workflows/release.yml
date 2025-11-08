@@ -9,15 +9,9 @@ on:
 permissions: {}
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
-    name: Deploy to PyPi
-    environment:
-      name: release
-      url: https://pypi.org/project/aiogithubapi
-    permissions:
-      # Used to authenticate to PyPI via OIDC.
-      id-token: write
+    name: Build
     steps:
       - name: 📥 Checkout the repository
         uses: actions/checkout@v5.0.0
@@ -28,14 +22,40 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: 📦 Install poetry
-        run:  make install-poetry
+      - name: Install uv
+        uses: astral-sh/setup-uv@d0cc045d04ccac9d8b7881df0226f9e82c39688e  # v6.8.0
+        with:
+          version: "0.8.22"
 
-      - name: 🔢 Set version number
-        run: poetry version "${{ github.event.release.tag_name }}"
+      - name: Set version number
+        run: scripts/set-version "${{ github.event.release.tag_name }}"
 
-      - name: 🛠 Build
-        run: poetry build --no-interaction
+      - name: Build
+        run: scripts/build
+
+      - name: Upload dists
+        uses: actions/upload-artifact@v4.6.2
+        with:
+          name: "dist"
+          path: "dist/"
+          if-no-files-found: error
+          retention-days: 5
+
+  publish:
+    name: Publish to PyPI
+    needs: [build]
+    runs-on: ubuntu-latest
+    environment:
+      name: release
+      url: https://pypi.org/project/aiogithubapi
+    permissions:
+      id-token: write
+    steps:
+      - name: Download dists
+        uses: actions/download-artifact@v5.0.0
+        with:
+          name: "dist"
+          path: "dist/"
 
       - name: 🚀 Publish to PyPi
         uses: pypa/gh-action-pypi-publish@ed0c53931b1dc9bd32cbe73a98c7f6766f8a527e # v1.13.0

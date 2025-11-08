@@ -8,6 +8,7 @@ on:
     branches:
       - main
 
+permissions: {}
 concurrency:
   group: '${{ github.workflow }}-${{ github.ref }}'
   cancel-in-progress: true
@@ -26,14 +27,22 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Install uv
+        uses: astral-sh/setup-uv@d0cc045d04ccac9d8b7881df0226f9e82c39688e  # v6.8.0
+        with:
+          version: "0.8.22"
+
       - name: 📦 Install dependencies
-        run:  make requirements
+        run: scripts/bootstrap
 
       - name: 🖤 Lint with Black
-        run:  make black-check
+        run: uv run --dev black --check --fast aiogithubapi tests
 
-      - name: 🔤 Lint with isort
-        run: make isort-check
+      - name: � Lint with mypy
+        run: uv run --dev mypy aiogithubapi
+
+      - name: �🔤 Lint with isort
+        run: uv run --dev isort aiogithubapi tests --check-only
 
   test:
     name: Test with Python ${{ matrix.python.version }}
@@ -58,14 +67,19 @@ jobs:
           python-version: ${{ matrix.python.version }}
           allow-prereleases: ${{ matrix.python.prereleases || false }}
 
+      - name: Install uv
+        uses: astral-sh/setup-uv@d0cc045d04ccac9d8b7881df0226f9e82c39688e  # v6.8.0
+        with:
+          version: "0.8.22"
+
       - name: 📦 Install dependencies
-        run: make requirements
+        run: scripts/bootstrap
 
       - name: 🏃 Run tests
-        run: make test
+        run: scripts/test
 
       - name: 🛠 Build
-        run: make build
+        run: scripts/build
 
   coverage:
     name: Coverage
@@ -83,10 +97,15 @@ jobs:
         with:
           python-version: "3.10"
 
+      - name: Install uv
+        uses: astral-sh/setup-uv@d0cc045d04ccac9d8b7881df0226f9e82c39688e  # v6.8.0
+        with:
+          version: "0.8.22"
+
       - name: 📦 Install dependencies
-        run:  make requirements
+        run: scripts/bootstrap
 
       - name: 📤 Upload coverage to Codecov
         run: |
-          make coverage
+          scripts/coverage
           curl -sfSL https://codecov.io/bash | bash -
