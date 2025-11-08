@@ -56,10 +56,9 @@ packages = ["aiogithubapi"]
 [tool.hatch.build.targets.sdist]
 include = ["aiogithubapi"]
 
-
 [tool.black]
 line-length = 100
-target-version = ['py38']
+target-version = ['py313']
 exclude = 'generated'
 
 [tool.isort]

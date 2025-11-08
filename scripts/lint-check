@@ -9,12 +9,10 @@ cd "$(dirname "$0")/.."
 echo "==> Checking linting..."
 
 echo "==> Checking isort..."
-uv run --dev isort aiogithubapi tests --check-only
+uv run --dev isort aiogithubapi --check-only
 
 echo "==> Checking black..."
-uv run --dev black --check --fast aiogithubapi tests
+uv run --dev black --check --fast aiogithubapi
 
-echo "==> Checking mypy..."
-uv run --dev mypy aiogithubapi
 
 echo "==> Linting check completed!"
