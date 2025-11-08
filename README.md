@@ -23,7 +23,7 @@ python3 -m pip install aiogithubapi
 
 **Note: This project is currently in a transition phase.**
 
-In august 2021 a new API interface was introduced (in [#42](https://github.com/ludeeus/aiogithubapi/pull/42)). With that addition, all parts of the old interface is now considered deprecated.
+In August 2021 a new API interface was introduced (in [#42](https://github.com/ludeeus/aiogithubapi/pull/42)). With that addition, all parts of the old interface are now considered deprecated.
 Which includes:
 
 - The [`aiogithubapi.common`](./aiogithubapi/common) module
@@ -34,9 +34,7 @@ Which includes:
 - The `GitHubDevice` class in `aiogithubapi`, replaced with `GitHubDeviceAPI`
 - The `GitHub` class in `aiogithubapi`, replaced with `GitHubAPI`
 
-Later this year (2024), warning logs will start to be emitted for deprecated code.
-
-Early next year (2025), the old code will be removed.
+**Warning:** The deprecated code will be removed in a future release. Please migrate to the new API interface.
 
 ## Contribute
 
@@ -45,8 +43,8 @@ Early next year (2025), the old code will be removed.
 1. Fork the repository
 2. Clone the repository locally and open the devcontainer or use GitHub codespaces
 3. Do your changes
-4. Lint the files with `make lint`
-5. Ensure all tests passes with `make test`
-6. Ensure 100% coverage with `make coverage`
+4. Lint the files with `scripts/lint`
+5. Ensure all tests passes with `scripts/test`
+6. Ensure 100% coverage with `scripts/coverage`
 7. Commit your work, and push it to GitHub
 8. Create a PR against the `main` branch
