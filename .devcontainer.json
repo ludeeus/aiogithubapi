@@ -1,6 +1,6 @@
 {
 	"name": "ludeeus/aiogithubapi",
-	"image": "mcr.microsoft.com/vscode/devcontainers/python:2-3.11",
+	"image": "mcr.microsoft.com/vscode/devcontainers/python:2-3.13",
 	"postCreateCommand": "scripts/setup",
 	"postStartCommand": "scripts/motd",
 	"features": {

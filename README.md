@@ -1,7 +1,6 @@
 # aiogithubapi
 
 [![codecov](https://codecov.io/gh/ludeeus/aiogithubapi/branch/main/graph/badge.svg)](https://codecov.io/gh/ludeeus/aiogithubapi)
-![python version](https://img.shields.io/badge/Python-3.9=><=3.12-blue.svg)
 [![PyPI](https://img.shields.io/pypi/v/aiogithubapi)](https://pypi.org/project/aiogithubapi)
 ![Actions](https://github.com/ludeeus/aiogithubapi/workflows/Actions/badge.svg?branch=main)
 
@@ -32,7 +31,6 @@ Which includes:
 - The [`aiogithubapi.objects`](./aiogithubapi/objects) module
 - All classes starting with `AIOGitHub`
 - The `async_call_api` function in the [`aiogithubapi/helpers.py`](./aiogithubapi/helpers.py) file
-- The `sigstore_verify_release_asset` function in the [`aiogithubapi/helpers.py`](./aiogithubapi/helpers.py) file
 - The `GitHubDevice` class in `aiogithubapi`, replaced with `GitHubDeviceAPI`
 - The `GitHub` class in `aiogithubapi`, replaced with `GitHubAPI`
 
