@@ -3,13 +3,11 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from enum import IntEnum, StrEnum
 from logging import Logger, getLogger
 from typing import Dict, Literal, TypeVar, Union
 
 from aiohttp.hdrs import ACCEPT, CONTENT_TYPE, USER_AGENT
-
-from enum import IntEnum, StrEnum
-
 
 GenericType = TypeVar("GenericType")
 
