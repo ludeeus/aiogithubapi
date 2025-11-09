@@ -39,7 +39,7 @@ from .models.commit import GitHubCommitModel
 from .models.contents import GitHubContentsModel
 from .models.device_login import GitHubLoginDeviceModel
 from .models.events import GitHubEventModel
-from .models.git_tree import GitHubGitTreeModel
+from .models.git_tree import GitHubGitTreeEntryModel, GitHubGitTreeModel
 from .models.issue import GitHubIssueModel
 from .models.issue_comment import GitHubIssueCommentModel
 from .models.label import GitHubLabelModel
