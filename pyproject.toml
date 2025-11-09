@@ -26,13 +26,6 @@ dependencies = [
     "backoff<3",
 ]
 
-[project.optional-dependencies]
-deprecated-verify = [
-    "sigstore<2",
-    "securesystemslib<1",
-    "setuptools>=60.0.0",
-]
-
 [project.urls]
 Repository = "https://github.com/ludeeus/aiogithubapi"
 "Bug tracker" = "https://github.com/ludeeus/aiogithubapi/issues"
