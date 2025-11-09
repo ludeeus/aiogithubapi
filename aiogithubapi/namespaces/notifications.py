@@ -6,7 +6,7 @@ https://docs.github.com/en/rest/activity/notifications
 
 from __future__ import annotations
 
-from typing import Any, Dict
+from typing import Any
 
 from ..const import GitHubRequestKwarg
 from ..models.notification import GitHubNotificationModel
