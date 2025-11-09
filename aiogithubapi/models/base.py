@@ -7,8 +7,6 @@ from typing import Any, Dict
 
 from ..const import LOGGER
 
-IGNORE_KEYS = ("node_id", "performed_via_github_app", "_links")
-
 
 class GitHubBase:
     """Base class for all GitHub objects."""
@@ -40,13 +38,6 @@ class GitHubDataModelBase(GitHubBase):
                     if handler := getattr(self, f"_generate_{key}", None):
                         value = handler(value)
                     self.__setattr__(key, value)
-                elif self._log_missing and key not in IGNORE_KEYS:
-                    self.logger.debug(
-                        "'%s' is missing key '%s' for %s",
-                        self.__class__.__name__,
-                        key,
-                        type(value),
-                    )
         self.__post_init__()
 
     def __post_init__(self):
