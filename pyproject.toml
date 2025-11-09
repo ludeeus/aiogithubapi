@@ -29,7 +29,7 @@ dependencies = [
 [project.optional-dependencies]
 deprecated-verify = [
     "sigstore<2",
-    "securesystemslib<1",
+    "securesystemslib<2",
     "setuptools>=60.0.0",
 ]
 
