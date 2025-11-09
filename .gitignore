@@ -9,5 +9,7 @@ dist
 docs
 example.py
 .pytest_cache
+.mypy_cache
 .venv
 uv.lock
+.local

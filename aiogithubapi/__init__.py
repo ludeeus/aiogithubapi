@@ -1,7 +1,5 @@
 """
 Asynchronous Python client for the GitHub API https://github.com/ludeeus/aiogithubapi
-
-.. include:: ../documentation.md
 """
 
 from .common.exceptions import (
