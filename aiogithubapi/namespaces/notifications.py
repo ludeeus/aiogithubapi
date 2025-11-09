@@ -6,8 +6,9 @@ https://docs.github.com/en/rest/activity/notifications
 
 from __future__ import annotations
 
-from typing import Any, List
+from typing import Any
 
+from ..const import GitHubRequestKwarg
 from ..models.notification import GitHubNotificationModel
 from ..models.response import GitHubResponseModel
 from .base import BaseNamespace
@@ -27,7 +28,7 @@ class GitHubNotificationsNamespace(BaseNamespace):
         per_page: int = 50,
         params: dict[str, str] | None = None,
         **kwargs: Any,
-    ) -> GitHubResponseModel[List[GitHubNotificationModel]]:
+    ) -> GitHubResponseModel[list[GitHubNotificationModel]]:
         """
         List notifications for the authenticated user
 
