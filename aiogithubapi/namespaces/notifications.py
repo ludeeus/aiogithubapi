@@ -27,7 +27,7 @@ class GitHubNotificationsNamespace(BaseNamespace):
         page: int = 1,
         per_page: int = 50,
         params: dict[str, str] | None = None,
-        **kwargs: Dict[GitHubRequestKwarg, Any],
+        **kwargs: Any,
     ) -> GitHubResponseModel[list[GitHubNotificationModel]]:
         """
         List notifications for the authenticated user
