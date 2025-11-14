@@ -14,6 +14,7 @@ from .models.base import GitHubBase
 from .models.meta import GitHubMetaModel
 from .models.rate_limit import GitHubRateLimitModel
 from .models.response import GitHubResponseModel
+from .namespaces.notifications import GitHubNotificationsNamespace
 from .namespaces.orgs import GitHubOrgsNamespace
 from .namespaces.projects import GitHubBaseProjectsNamespace
 from .namespaces.repos import GitHubReposNamespace
@@ -73,11 +74,17 @@ class GitHub(GitHubBase):
         self._client = GitHubClient(token=token, session=session, api_version=api_version, **kwargs)
 
         # Namespaces
+        self._notifications = GitHubNotificationsNamespace(self._client)
         self._repos = GitHubReposNamespace(self._client)
         self._user = GitHubUserNamespace(self._client)
         self._users = GitHubUsersNamespace(self._client)
         self._orgs = GitHubOrgsNamespace(self._client)
         self._projects = GitHubBaseProjectsNamespace(self._client)
+
+    @property
+    def notifications(self) -> GitHubNotificationsNamespace:
+        """Property to access the notifications namespace."""
+        return self._notifications
 
     @property
     def repos(self) -> GitHubReposNamespace:
