@@ -45,6 +45,7 @@ from .models.license import GitHubLicenseModel
 from .models.login_oauth import GitHubLoginOauthModel
 from .models.meta import GitHubMetaModel
 from .models.milestone import GitHubMilestoneModel
+from .models.notification import GitHubNotificationModel
 from .models.organization import GitHubOrganizationMinimalModel, GitHubOrganizationModel
 from .models.owner import GitHubOwnerModel
 from .models.permissions import GitHubPermissionsModel
