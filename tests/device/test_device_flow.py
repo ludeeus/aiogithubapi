@@ -25,7 +25,7 @@ async def test_register_device(
     assert response.status == 200
     assert response.data.verification_uri == "https://github.com/login/device"
     assert mock_requests.called == 1
-    assert mock_requests.last_request["url"] == "https://github.com/login/device/code"
+    assert mock_requests.last_request["url"] == "https://github.com/login/device"
     assert mock_requests.last_request["params"]["scope"] == ""
     assert mock_requests.last_request["params"]["client_id"] == CLIENT_ID
 
@@ -39,7 +39,7 @@ async def test_register_device_custom_scope(
     assert response.status == 200
     assert response.data.verification_uri == "https://github.com/login/device"
     assert mock_requests.called == 1
-    assert mock_requests.last_request["url"] == "https://github.com/login/device/code"
+    assert mock_requests.last_request["url"] == "https://github.com/login/device"
     assert mock_requests.last_request["params"]["scope"] == "custom"
 
 

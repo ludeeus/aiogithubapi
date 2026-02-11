@@ -31,7 +31,7 @@ DEFAULT_API_VERSION = "2022-11-28"
 
 BASE_API_URL = "https://api.github.com"
 BASE_GITHUB_URL = "https://github.com"
-OAUTH_DEVICE_LOGIN_PATH = "/login/device/code"
+OAUTH_DEVICE_LOGIN_PATH = "/login/device"
 OAUTH_ACCESS_TOKEN_PATH = "/login/oauth/access_token"
 OAUTH_USER_LOGIN = "https://github.com/login/device"
 
