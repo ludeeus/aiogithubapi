@@ -5,5 +5,16 @@
   ],
   "labels": [
     "dependencies"
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "fileMatch": ["^\\.devcontainer\\.json$"],
+      "matchStrings": [
+        "ghcr\\.io/va-h/devcontainers-features/uv:[\\d]+\"[\\s\\S]*?\"version\":\\s*\"(?<currentValue>[^\"]+)\""
+      ],
+      "depNameTemplate": "astral-sh/uv",
+      "datasourceTemplate": "github-releases"
+    }
   ]
 }
