@@ -48,3 +48,25 @@ Which includes:
 6. Ensure 100% coverage with `scripts/coverage`
 7. Commit your work, and push it to GitHub
 8. Create a PR against the `main` branch
+
+## Versioning
+
+This project follows [Semantic Versioning](https://semver.org/).
+
+Early releases used semver (`0.1.0`–`2.0.0`), followed by a period of calendar versioning (`21.1.0`–`25.5.0`). Starting with `26.0.0`, the project returns to semver — using `26.x.x` as the starting point to stay above the last calver release and avoid confusing package managers.
+
+Version bumps are determined automatically by PR labels:
+
+- `breaking-change` → **major**
+- `feature` / `enhancement` → **minor**
+- All other changes → **patch**
+
+## Release
+
+Releases are automated via GitHub Actions. The flow works as follows:
+
+1. PRs are merged to `main` with appropriate labels
+2. On every merge, [release-drafter](https://github.com/release-drafter/release-drafter) automatically maintains a **draft GitHub Release** with categorized changelog entries built from PR titles and authors
+3. Changelog entries are grouped into: Breaking changes, New features, Enhancements, Bug fixes, Maintenance, Documentation, and Dependencies
+4. A maintainer reviews the draft and **publishes** the release via the GitHub Releases UI
+5. Publishing creates a git tag and triggers the release workflow, which stamps the version into `pyproject.toml`, builds the package, and publishes it to [PyPI](https://pypi.org/project/aiogithubapi) via OIDC trusted publishing
