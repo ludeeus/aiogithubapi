@@ -16,7 +16,9 @@
   "customManagers": [
     {
       "customType": "regex",
-      "fileMatch": ["^\\.devcontainer\\.json$"],
+      "managerFilePatterns": [
+        "/^\\.devcontainer\\.json$/"
+      ],
       "matchStrings": [
         "ghcr\\.io/va-h/devcontainers-features/uv:[\\d]+\"[\\s\\S]*?\"version\":\\s*\"(?<currentValue>[^\"]+)\""
       ],
