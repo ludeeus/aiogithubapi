@@ -6,6 +6,9 @@
   "labels": [
     "dependencies"
   ],
+  "ignorePaths": [
+    ".python-version"
+  ],
   "customManagers": [
     {
       "customType": "regex",
