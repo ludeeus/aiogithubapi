@@ -25,12 +25,12 @@ jobs:
         uses: actions/setup-python@v6.2.0
         id: python
         with:
-          python-version: "3.13"
+          python-version-file: .python-version
 
       - name: Install uv
         uses: astral-sh/setup-uv@eac588ad8def6316056a12d4907a9d4d84ff7a3b  # v7.3.0
         with:
-          version: "0.10.3"
+          version: "0.10.6"
 
       - name: Install dependencies
         run: scripts/bootstrap
@@ -61,7 +61,7 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@eac588ad8def6316056a12d4907a9d4d84ff7a3b  # v7.3.0
         with:
-          version: "0.10.3"
+          version: "0.10.6"
 
       - name: 📦 Install dependencies
         run: scripts/bootstrap
@@ -80,16 +80,16 @@ jobs:
       - name: 📥 Checkout the repository
         uses: actions/checkout@v6.0.2
 
-      - name: 🛠 Set up Python 3.13
+      - name: 🛠 Set up Python
         uses: actions/setup-python@v6.2.0
         id: python
         with:
-          python-version: "3.13"
+          python-version-file: .python-version
 
       - name: Install uv
         uses: astral-sh/setup-uv@eac588ad8def6316056a12d4907a9d4d84ff7a3b  # v7.3.0
         with:
-          version: "0.10.3"
+          version: "0.10.6"
 
       - name: 📦 Install dependencies
         run: scripts/bootstrap
