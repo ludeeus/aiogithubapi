@@ -6,6 +6,9 @@ set -e
 
 cd "$(dirname "$0")/.."
 
+echo "==> Installing Python with uv..."
+uv python install
+
 scripts/bootstrap
 
 echo "==> Project is now ready to go!"
