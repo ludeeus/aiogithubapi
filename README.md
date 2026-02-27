@@ -69,4 +69,4 @@ Releases are automated via GitHub Actions. The flow works as follows:
 2. On every merge, [release-drafter](https://github.com/release-drafter/release-drafter) automatically maintains a **draft GitHub Release** with categorized changelog entries built from PR titles and authors
 3. Changelog entries are grouped into: Breaking changes, New features, Enhancements, Bug fixes, Maintenance, Documentation, and Dependencies
 4. A maintainer reviews the draft and **publishes** the release via the GitHub Releases UI
-5. Publishing creates a git tag and triggers the release workflow, which stamps the version into `pyproject.toml`, builds the package, and publishes it to [PyPI](https://pypi.org/project/aiogithubapi) via OIDC trusted publishing
+5. Publishing the GitHub Release for a tag (creating or selecting the tag in the UI) triggers the release workflow, which stamps the version into `pyproject.toml`, builds the package, and publishes it to [PyPI](https://pypi.org/project/aiogithubapi) via OIDC trusted publishing
