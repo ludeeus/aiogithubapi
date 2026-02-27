@@ -29,7 +29,7 @@ def short_message(message: str) -> str:
 
 @backoff.on_exception(
     backoff.expo,
-    (ClientError, asyncio.CancelledError, asyncio.TimeoutError, KeyError),
+    (ClientError, asyncio.CancelledError, TimeoutError, KeyError),
     max_tries=5,
     logger=None,
 )
