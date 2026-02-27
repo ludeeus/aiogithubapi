@@ -1,7 +1,6 @@
 """Helpers for AIOGitHubAPI."""
 
 import asyncio
-from asyncio import CancelledError, TimeoutError
 from typing import Optional
 
 import aiohttp
@@ -30,7 +29,7 @@ def short_message(message: str) -> str:
 
 @backoff.on_exception(
     backoff.expo,
-    (ClientError, CancelledError, TimeoutError, KeyError),
+    (ClientError, asyncio.CancelledError, asyncio.TimeoutError, KeyError),
     max_tries=5,
     logger=None,
 )
