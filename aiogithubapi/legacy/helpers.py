@@ -1,11 +1,10 @@
 """Helpers for AIOGitHubAPI."""
 
-from asyncio import CancelledError, TimeoutError
+import asyncio
 from typing import Optional
 
 import aiohttp
 from aiohttp.client_exceptions import ClientError
-import async_timeout
 import backoff
 
 from ..common.const import HTTP_STATUS_CODE_GOOD_LIST, HttpMethod, HttpStatusCode
@@ -30,7 +29,7 @@ def short_message(message: str) -> str:
 
 @backoff.on_exception(
     backoff.expo,
-    (ClientError, CancelledError, TimeoutError, KeyError),
+    (ClientError, asyncio.CancelledError, TimeoutError, KeyError),
     max_tries=5,
     logger=None,
 )
@@ -47,7 +46,7 @@ async def async_call_api(
     """Execute the API call."""
     response = AIOGitHubAPIResponse()
 
-    async with async_timeout.timeout(20):
+    async with asyncio.timeout(20):
         if method == HttpMethod.GET:
             result = await session.get(url, params=params or {}, headers=headers)
         else:
