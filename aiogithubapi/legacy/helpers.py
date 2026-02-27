@@ -1,11 +1,11 @@
 """Helpers for AIOGitHubAPI."""
 
+import asyncio
 from asyncio import CancelledError, TimeoutError
 from typing import Optional
 
 import aiohttp
 from aiohttp.client_exceptions import ClientError
-import async_timeout
 import backoff
 
 from ..common.const import HTTP_STATUS_CODE_GOOD_LIST, HttpMethod, HttpStatusCode
@@ -47,7 +47,7 @@ async def async_call_api(
     """Execute the API call."""
     response = AIOGitHubAPIResponse()
 
-    async with async_timeout.timeout(20):
+    async with asyncio.timeout(20):
         if method == HttpMethod.GET:
             result = await session.get(url, params=params or {}, headers=headers)
         else:

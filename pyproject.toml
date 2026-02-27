@@ -22,7 +22,6 @@ classifiers = [
 ]
 dependencies = [
     "aiohttp>=3.8",
-    "async-timeout>=5",
     "backoff<3",
 ]
 
