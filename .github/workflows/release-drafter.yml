@@ -15,6 +15,6 @@ jobs:
       contents: write
     steps:
       - name: 🏃 Run Release Drafter
-        uses: release-drafter/release-drafter@3a7fb5c85b80b1dda66e1ccb94009adbbd32fce3  # v7.0.0
+        uses: release-drafter/release-drafter@c2e2804cc59f45f57076a99af580d0fedb697927  # v7.3.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
