@@ -7,6 +7,7 @@ from collections.abc import Awaitable, Callable
 from functools import wraps
 
 from .const import LOGGER
+from .utils import random_float
 
 
 def async_backoff[**P, T](
@@ -23,9 +24,6 @@ def async_backoff[**P, T](
     def decorator(func: Callable[P, Awaitable[T]]) -> Callable[P, Awaitable[T]]:
         @wraps(func)
         async def wrapper(*args: P.args, **kwargs: P.kwargs) -> T:
-            # Imported here to avoid a circular import
-            from .helpers import random_float  # pylint: disable=import-outside-toplevel
-
             attempt = 0
             while True:
                 try:
