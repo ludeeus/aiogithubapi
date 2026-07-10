@@ -181,9 +181,11 @@ class GitHubDeviceAPI(GitHubBase):
                 if error in (DeviceFlowError.AUTHORIZATION_PENDING, DeviceFlowError.SLOW_DOWN):
                     if interval := response.data.get("interval"):
                         self._interval = interval
-                        self.logger.info(
-                            "Got new interval instruction of %s from the API", interval
-                        )
+                        if self._interval is not None:
+                            self.logger.info(
+                                "Got new interval instruction of %s from the API",
+                                self._interval,
+                            )
                     wait = self._interval or 5
                     sleep_seconds = wait + random_float(wait * 0.1, wait)
                     self.logger.debug(
