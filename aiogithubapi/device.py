@@ -162,7 +162,6 @@ class GitHubDeviceAPI(GitHubBase):
                 )
 
             if error := response.data.get("error"):
-                self.logger.debug(response.data.get("error_description"))
                 if error in (DeviceFlowError.AUTHORIZATION_PENDING, DeviceFlowError.SLOW_DOWN):
                     if interval := response.data.get("interval"):
                         self._interval = interval
@@ -170,8 +169,15 @@ class GitHubDeviceAPI(GitHubBase):
                             "Got new interval instruction of %s from the API", interval
                         )
                     wait = self._interval or 5
-                    await asyncio.sleep(wait + random_float(wait * 0.1, wait))
+                    sleep = wait + random_float(wait * 0.1, wait)
+                    self.logger.debug(
+                        "%s, waiting %.2f seconds before retrying",
+                        response.data.get("error_description"),
+                        sleep,
+                    )
+                    await asyncio.sleep(sleep)
                 else:
+                    self.logger.debug(response.data.get("error_description"))
                     raise GitHubException(response.data.get("error_description"))
             else:
                 response.data = GitHubLoginOauthModel(response.data)
