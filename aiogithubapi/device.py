@@ -85,12 +85,19 @@ class GitHubDeviceAPI(GitHubBase):
 
     @property
     def _interval(self) -> int | None:
-        """Polling interval in seconds; always None or a positive number."""
+        """Polling interval in seconds; always None or a positive int."""
         return self.__interval
 
     @_interval.setter
-    def _interval(self, value: int | None) -> None:
-        self.__interval = value if isinstance(value, (int, float)) and value > 0 else None
+    def _interval(self, value: int | float | None) -> None:
+        if isinstance(value, bool):
+            self.__interval = None
+        elif isinstance(value, int) and value > 0:
+            self.__interval = value
+        elif isinstance(value, float) and value.is_integer() and value > 0:
+            self.__interval = int(value)
+        else:
+            self.__interval = None
 
     async def __aenter__(self) -> GitHubDeviceAPI:
         """Async enter."""

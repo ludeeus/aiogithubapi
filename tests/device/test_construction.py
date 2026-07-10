@@ -42,11 +42,14 @@ async def test_session_creation_with_enter():
 async def test_interval_validation():
     device = GitHubDeviceAPI(client_id=CLIENT_ID)
     assert device._interval == 5  # __init__ default
-    for bad in (0, -5, None, "x"):
+    for bad in (0, -5, None, "x", True, False, 20.5, -1.0):
         device._interval = bad
         assert device._interval is None
     device._interval = 12
     assert device._interval == 12
+    device._interval = 20.0  # integer-valued float coerced to int
+    assert device._interval == 20
+    assert isinstance(device._interval, int)
     await device.close_session()
 
 
