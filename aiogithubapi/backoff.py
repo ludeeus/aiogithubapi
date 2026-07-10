@@ -17,8 +17,9 @@ def async_backoff[**P, T](
 ) -> Callable[[Callable[P, Awaitable[T]]], Callable[P, Awaitable[T]]]:
     """Retry an async function with exponential backoff and full jitter.
 
-    Waits random_float(0, base**attempt) between tries,
-    re-raises the last exception after max_tries attempts.
+    Before retry number n (starting at 1) this waits
+    random_float(0, base ** (n - 1)) seconds, and re-raises
+    the last exception after max_tries attempts.
     """
 
     def decorator(func: Callable[P, Awaitable[T]]) -> Callable[P, Awaitable[T]]:
