@@ -5,8 +5,8 @@ from typing import Optional
 
 import aiohttp
 from aiohttp.client_exceptions import ClientError
-import backoff
 
+from ..backoff import async_backoff
 from ..common.const import HTTP_STATUS_CODE_GOOD_LIST, HttpMethod, HttpStatusCode
 from ..common.exceptions import (
     AIOGitHubAPIAuthenticationException,
@@ -27,11 +27,9 @@ def short_message(message: str) -> str:
     return message.split("\n")[0]
 
 
-@backoff.on_exception(
-    backoff.expo,
+@async_backoff(
     (ClientError, asyncio.CancelledError, TimeoutError, KeyError),
     max_tries=5,
-    logger=None,
 )
 async def async_call_api(
     session: aiohttp.ClientSession,
