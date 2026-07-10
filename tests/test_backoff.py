@@ -1,5 +1,6 @@
 """Test the async_backoff decorator."""
 
+import asyncio
 from unittest.mock import AsyncMock, patch
 
 import pytest
@@ -90,6 +91,26 @@ async def test_unlisted_exception_not_retried(caplog: pytest.CaptureFixture):
 
     with patch("aiogithubapi.backoff.asyncio.sleep", AsyncMock()) as sleep:
         with pytest.raises(KeyError, match="boom"):
+            await call()
+
+    assert calls == 1
+    sleep.assert_not_called()
+    assert "Retrying" not in caplog.text
+
+
+@pytest.mark.asyncio
+async def test_cancellation_not_retried(caplog: pytest.CaptureFixture):
+    """Test that asyncio.CancelledError propagates even when listed."""
+    calls = 0
+
+    @async_backoff((ValueError, asyncio.CancelledError), max_tries=5)
+    async def call():
+        nonlocal calls
+        calls += 1
+        raise asyncio.CancelledError
+
+    with patch("aiogithubapi.backoff.asyncio.sleep", AsyncMock()) as sleep:
+        with pytest.raises(asyncio.CancelledError):
             await call()
 
     assert calls == 1

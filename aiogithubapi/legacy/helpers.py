@@ -28,7 +28,7 @@ def short_message(message: str) -> str:
 
 
 @async_backoff(
-    (ClientError, asyncio.CancelledError, TimeoutError, KeyError),
+    (ClientError, TimeoutError, KeyError),
     max_tries=5,
 )
 async def async_call_api(

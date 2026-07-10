@@ -20,6 +20,9 @@ def async_backoff[**P, T](
     Before retry number n (starting at 1) this waits
     random_float(0, base ** (n - 1)) seconds, and re-raises
     the last exception after max_tries attempts.
+
+    asyncio.CancelledError is always re-raised immediately,
+    even if included in exceptions.
     """
 
     def decorator(func: Callable[P, Awaitable[T]]) -> Callable[P, Awaitable[T]]:
@@ -30,6 +33,8 @@ def async_backoff[**P, T](
                 try:
                     return await func(*args, **kwargs)
                 except exceptions as exception:
+                    if isinstance(exception, asyncio.CancelledError):
+                        raise
                     attempt += 1
                     if attempt >= max_tries:
                         raise
