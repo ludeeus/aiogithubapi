@@ -69,7 +69,7 @@ class GitHubDeviceAPI(GitHubBase):
         https://docs.github.com/en/developers/apps/authorizing-oauth-apps#device-flow
         """
         self.client_id = client_id
-        self._interval = 5
+        self.__interval = 5
         self._expires = None
 
         if session is None:
