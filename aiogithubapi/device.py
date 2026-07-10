@@ -23,6 +23,7 @@ from .const import (
     HttpMethod,
 )
 from .exceptions import GitHubAuthenticationException, GitHubException
+from .helpers import random_float
 from .legacy.device import AIOGitHubAPIDeviceLogin as LegacyAIOGitHubAPIDeviceLogin
 from .models.base import GitHubBase
 from .models.device_login import GitHubLoginDeviceModel
@@ -168,7 +169,8 @@ class GitHubDeviceAPI(GitHubBase):
                         self.logger.info(
                             "Got new interval instruction of %s from the API", interval
                         )
-                    await asyncio.sleep(self._interval or 5)
+                    wait = self._interval or 5
+                    await asyncio.sleep(wait + random_float(wait * 0.1, wait))
                 else:
                     raise GitHubException(response.data.get("error_description"))
             else:
