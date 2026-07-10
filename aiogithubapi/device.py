@@ -83,6 +83,15 @@ class GitHubDeviceAPI(GitHubBase):
 
         self._client = GitHubClient(session=session, **kwargs)
 
+    @property
+    def _interval(self) -> int | None:
+        """Polling interval in seconds; always None or a positive number."""
+        return self.__interval
+
+    @_interval.setter
+    def _interval(self, value: int | None) -> None:
+        self.__interval = value if isinstance(value, (int, float)) and value > 0 else None
+
     async def __aenter__(self) -> GitHubDeviceAPI:
         """Async enter."""
         return self

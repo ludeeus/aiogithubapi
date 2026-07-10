@@ -39,6 +39,18 @@ async def test_session_creation_with_enter():
 
 
 @pytest.mark.asyncio
+async def test_interval_validation():
+    device = GitHubDeviceAPI(client_id=CLIENT_ID)
+    assert device._interval == 5  # __init__ default
+    for bad in (0, -5, None, "x"):
+        device._interval = bad
+        assert device._interval is None
+    device._interval = 12
+    assert device._interval == 12
+    await device.close_session()
+
+
+@pytest.mark.asyncio
 async def test_base_url():
     async with GitHubDeviceAPI(client_id=CLIENT_ID) as device:
         assert device._client._base_request_data.base_url == "https://github.com"
