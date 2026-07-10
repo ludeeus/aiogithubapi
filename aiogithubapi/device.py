@@ -169,13 +169,13 @@ class GitHubDeviceAPI(GitHubBase):
                             "Got new interval instruction of %s from the API", interval
                         )
                     wait = self._interval or 5
-                    sleep = wait + random_float(wait * 0.1, wait)
+                    sleep_seconds = wait + random_float(wait * 0.1, wait)
                     self.logger.debug(
                         "%s, waiting %.2f seconds before retrying",
                         response.data.get("error_description"),
-                        sleep,
+                        sleep_seconds,
                     )
-                    await asyncio.sleep(sleep)
+                    await asyncio.sleep(sleep_seconds)
                 else:
                     self.logger.debug(response.data.get("error_description"))
                     raise GitHubException(response.data.get("error_description"))
