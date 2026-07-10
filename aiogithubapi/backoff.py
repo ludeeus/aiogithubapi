@@ -5,12 +5,8 @@ from __future__ import annotations
 import asyncio
 from collections.abc import Awaitable, Callable
 from functools import wraps
-import random
 
-
-def random_float(minimum: float, maximum: float) -> float:
-    """Return a random float between minimum and maximum (inclusive)."""
-    return random.uniform(minimum, maximum)
+from .const import LOGGER
 
 
 def async_backoff[**P, T](
@@ -27,15 +23,27 @@ def async_backoff[**P, T](
     def decorator(func: Callable[P, Awaitable[T]]) -> Callable[P, Awaitable[T]]:
         @wraps(func)
         async def wrapper(*args: P.args, **kwargs: P.kwargs) -> T:
+            # Imported here to avoid a circular import
+            from .helpers import random_float  # pylint: disable=import-outside-toplevel
+
             attempt = 0
             while True:
                 try:
                     return await func(*args, **kwargs)
-                except exceptions:
+                except exceptions as exception:
                     attempt += 1
                     if attempt >= max_tries:
                         raise
-                    await asyncio.sleep(random_float(0, base ** (attempt - 1)))
+                    sleep_seconds = random_float(0, base ** (attempt - 1))
+                    LOGGER.debug(
+                        "Retrying %s in %.2f seconds (attempt %s of %s) after %r",
+                        func.__name__,
+                        sleep_seconds,
+                        attempt,
+                        max_tries,
+                        exception,
+                    )
+                    await asyncio.sleep(sleep_seconds)
 
         return wrapper
 
