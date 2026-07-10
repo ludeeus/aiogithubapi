@@ -8,7 +8,7 @@ from aiogithubapi.backoff import async_backoff
 
 
 @pytest.mark.asyncio
-async def test_returns_on_first_success():
+async def test_returns_on_first_success(caplog: pytest.CaptureFixture):
     """Test that a successful call is not retried and does not sleep."""
     calls = 0
 
@@ -23,10 +23,11 @@ async def test_returns_on_first_success():
 
     assert calls == 1
     sleep.assert_not_called()
+    assert "Retrying" not in caplog.text
 
 
 @pytest.mark.asyncio
-async def test_retries_then_succeeds():
+async def test_retries_then_succeeds(caplog: pytest.CaptureFixture):
     """Test that listed exceptions are retried until success."""
     calls = 0
 
@@ -46,9 +47,14 @@ async def test_retries_then_succeeds():
     for attempt, call_args in enumerate(sleep.call_args_list):
         assert 0 <= call_args.args[0] <= 2**attempt
 
+    retry_logs = [message for message in caplog.messages if message.startswith("Retrying call in")]
+    assert len(retry_logs) == 2
+    assert "(attempt 1 of 5) after KeyError('boom')" in retry_logs[0]
+    assert "(attempt 2 of 5) after KeyError('boom')" in retry_logs[1]
+
 
 @pytest.mark.asyncio
-async def test_raises_after_max_tries():
+async def test_raises_after_max_tries(caplog: pytest.CaptureFixture):
     """Test that the exception is re-raised after max_tries attempts."""
     calls = 0
 
@@ -59,15 +65,20 @@ async def test_raises_after_max_tries():
         raise ValueError("boom")
 
     with patch("aiogithubapi.backoff.asyncio.sleep", AsyncMock()) as sleep:
-        with pytest.raises(ValueError):
+        with pytest.raises(ValueError, match="boom"):
             await call()
 
     assert calls == 5
     assert sleep.call_count == 4
 
+    retry_logs = [message for message in caplog.messages if message.startswith("Retrying call in")]
+    assert len(retry_logs) == 4
+    for retry, message in enumerate(retry_logs, start=1):
+        assert f"(attempt {retry} of 5) after ValueError('boom')" in message
+
 
 @pytest.mark.asyncio
-async def test_unlisted_exception_not_retried():
+async def test_unlisted_exception_not_retried(caplog: pytest.CaptureFixture):
     """Test that exceptions not in the tuple propagate immediately."""
     calls = 0
 
@@ -78,11 +89,12 @@ async def test_unlisted_exception_not_retried():
         raise KeyError("boom")
 
     with patch("aiogithubapi.backoff.asyncio.sleep", AsyncMock()) as sleep:
-        with pytest.raises(KeyError):
+        with pytest.raises(KeyError, match="boom"):
             await call()
 
     assert calls == 1
     sleep.assert_not_called()
+    assert "Retrying" not in caplog.text
 
 
 def test_preserves_metadata():
