@@ -23,6 +23,7 @@ from .const import (
     HttpMethod,
 )
 from .exceptions import GitHubAuthenticationException, GitHubException
+from .helpers import random_float
 from .legacy.device import AIOGitHubAPIDeviceLogin as LegacyAIOGitHubAPIDeviceLogin
 from .models.base import GitHubBase
 from .models.device_login import GitHubLoginDeviceModel
@@ -68,7 +69,7 @@ class GitHubDeviceAPI(GitHubBase):
         https://docs.github.com/en/developers/apps/authorizing-oauth-apps#device-flow
         """
         self.client_id = client_id
-        self._interval = 5
+        self.__interval = 5
         self._expires = None
 
         if session is None:
@@ -81,6 +82,22 @@ class GitHubDeviceAPI(GitHubBase):
             kwargs[GitHubClientKwarg.BASE_URL] = BASE_GITHUB_URL
 
         self._client = GitHubClient(session=session, **kwargs)
+
+    @property
+    def _interval(self) -> int | None:
+        """Polling interval in seconds; always None or a positive int."""
+        return self.__interval
+
+    @_interval.setter
+    def _interval(self, value: int | float | None) -> None:
+        if isinstance(value, bool):
+            self.__interval = None
+        elif isinstance(value, int) and value > 0:
+            self.__interval = value
+        elif isinstance(value, float) and value.is_integer() and value > 0:
+            self.__interval = int(value)
+        else:
+            self.__interval = None
 
     async def __aenter__(self) -> GitHubDeviceAPI:
         """Async enter."""
@@ -161,15 +178,24 @@ class GitHubDeviceAPI(GitHubBase):
                 )
 
             if error := response.data.get("error"):
-                self.logger.debug(response.data.get("error_description"))
                 if error in (DeviceFlowError.AUTHORIZATION_PENDING, DeviceFlowError.SLOW_DOWN):
                     if interval := response.data.get("interval"):
                         self._interval = interval
-                        self.logger.info(
-                            "Got new interval instruction of %s from the API", interval
-                        )
-                    await asyncio.sleep(self._interval or 5)
+                        if (validated_interval := self._interval) is not None:
+                            self.logger.info(
+                                "Got new interval instruction of %s from the API",
+                                validated_interval,
+                            )
+                    wait = self._interval or 5
+                    sleep_seconds = wait + random_float(wait * 0.1, wait)
+                    self.logger.debug(
+                        "%s, waiting %.2f seconds before retrying",
+                        response.data.get("error_description"),
+                        sleep_seconds,
+                    )
+                    await asyncio.sleep(sleep_seconds)
                 else:
+                    self.logger.debug(response.data.get("error_description"))
                     raise GitHubException(response.data.get("error_description"))
             else:
                 response.data = GitHubLoginOauthModel(response.data)

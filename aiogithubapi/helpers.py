@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import random
 from typing import TYPE_CHECKING, Optional
 
 import aiohttp
@@ -13,6 +14,11 @@ from .legacy.helpers import (
     short_sha,
 )
 from .objects.base import AIOGitHubAPIResponse
+
+
+def random_float(minimum: float, maximum: float) -> float:
+    """Return a random float between minimum and maximum (inclusive)."""
+    return random.uniform(minimum, maximum)
 
 
 def repository_full_name(repository: RepositoryType) -> str:

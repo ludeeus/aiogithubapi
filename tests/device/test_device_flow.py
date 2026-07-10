@@ -106,11 +106,11 @@ async def test_wait_for_confirmation(
     assert mock_requests.called == 5
     assert asyncio_sleep.call_count == 4
 
-    # Use default interval
-    assert asyncio_sleep.call_args_list[-3][0][0] == 1
-    # Use new interval from API for all next calls
-    assert asyncio_sleep.call_args_list[-2][0][0] == 20
-    assert asyncio_sleep.call_args_list[-1][0][0] == 20
+    # Use the fixture interval (1) plus jitter between 10% and 100% of the interval
+    assert 1.1 <= asyncio_sleep.call_args_list[-3][0][0] <= 2
+    # Use new interval from API (20) for all next calls, plus jitter
+    assert 22 <= asyncio_sleep.call_args_list[-2][0][0] <= 40
+    assert 22 <= asyncio_sleep.call_args_list[-1][0][0] <= 40
 
     assert mock_requests.last_request["url"] == "https://github.com/login/oauth/access_token"
     assert "Pending user authorization" in caplog.text
