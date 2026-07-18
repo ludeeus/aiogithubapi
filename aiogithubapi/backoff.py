@@ -35,8 +35,6 @@ def async_backoff[**P, T](
                 except asyncio.CancelledError:
                     raise
                 except exceptions as exception:
-                    if isinstance(exception, asyncio.CancelledError):
-                        raise
                     attempt += 1
                     if attempt >= max_tries:
                         raise
