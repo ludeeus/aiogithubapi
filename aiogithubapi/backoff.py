@@ -32,6 +32,8 @@ def async_backoff[**P, T](
             while True:
                 try:
                     return await func(*args, **kwargs)
+                except asyncio.CancelledError:
+                    raise
                 except exceptions as exception:
                     if isinstance(exception, asyncio.CancelledError):
                         raise
