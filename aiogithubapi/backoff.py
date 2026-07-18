@@ -25,6 +25,9 @@ def async_backoff[**P, T](
     even if included in exceptions.
     """
 
+    if max_tries < 1:
+        raise ValueError("max_tries must be >= 1")
+
     def decorator(func: Callable[P, Awaitable[T]]) -> Callable[P, Awaitable[T]]:
         @wraps(func)
         async def wrapper(*args: P.args, **kwargs: P.kwargs) -> T:
