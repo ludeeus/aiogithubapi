@@ -19,7 +19,7 @@ classifiers = [
 ]
 dependencies = [
     "aiohttp>=3.8",
-    "backoff<3",
+    "python-backoff<3",
 ]
 
 [project.urls]
