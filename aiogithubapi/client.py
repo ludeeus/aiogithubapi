@@ -82,6 +82,10 @@ class GitHubClient(GitHubBase):
         self._session = session
         self._loop = asyncio.get_running_loop()
 
+    def set_token(self, token: str | None) -> None:
+        """Replace the access token without changing endpoint-specific headers."""
+        self._base_request_data.token = token
+
     async def async_call_api(
         self,
         endpoint: str,

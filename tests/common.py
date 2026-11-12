@@ -1,4 +1,5 @@
 """Common tests helpers."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -67,6 +68,12 @@ BYTES_ENDPOINT = ("tarball", "zipball")
 @dataclass
 class MockResponse:
     """Mock response class."""
+
+    async def __aenter__(self):
+        return self
+
+    async def __aexit__(self, *_):
+        return None
 
     _count = 0
 

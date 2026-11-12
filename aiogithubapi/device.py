@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import asyncio
 from datetime import datetime
+import time
 from typing import Any, Dict
 
 import aiohttp
@@ -22,7 +23,12 @@ from .const import (
     GitHubRequestKwarg,
     HttpMethod,
 )
-from .exceptions import GitHubAuthenticationException, GitHubException
+from .exceptions import (
+    GitHubAuthenticationException,
+    GitHubConnectionException,
+    GitHubException,
+    GitHubRatelimitException,
+)
 from .helpers import random_float
 from .legacy.device import AIOGitHubAPIDeviceLogin as LegacyAIOGitHubAPIDeviceLogin
 from .models.base import GitHubBase
@@ -82,6 +88,9 @@ class GitHubDeviceAPI(GitHubBase):
             kwargs[GitHubClientKwarg.BASE_URL] = BASE_GITHUB_URL
 
         self._client = GitHubClient(session=session, **kwargs)
+        self._token_url = (
+            f"{kwargs[GitHubClientKwarg.BASE_URL].rstrip('/')}{OAUTH_ACCESS_TOKEN_PATH}"
+        )
 
     @property
     def _interval(self) -> int | None:
@@ -156,6 +165,7 @@ class GitHubDeviceAPI(GitHubBase):
             if self._expires < datetime.timestamp(datetime.now()):
                 raise GitHubException("User took too long to enter key")
 
+            requested_at = time.time()
             response = await self._client.async_call_api(
                 endpoint=OAUTH_ACCESS_TOKEN_PATH,
                 **{
@@ -198,7 +208,47 @@ class GitHubDeviceAPI(GitHubBase):
                     self.logger.debug(response.data.get("error_description"))
                     raise GitHubException(response.data.get("error_description"))
             else:
-                response.data = GitHubLoginOauthModel(response.data)
+                response.data = GitHubLoginOauthModel(response.data, requested_at=requested_at)
                 break
 
+        return response
+
+    async def refresh(self, refresh_token: str) -> GitHubResponseModel[GitHubLoginOauthModel]:
+        """Renew a device-flow token, returning the rotated credentials.
+
+        A rejected refresh token raises GitHubAuthenticationException. Temporary,
+        malformed, and client-configuration failures preserve the caller's login
+        by raising other GitHubException subclasses.
+        """
+        requested_at = time.time()
+        try:
+            async with self._session.post(
+                self._token_url,
+                json={
+                    "client_id": self.client_id,
+                    "grant_type": "refresh_token",
+                    "refresh_token": refresh_token,
+                },
+                headers={"Accept": "application/json"},
+                timeout=aiohttp.ClientTimeout(total=30),
+                allow_redirects=False,
+            ) as result:
+                response = GitHubResponseModel(result)
+                if result.status == 429:
+                    raise GitHubRatelimitException("GitHub OAuth token endpoint rate limited")
+                if result.status >= 500:
+                    raise GitHubConnectionException("GitHub OAuth token endpoint unavailable")
+                payload = await result.json()
+        except (aiohttp.ClientError, TimeoutError, ValueError) as exception:
+            raise GitHubConnectionException("GitHub OAuth token refresh failed") from exception
+
+        if not isinstance(payload, dict):
+            raise GitHubException("Invalid OAuth token refresh response")
+        if payload.get("error") in ("bad_refresh_token", "invalid_grant"):
+            raise GitHubAuthenticationException("GitHub refresh token is invalid or expired")
+        if response.status != 200 or payload.get("error"):
+            raise GitHubException("GitHub OAuth token refresh was refused")
+        if "refresh_token" not in payload:
+            payload = {**payload, "refresh_token": refresh_token}
+        response.data = GitHubLoginOauthModel(payload, requested_at=requested_at)
         return response
