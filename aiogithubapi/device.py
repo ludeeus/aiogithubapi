@@ -229,8 +229,15 @@ class GitHubDeviceAPI(GitHubBase):
                     "grant_type": "refresh_token",
                     "refresh_token": refresh_token,
                 },
-                headers={"Accept": "application/json"},
-                timeout=aiohttp.ClientTimeout(total=30),
+                headers={
+                    **{
+                        name: value
+                        for name, value in self._client._base_request_data.headers.items()
+                        if name.lower() not in ("authorization", "accept", "content-type")
+                    },
+                    "Accept": "application/json",
+                },
+                timeout=aiohttp.ClientTimeout(total=self._client._base_request_data.timeout),
                 allow_redirects=False,
             ) as result:
                 response = GitHubResponseModel(result)
