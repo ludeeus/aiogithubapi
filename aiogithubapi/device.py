@@ -239,6 +239,7 @@ class GitHubDeviceAPI(GitHubBase):
                 },
                 timeout=aiohttp.ClientTimeout(total=self._client._base_request_data.timeout),
                 allow_redirects=False,
+                raise_for_status=False,
             ) as result:
                 response = GitHubResponseModel(result)
                 if result.status == 429:

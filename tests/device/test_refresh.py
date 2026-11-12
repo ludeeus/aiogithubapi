@@ -1,8 +1,11 @@
 """Test expiring device credentials and token rotation."""
 
 import asyncio
+import json
 from unittest.mock import patch
 
+from aiohttp import ClientSession
+from aresponses import ResponsesMockServer
 import pytest
 
 from aiogithubapi import (
@@ -136,3 +139,63 @@ async def test_set_token_preserves_contents_accept_header(
     await contents.get("octocat/hello-world", "hacs.json")
     assert mock_requests.last_request["headers"]["Authorization"] == "token new-access"
     assert mock_requests.last_request["headers"]["Accept"] == "application/vnd.github.v3+json"
+
+
+@pytest.mark.parametrize("header_name", ["Authorization", "authorization", "AUTHORIZATION"])
+@pytest.mark.parametrize("token", ["new-access", None, ""])
+@pytest.mark.asyncio
+async def test_set_token_replaces_configured_authorization(
+    client_session: ClientSession,
+    mock_response: MockResponse,
+    mock_requests: MockedRequests,
+    header_name: str,
+    token: str | None,
+):
+    headers = {header_name: "token old-access", "X-Custom": "preserved"}
+    api = GitHubAPI(token="initial-access", session=client_session, headers=headers)
+    contents = api.repos.contents
+    mock_response.mock_data = {"type": "file", "content": "e30=", "encoding": "base64"}
+
+    api.set_token(token)
+    await contents.get("octocat/hello-world", "hacs.json")
+
+    sent = mock_requests.last_request["headers"]
+    authorization = [value for name, value in sent.items() if name.lower() == "authorization"]
+    assert authorization == ([f"token {token}"] if token else [])
+    assert sent["X-Custom"] == "preserved"
+    assert sent["Accept"] == "application/vnd.github.v3+json"
+    assert headers == {header_name: "token old-access", "X-Custom": "preserved"}
+
+
+@pytest.mark.parametrize(
+    ("status", "code", "exception"),
+    [
+        (400, "bad_refresh_token", GitHubAuthenticationException),
+        (401, "invalid_grant", GitHubAuthenticationException),
+        (429, "invalid_grant", GitHubRatelimitException),
+        (503, "invalid_grant", GitHubConnectionException),
+    ],
+)
+@pytest.mark.asyncio
+async def test_refresh_classifies_errors_with_automatic_status_raising(
+    aresponses: ResponsesMockServer,
+    status: int,
+    code: str,
+    exception: type[GitHubException],
+):
+    aresponses.add(
+        "github.com",
+        "/login/oauth/access_token",
+        "post",
+        aresponses.Response(
+            status=status,
+            text=json.dumps({"error": code}),
+            headers={"Content-Type": "application/json"},
+        ),
+    )
+    async with ClientSession(raise_for_status=True) as session:
+        device = GitHubDeviceAPI(CLIENT_ID, session=session)
+        with pytest.raises(exception) as raised:
+            await device.refresh("old-refresh")
+        assert type(raised.value) is exception
+    aresponses.assert_plan_strictly_followed()
