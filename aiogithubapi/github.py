@@ -81,6 +81,10 @@ class GitHub(GitHubBase):
         self._orgs = GitHubOrgsNamespace(self._client)
         self._projects = GitHubBaseProjectsNamespace(self._client)
 
+    def set_token(self, token: str | None) -> None:
+        """Set the access token used by this client and its existing namespaces."""
+        self._client.set_token(token)
+
     @property
     def notifications(self) -> GitHubNotificationsNamespace:
         """Property to access the notifications namespace."""
