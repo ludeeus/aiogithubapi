@@ -258,5 +258,7 @@ class GitHubDeviceAPI(GitHubBase):
             raise GitHubException("GitHub OAuth token refresh was refused")
         if "refresh_token" not in payload:
             payload = {**payload, "refresh_token": refresh_token}
+        elif payload["refresh_token"] is None:
+            raise GitHubException("Invalid OAuth refresh token response")
         response.data = GitHubLoginOauthModel(payload, requested_at=requested_at)
         return response

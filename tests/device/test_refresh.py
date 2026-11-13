@@ -107,6 +107,14 @@ async def test_omitted_refresh_token(
 
 
 @pytest.mark.asyncio
+async def test_null_refresh_token(github_device_api: GitHubDeviceAPI, mock_response: MockResponse):
+    mock_response.mock_data = {**TOKENS, "refresh_token": None}
+    with pytest.raises(GitHubException, match="Invalid OAuth refresh token response") as raised:
+        await github_device_api.refresh("old-refresh")
+    assert not isinstance(raised.value, GitHubAuthenticationException)
+
+
+@pytest.mark.asyncio
 async def test_cancellation_propagates(
     github_device_api: GitHubDeviceAPI, mock_response: MockResponse
 ):
