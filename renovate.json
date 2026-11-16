@@ -5,7 +5,9 @@
   ],
   "minimumReleaseAge": "2 days",
   "osvVulnerabilityAlerts": true,
-  "dependencyDashboardOSVVulnerabilitySummary": "all",
+  "dependencyDashboard": {
+    "osvVulnerabilitySummary": "all"
+  },
   "timezone": "Europe/Berlin",
   "labels": [
     "dependencies"
