@@ -31,3 +31,9 @@ async def test_latest(github_api: GitHubAPI, mock_requests: MockedRequests):
         mock_requests.last_request["url"]
         == "https://api.github.com/repos/octocat/hello-world/releases/latest"
     )
+
+def test_release_without_author():
+    """A release whose author account no longer exists has author null."""
+    release = GitHubReleaseModel({"name": "First release", "author": None})
+    assert release.name == "First release"
+    assert release.author is None

@@ -25,6 +25,6 @@ class GitHubMilestoneModel(GitHubDataModelBase):
     url: str | None = None
     creator: GitHubUserModel | None = None
 
-    def _generate_creator(self, data: dict) -> GitHubUserModel:
+    def _generate_creator(self, data: dict | None) -> GitHubUserModel | None:
         """Generate the creator."""
-        return GitHubUserModel(data)
+        return GitHubUserModel(data) if data else None

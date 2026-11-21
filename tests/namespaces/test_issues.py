@@ -264,3 +264,10 @@ async def test_delete_comment(
         mock_requests.last_request["url"]
         == "https://api.github.com/repos/octocat/hello-world/issues/comments/1"
     )
+
+
+def test_milestone_without_creator():
+    """A milestone whose creator account no longer exists has creator null."""
+    issue = GitHubIssueModel({"number": 1, "milestone": {"number": 2, "creator": None}})
+    assert issue.milestone.number == 2
+    assert issue.milestone.creator is None

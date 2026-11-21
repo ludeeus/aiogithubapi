@@ -54,9 +54,9 @@ class GitHubReleaseModel(GitHubDataModelBase):
     reactions: GitHubReactionModel | None = None
     mentions_count: int | None = None
 
-    def _generate_author(self, data: dict) -> GitHubBaseUserModel:
+    def _generate_author(self, data: dict | None) -> GitHubBaseUserModel | None:
         """Generate author data."""
-        return GitHubBaseUserModel(data)
+        return GitHubBaseUserModel(data) if data else None
 
     def _generate_assets(self, data: list[Dict[str, Any]]) -> dict:
         """Generate assets data."""
